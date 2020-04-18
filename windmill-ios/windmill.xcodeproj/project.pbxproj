@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6B98C4F3244B7F47001F50CD /* Pacifico-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B98C4F2244B7F47001F50CD /* Pacifico-Regular.ttf */; };
 		6BF70E71244A30FE006A609B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF70E70244A30FE006A609B /* AppDelegate.swift */; };
 		6BF70E73244A30FE006A609B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF70E72244A30FE006A609B /* SceneDelegate.swift */; };
 		6BF70E75244A30FE006A609B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF70E74244A30FE006A609B /* ContentView.swift */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6B98C4F2244B7F47001F50CD /* Pacifico-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pacifico-Regular.ttf"; sourceTree = "<group>"; };
 		6BF70E6D244A30FE006A609B /* windmill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = windmill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BF70E70244A30FE006A609B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6BF70E72244A30FE006A609B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -37,6 +39,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6B98C4F1244B7F02001F50CD /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				6B98C4F2244B7F47001F50CD /* Pacifico-Regular.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		6BF70E64244A30FE006A609B = {
 			isa = PBXGroup;
 			children = (
@@ -56,6 +66,7 @@
 		6BF70E6F244A30FE006A609B /* windmill */ = {
 			isa = PBXGroup;
 			children = (
+				6B98C4F1244B7F02001F50CD /* Fonts */,
 				6BF70E70244A30FE006A609B /* AppDelegate.swift */,
 				6BF70E72244A30FE006A609B /* SceneDelegate.swift */,
 				6BF70E74244A30FE006A609B /* ContentView.swift */,
@@ -134,6 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6BF70E7D244A30FF006A609B /* LaunchScreen.storyboard in Resources */,
+				6B98C4F3244B7F47001F50CD /* Pacifico-Regular.ttf in Resources */,
 				6BF70E7A244A30FF006A609B /* Preview Assets.xcassets in Resources */,
 				6BF70E77244A30FF006A609B /* Assets.xcassets in Resources */,
 			);

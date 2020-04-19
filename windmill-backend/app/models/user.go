@@ -8,4 +8,13 @@ type User struct {
 	Username string
 	Email string
 	Password string
+	Relations Relationships
 }
+
+// Credentials struct
+type Credentials struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+

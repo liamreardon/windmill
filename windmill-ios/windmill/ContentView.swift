@@ -10,7 +10,16 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text("windmill: the looping video app")
+        ZStack {
+            Color(red: 0.00, green: 0.72, blue: 0.58, opacity: 1.00).edgesIgnoringSafeArea(.all)
+            VStack {
+                Text("welcome")
+                    .font(Font.custom("Pacifico-Regular", size: 40))
+                    .bold()
+                    .foregroundColor(.white)
+                
+            }
+        }
     }
 }
 

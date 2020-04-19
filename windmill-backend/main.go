@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/joho/godotenv"
-	"github.com/liamreardon/windmill-backend/app"
+	"github.com/liamreardon/windmill/windmill-backend/app"
 	"log"
 )
 

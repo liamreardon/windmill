@@ -4,7 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/gorilla/mux"
-	"github.com/liamreardon/windmill-backend/config"
+	"github.com/liamreardon/windmill/windmill-backend/app/handlers"
+	"github.com/liamreardon/windmill/windmill-backend/config"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -49,7 +50,9 @@ func (app *App) Init() {
 
 // Sets up routes
 func (app *App) setupRoutes() {
-	// Project routes
+	// Auth routes
+	app.Post("/api/login", handlers.Login)
+	app.Get("/api/welcome", handlers.Welcome)
 }
 
 // Run app on router

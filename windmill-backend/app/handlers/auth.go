@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
@@ -73,7 +74,7 @@ func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	//}
 	//w.Write([]byte(fmt.Sprintf("auth works", ok)))
 
-	res, err := services.ValidateAuthRequest(r)
+	res, err := services.ValidateSignupRequest(r)
 	if len(err) > 0 {
 		respondError(w, http.StatusInternalServerError, map[string]interface{}{
 			"message":"Invalid request body",
@@ -82,10 +83,23 @@ func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Check database
-	// . . .
-	fmt.Println(res)
+	collection := client.Database("windmill-master").Collection("Users")
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 
+	userExists, message := services.CheckUserExists(collection, ctx, res.Email, res.Username)
+	if userExists {
+		respondError(w, http.StatusConflict, map[string]interface{}{
+			"message":message,
+		})
+		return
+	}
+
+	error, result := services.SignUpUser(collection, ctx, res)
+	fmt.Println(error)
+	respondJSON(w, http.StatusCreated, map[string]interface{}{
+		"message":"Sign Up successful!",
+		"result":result,
+	})
 }
 
 func Welcome(client *mongo.Client, w http.ResponseWriter, r *http.Request) {

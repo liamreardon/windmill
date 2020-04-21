@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/liamreardon/windmill/windmill-backend/app/services"
@@ -30,30 +29,38 @@ var users = map[string]string{
 }
 
 func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
-	var creds Credentials
-	err := json.NewDecoder(r.Body).Decode(&creds)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+
+	res, err := services.ValidateLoginRequest(r)
+	if len(err) > 0 {
+		respondError(w, http.StatusBadRequest, map[string]interface{}{
+			"message":"Invalid request body",
+			"error":err,
+		})
 		return
 	}
 
-	expectedPassword, ok := users[creds.Username]
-	if !ok || expectedPassword != creds.Password {
-		w.WriteHeader(http.StatusUnauthorized)
+	collection := client.Database("windmill-master").Collection("Users")
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
+	user, e := services.GetUser(collection, ctx, res)
+	if len(e) > 0 {
+		respondError(w, http.StatusUnauthorized, map[string]interface{}{
+			"error":e,
+		})
 		return
 	}
 
 	expirationTime := time.Now().Add(5 * time.Minute)
 	claims := &Claims{
-		Username:       creds.Username,
+		Username:       user.Username,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtKey)
-	if err != nil {
+	tokenString, error := token.SignedString(jwtKey)
+	if error != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -76,7 +83,7 @@ func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 
 	res, err := services.ValidateSignupRequest(r)
 	if len(err) > 0 {
-		respondError(w, http.StatusInternalServerError, map[string]interface{}{
+		respondError(w, http.StatusBadRequest, map[string]interface{}{
 			"message":"Invalid request body",
 			"error":err,
 		})
@@ -94,8 +101,7 @@ func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	error, result := services.SignUpUser(collection, ctx, res)
-	fmt.Println(error)
+	_, result := services.SignUpUser(collection, ctx, res)
 	respondJSON(w, http.StatusCreated, map[string]interface{}{
 		"message":"Sign Up successful!",
 		"result":result,

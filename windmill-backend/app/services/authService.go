@@ -13,6 +13,7 @@ import (
 	//"net/http"
 )
 
+
 func CheckHashedPassword(password string, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
@@ -54,6 +55,16 @@ func SignUpUser(collection *mongo.Collection, ctx context.Context, data *models.
 	}
 	res, _ := collection.InsertOne(ctx, user)
 	return true, res
+}
+
+
+func GetUser(collection *mongo.Collection, ctx context.Context, creds *models.Credentials) (models.User, string){
+	var user models.User
+	collection.FindOne(ctx, bson.M{"username":creds.Username, "password":creds.Password}).Decode(&user)
+	if len(user.Username) == 0 {
+		return models.User{}, "That username and / or password don't match"
+	}
+	return user, ""
 }
 
 

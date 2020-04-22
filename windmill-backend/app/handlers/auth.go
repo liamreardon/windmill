@@ -13,19 +13,9 @@ import (
 // Create the JWT key used to create the signature
 var jwtKey = []byte("my_secret_key")
 
-type Credentials struct {
-	Password string `json:"password"`
-	Username string `json:"username"`
-}
-
 type Claims struct {
 	Username string `json:"username"`
 	jwt.StandardClaims
-}
-
-var users = map[string]string{
-	"user1": "password1",
-	"user2": "password2",
 }
 
 func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {

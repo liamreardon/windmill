@@ -10,8 +10,8 @@ func ValidateLoginRequest(r *http.Request) (*models.Credentials, map[string]inte
 	var creds models.Credentials
 
 	rules := govalidator.MapData{
-		"username": 	[]string{"required"},
-		"password":		[]string{"required"},
+		"username": 	{"required"},
+		"password":		{"required"},
 	}
 
 	opts := govalidator.Options{

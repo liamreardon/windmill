@@ -8,15 +8,10 @@
 
 import Foundation
 import UIKit
-import Alamofire
-import SwiftyJSON
-
 
 class AuthController: UIViewController {
     
-    let API_URL = "http://localhost:8080/api/auth"
-    let LOGIN = "/login"
-    let SIGNUP = "/signup"
+    let authManager = AuthManager()
     
     @IBOutlet var username: UITextField!
     @IBOutlet var password: UITextField!
@@ -33,17 +28,19 @@ class AuthController: UIViewController {
         view.addGestureRecognizer(tap)    }
     
     @IBAction func loginPressed(_ sender: Any) {
-        let credentials: [String:String] = [
+        let credentials: [String:Any] = [
             "username":username.text!,
             "password":password.text!
         ]
-        loginUser(url: API_URL+LOGIN, params: credentials)
+        
+        loginUser(params: credentials)
+
     }
     
-    func loginUser(url: String, params: [String:String]) {
-
-        print(url)
-        print(params)
+    func loginUser(params: [String:Any]) {
+    
+        authManager.login(params: params)
+       
     }
     
     //Calls this function when the tap is recognized.

@@ -60,6 +60,10 @@ func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		Value:      tokenString,
 		Expires:    expirationTime,
 	})
+
+	respondJSON(w, http.StatusCreated, map[string]interface{}{
+		"message":"Login successful!",
+	})
 }
 
 func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {

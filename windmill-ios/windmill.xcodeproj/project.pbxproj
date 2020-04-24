@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D34E05C52489BF6F94B57C8 /* Pods_windmill.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11BD33569450C8AE8A8CA855 /* Pods_windmill.framework */; };
 		6B881A582450C59F001466CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B881A572450C59F001466CB /* AppDelegate.swift */; };
 		6B881A5A2450C59F001466CB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B881A592450C59F001466CB /* SceneDelegate.swift */; };
 		6B881A5C2450C59F001466CB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B881A5B2450C59F001466CB /* ViewController.swift */; };
@@ -14,11 +15,16 @@
 		6B881A612450C5A0001466CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B881A602450C5A0001466CB /* Assets.xcassets */; };
 		6B881A642450C5A0001466CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B881A622450C5A0001466CB /* LaunchScreen.storyboard */; };
 		6B881A6E2450D5F8001466CB /* Pacifico-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B881A6D2450D5F8001466CB /* Pacifico-Regular.ttf */; };
+		6BB574F124526BFE0065B5CB /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BB574F024526BFE0065B5CB /* Environment.swift */; };
 		6BFEA97F2450F3A300181287 /* AuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFEA97E2450F3A300181287 /* AuthController.swift */; };
 		6BFEA989245133E100181287 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFEA988245133E100181287 /* AuthManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		11BD33569450C8AE8A8CA855 /* Pods_windmill.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_windmill.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1BDB754FB4236FCA07693311 /* Pods-windmill.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-windmill.debug.xcconfig"; path = "Target Support Files/Pods-windmill/Pods-windmill.debug.xcconfig"; sourceTree = "<group>"; };
+		42A45FAACBC6B2C0CD04BBDB /* Pods-windmill.debug (production).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-windmill.debug (production).xcconfig"; path = "Target Support Files/Pods-windmill/Pods-windmill.debug (production).xcconfig"; sourceTree = "<group>"; };
+		522504E802420F70C6D5FB8A /* Pods-windmill.debug (development).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-windmill.debug (development).xcconfig"; path = "Target Support Files/Pods-windmill/Pods-windmill.debug (development).xcconfig"; sourceTree = "<group>"; };
 		6B881A542450C59F001466CB /* windmill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = windmill.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B881A572450C59F001466CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6B881A592450C59F001466CB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -28,8 +34,17 @@
 		6B881A632450C5A0001466CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6B881A652450C5A0001466CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6B881A6D2450D5F8001466CB /* Pacifico-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pacifico-Regular.ttf"; sourceTree = "<group>"; };
+		6BB54ACE24525FB700BD4418 /* Development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Development.xcconfig; sourceTree = "<group>"; };
+		6BB54AD92452632A00BD4418 /* Staging.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Staging.xcconfig; sourceTree = "<group>"; };
+		6BB54ADA2452633A00BD4418 /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
+		6BB574F024526BFE0065B5CB /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		6BFEA97E2450F3A300181287 /* AuthController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthController.swift; sourceTree = "<group>"; };
 		6BFEA988245133E100181287 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		79D76D8B6AF06C8E36D80302 /* Pods-windmill.debug (staging).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-windmill.debug (staging).xcconfig"; path = "Target Support Files/Pods-windmill/Pods-windmill.debug (staging).xcconfig"; sourceTree = "<group>"; };
+		8A33283209E1F975D641D025 /* Pods-windmill.release (production).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-windmill.release (production).xcconfig"; path = "Target Support Files/Pods-windmill/Pods-windmill.release (production).xcconfig"; sourceTree = "<group>"; };
+		9FE6E7F7A9F848A549273FD1 /* Pods-windmill.release (development).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-windmill.release (development).xcconfig"; path = "Target Support Files/Pods-windmill/Pods-windmill.release (development).xcconfig"; sourceTree = "<group>"; };
+		A1784A103F842668AE4FF3CF /* Pods-windmill.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-windmill.release.xcconfig"; path = "Target Support Files/Pods-windmill/Pods-windmill.release.xcconfig"; sourceTree = "<group>"; };
+		C8CC1F2B4CB98E38FCF61B0C /* Pods-windmill.release (staging).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-windmill.release (staging).xcconfig"; path = "Target Support Files/Pods-windmill/Pods-windmill.release (staging).xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +52,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D34E05C52489BF6F94B57C8 /* Pods_windmill.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +62,7 @@
 		552E72D37D648828B003D76D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				11BD33569450C8AE8A8CA855 /* Pods_windmill.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -56,6 +73,7 @@
 				6B881A562450C59F001466CB /* windmill */,
 				6B881A552450C59F001466CB /* Products */,
 				552E72D37D648828B003D76D /* Frameworks */,
+				B0B6A2D5712E53957A5AD7F4 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -70,6 +88,7 @@
 		6B881A562450C59F001466CB /* windmill */ = {
 			isa = PBXGroup;
 			children = (
+				6BB54ACC24525F2300BD4418 /* Config */,
 				6BFEA9792450F2AF00181287 /* Models */,
 				6BFEA9782450F26600181287 /* Controllers */,
 				6BFEA9772450F25300181287 /* Views */,
@@ -97,6 +116,17 @@
 				6B881A6D2450D5F8001466CB /* Pacifico-Regular.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		6BB54ACC24525F2300BD4418 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				6BB54ACE24525FB700BD4418 /* Development.xcconfig */,
+				6BB54AD92452632A00BD4418 /* Staging.xcconfig */,
+				6BB54ADA2452633A00BD4418 /* Production.xcconfig */,
+				6BB574F024526BFE0065B5CB /* Environment.swift */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 		6BFEA9772450F25300181287 /* Views */ = {
@@ -140,6 +170,21 @@
 			path = Auth;
 			sourceTree = "<group>";
 		};
+		B0B6A2D5712E53957A5AD7F4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1BDB754FB4236FCA07693311 /* Pods-windmill.debug.xcconfig */,
+				A1784A103F842668AE4FF3CF /* Pods-windmill.release.xcconfig */,
+				522504E802420F70C6D5FB8A /* Pods-windmill.debug (development).xcconfig */,
+				79D76D8B6AF06C8E36D80302 /* Pods-windmill.debug (staging).xcconfig */,
+				42A45FAACBC6B2C0CD04BBDB /* Pods-windmill.debug (production).xcconfig */,
+				9FE6E7F7A9F848A549273FD1 /* Pods-windmill.release (development).xcconfig */,
+				C8CC1F2B4CB98E38FCF61B0C /* Pods-windmill.release (staging).xcconfig */,
+				8A33283209E1F975D641D025 /* Pods-windmill.release (production).xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -147,9 +192,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6B881A682450C5A0001466CB /* Build configuration list for PBXNativeTarget "windmill" */;
 			buildPhases = (
+				FBA23F2CBA2EDDB6638EE6DA /* [CP] Check Pods Manifest.lock */,
 				6B881A502450C59F001466CB /* Sources */,
 				6B881A512450C59F001466CB /* Frameworks */,
 				6B881A522450C59F001466CB /* Resources */,
+				41033195DC11E8CDCFAAAF2B /* [CP] Embed Pods Frameworks */,
+				18D97D19CB364A796849FCF4 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -207,12 +255,72 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		18D97D19CB364A796849FCF4 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-windmill/Pods-windmill-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-windmill/Pods-windmill-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-windmill/Pods-windmill-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		41033195DC11E8CDCFAAAF2B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-windmill/Pods-windmill-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-windmill/Pods-windmill-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-windmill/Pods-windmill-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FBA23F2CBA2EDDB6638EE6DA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-windmill-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		6B881A502450C59F001466CB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				6B881A5C2450C59F001466CB /* ViewController.swift in Sources */,
+				6BB574F124526BFE0065B5CB /* Environment.swift in Sources */,
 				6BFEA97F2450F3A300181287 /* AuthController.swift in Sources */,
 				6B881A582450C59F001466CB /* AppDelegate.swift in Sources */,
 				6B881A5A2450C59F001466CB /* SceneDelegate.swift in Sources */,
@@ -242,8 +350,9 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		6B881A662450C5A0001466CB /* Debug */ = {
+		6B881A662450C5A0001466CB /* Debug (Development) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6BB54ACE24525FB700BD4418 /* Development.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -300,10 +409,266 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
-			name = Debug;
+			name = "Debug (Development)";
 		};
-		6B881A672450C5A0001466CB /* Release */ = {
+		6B881A672450C5A0001466CB /* Release (Development) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6BB54ACE24525FB700BD4418 /* Development.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release (Development)";
+		};
+		6B881A692450C5A0001466CB /* Debug (Development) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 522504E802420F70C6D5FB8A /* Pods-windmill.debug (development).xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2EC9AK89JE;
+				INFOPLIST_FILE = windmill/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.liamreardon.windmill.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug (Development)";
+		};
+		6B881A6A2450C5A0001466CB /* Release (Development) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9FE6E7F7A9F848A549273FD1 /* Pods-windmill.release (development).xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2EC9AK89JE;
+				INFOPLIST_FILE = windmill/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.liamreardon.windmill.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Release (Development)";
+		};
+		6BB54ACF245260A900BD4418 /* Debug (Production) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6BB54ADA2452633A00BD4418 /* Production.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = "Debug (Production)";
+		};
+		6BB54AD0245260A900BD4418 /* Debug (Production) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 42A45FAACBC6B2C0CD04BBDB /* Pods-windmill.debug (production).xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2EC9AK89JE;
+				INFOPLIST_FILE = windmill/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.liamreardon.windmill.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug (Production)";
+		};
+		6BB54AD1245260AF00BD4418 /* Debug (Staging) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6BB54AD92452632A00BD4418 /* Staging.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = "Debug (Staging)";
+		};
+		6BB54AD2245260AF00BD4418 /* Debug (Staging) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 79D76D8B6AF06C8E36D80302 /* Pods-windmill.debug (staging).xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2EC9AK89JE;
+				INFOPLIST_FILE = windmill/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = io.liamreardon.windmill.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug (Staging)";
+		};
+		6BB54AD5245260E800BD4418 /* Release (Staging) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6BB54AD92452632A00BD4418 /* Staging.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -354,10 +719,11 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
-			name = Release;
+			name = "Release (Staging)";
 		};
-		6B881A692450C5A0001466CB /* Debug */ = {
+		6BB54AD6245260E800BD4418 /* Release (Staging) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C8CC1F2B4CB98E38FCF61B0C /* Pods-windmill.release (staging).xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -367,15 +733,71 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.liamreardon.windmill;
+				PRODUCT_BUNDLE_IDENTIFIER = io.liamreardon.windmill.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Debug;
+			name = "Release (Staging)";
 		};
-		6B881A6A2450C5A0001466CB /* Release */ = {
+		6BB54AD7245260EB00BD4418 /* Release (Production) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6BB54ADA2452633A00BD4418 /* Production.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release (Production)";
+		};
+		6BB54AD8245260EB00BD4418 /* Release (Production) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8A33283209E1F975D641D025 /* Pods-windmill.release (production).xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -385,12 +807,12 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.liamreardon.windmill;
+				PRODUCT_BUNDLE_IDENTIFIER = io.liamreardon.windmill.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Release;
+			name = "Release (Production)";
 		};
 /* End XCBuildConfiguration section */
 
@@ -398,20 +820,28 @@
 		6B881A4F2450C59F001466CB /* Build configuration list for PBXProject "windmill" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6B881A662450C5A0001466CB /* Debug */,
-				6B881A672450C5A0001466CB /* Release */,
+				6B881A662450C5A0001466CB /* Debug (Development) */,
+				6BB54AD1245260AF00BD4418 /* Debug (Staging) */,
+				6BB54ACF245260A900BD4418 /* Debug (Production) */,
+				6B881A672450C5A0001466CB /* Release (Development) */,
+				6BB54AD5245260E800BD4418 /* Release (Staging) */,
+				6BB54AD7245260EB00BD4418 /* Release (Production) */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release (Development)";
 		};
 		6B881A682450C5A0001466CB /* Build configuration list for PBXNativeTarget "windmill" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6B881A692450C5A0001466CB /* Debug */,
-				6B881A6A2450C5A0001466CB /* Release */,
+				6B881A692450C5A0001466CB /* Debug (Development) */,
+				6BB54AD2245260AF00BD4418 /* Debug (Staging) */,
+				6BB54AD0245260A900BD4418 /* Debug (Production) */,
+				6B881A6A2450C5A0001466CB /* Release (Development) */,
+				6BB54AD6245260E800BD4418 /* Release (Staging) */,
+				6BB54AD8245260EB00BD4418 /* Release (Production) */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release (Development)";
 		};
 /* End XCConfigurationList section */
 	};

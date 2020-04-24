@@ -62,7 +62,7 @@ func GetUser(collection *mongo.Collection, ctx context.Context, creds *models.Cr
 	var user models.User
 	collection.FindOne(ctx, bson.M{"username":creds.Username, "password":creds.Password}).Decode(&user)
 	if len(user.Username) == 0 {
-		return models.User{}, "That username and / or password don't match"
+		return models.User{}, "Username and password do not match"
 	}
 	return user, ""
 }

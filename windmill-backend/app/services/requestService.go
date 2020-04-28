@@ -6,17 +6,16 @@ import (
 	"net/http"
 )
 
-func ValidateLoginRequest(r *http.Request) (*models.Credentials, map[string]interface{}) {
-	var creds models.Credentials
+func ValidateLoginRequest(r *http.Request) (models.GoogleToken, map[string]interface{}) {
+	var token models.GoogleToken
 
 	rules := govalidator.MapData{
-		"username": 	{"required"},
-		"password":		{"required"},
+		"tokenId": 	{"required"},
 	}
 
 	opts := govalidator.Options{
 		Request: r,
-		Data:    &creds,
+		Data:    &token,
 		Rules:   rules,
 		RequiredDefault: true,
 	}
@@ -26,21 +25,17 @@ func ValidateLoginRequest(r *http.Request) (*models.Credentials, map[string]inte
 
 	if len(e) > 0 {
 		err := map[string]interface{}{"validationError": e}
-		return &creds, err
+		return token, err
 	}
 
-	return &creds, map[string]interface{}{}
+	return token, map[string]interface{}{}
 }
 
 func ValidateSignupRequest(r *http.Request) (*models.User, map[string]interface{}) {
 	var user models.User
 
 	rules := govalidator.MapData{
-		"firstName":     {"required"},
-		"lastName": 	{"required"},
-		"email":		{"required"},
 		"username": 	{"required"},
-		"password":		{"required"},
 	}
 
 	opts := govalidator.Options{

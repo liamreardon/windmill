@@ -28,21 +28,35 @@ func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	collection := client.Database("windmill-master").Collection("Users")
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-
-	user, e := services.GetUser(collection, ctx, res)
-	if len(e) > 0 {
-		respondError(w, http.StatusUnauthorized, map[string]interface{}{
-			"error":e,
+	info, error := services.VerifyGoogleToken(res.TokenId)
+	if error != nil {
+		respondError(w, http.StatusBadRequest, map[string]interface{}{
+			"message":"Token could not be verified",
+			"error":error,
 		})
 		return
 	}
 
+	collection := client.Database("windmill-master").Collection("Users")
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
+	user, e := services.GetUser(collection, ctx, res, info)
+
+	// Send user to username creation page
+	if len(e) > 0 {
+		respondJSON(w, http.StatusCreated, map[string]interface{}{
+			"message":e,
+			"authFlag": "1",
+		})
+		return
+	}
+
+	// Login user - redirect to homepage
 	services.GenerateToken(user, w)
 
 	respondJSON(w, http.StatusCreated, map[string]interface{}{
 		"message":"Login successful!",
+		"authFlag": "2",
 	})
 }
 
@@ -67,18 +81,19 @@ func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	collection := client.Database("windmill-master").Collection("Users")
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 
-	userExists, message := services.CheckUserExists(collection, ctx, res.Email, res.Username)
+	userExists, message := services.CheckUserExists(collection, ctx, res.Username)
 	if userExists {
 		respondError(w, http.StatusConflict, map[string]interface{}{
-			"message":message,
+			"message":message["result"],
+			"available":false,
 		})
 		return
 	}
 
-	_, result := services.SignUpUser(collection, ctx, res)
+	//_, result := services.SignUpUser(collection, ctx, res)
 	respondJSON(w, http.StatusCreated, map[string]interface{}{
-		"message":"Sign Up successful!",
-		"result":result,
+		"message":"username available",
+		"available":true,
 	})
 }
 
@@ -116,3 +131,4 @@ func Welcome(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 
 	w.Write([]byte(fmt.Sprintf("Welcome %s!", claims.Username)))
 }
+

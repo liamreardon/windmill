@@ -9,7 +9,7 @@
 import UIKit
 import GoogleSignIn
 
-class ViewController: UIViewController {
+class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +29,10 @@ class ViewController: UIViewController {
         googleSignOut.addTarget(self, action: #selector(self.signOut(_:)), for: .touchUpInside)
         self.view.addSubview(googleSignOut)
             
+    }
+    
+    func goToUsernameCreation() {
+        performSegue(withIdentifier: "usernameCreation", sender: self)
     }
     
     @objc func signOut(_ sender: UIButton) {

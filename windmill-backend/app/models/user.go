@@ -7,11 +7,12 @@ import (
 // User struct
 type User struct {
 	UserId uuid.UUID `json:"userId"`
+	UserToken GoogleToken `json:"userToken"`
 	FirstName string `json:"firstName"`
 	LastName string `json:"lastName"`
 	Username string `json:"username"`
 	Email string `json:"email"`
-	Password string `json:"password"`
+	Verified bool `json:"verified"`
 	Relations Relationships `json:"relations"`
 }
 
@@ -20,5 +21,12 @@ type Credentials struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
+
+// Google Token Struct
+type GoogleToken struct {
+	TokenId string `json:"tokenId"`
+}
+
+
 
 

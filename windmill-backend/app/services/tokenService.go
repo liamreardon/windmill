@@ -4,9 +4,12 @@ package services
 import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/liamreardon/windmill/windmill-backend/app/models"
+	"google.golang.org/api/oauth2/v2"
 	"net/http"
 	"time"
 )
+
+var httpClient = &http.Client{}
 
 // Create the JWT key used to create the signature
 var jwtKey = []byte("my_secret_key")
@@ -40,3 +43,13 @@ func GenerateToken(user models.User, w http.ResponseWriter) {
 	})
 }
 
+func VerifyGoogleToken(idToken string) (*oauth2.Tokeninfo, error) {
+	oauth2Service, err := oauth2.New(httpClient)
+	tokenInfoCall := oauth2Service.Tokeninfo()
+	tokenInfoCall.IdToken(idToken)
+	tokenInfo, err := tokenInfoCall.Do()
+	if err != nil {
+		return nil, err
+	}
+	return tokenInfo, nil
+}

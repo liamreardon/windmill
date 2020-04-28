@@ -59,8 +59,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         let email = user.profile.email
         // ...
         let dict = ["tokenId":idToken]
-        let authManger = AuthManager()
-        authManger.login(params: dict)
+        let defaults = UserDefaults.standard
+        defaults.set(idToken, forKey: "token")
+        let authManager = AuthManager()
+        authManager.login(params: dict)
         
     }
     
@@ -68,6 +70,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
               withError error: Error!) {
       // Perform any operations when the user disconnects from app here.
       // ...
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "token")
     }
     
     
@@ -90,4 +94,5 @@ extension UIApplication {
         return viewController
     }
 }
+
 

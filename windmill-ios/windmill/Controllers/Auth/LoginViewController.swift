@@ -20,14 +20,6 @@ class LoginViewController: UIViewController {
         let googleSignIn = GIDSignInButton(frame: CGRect(x: 0, y: 0, width: 230, height: 48))
         googleSignIn.center = view.center
         view.addSubview(googleSignIn)
-        
-        let googleSignOut = UIButton(frame: CGRect(x: 50, y: 50, width: 100, height: 30))
-        googleSignOut.backgroundColor = UIColor.red
-        googleSignOut.setTitle("Sign Out", for: .normal)
-        googleSignOut.center = view.center
-        googleSignOut.center.y = view.center.y + 100
-        googleSignOut.addTarget(self, action: #selector(self.signOut(_:)), for: .touchUpInside)
-        self.view.addSubview(googleSignOut)
             
     }
     

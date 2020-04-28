@@ -8,8 +8,7 @@ import (
 type User struct {
 	UserId uuid.UUID `json:"userId"`
 	UserToken GoogleToken `json:"userToken"`
-	FirstName string `json:"firstName"`
-	LastName string `json:"lastName"`
+	DisplayName string `json:"firstName"`
 	Username string `json:"username"`
 	Email string `json:"email"`
 	Verified bool `json:"verified"`

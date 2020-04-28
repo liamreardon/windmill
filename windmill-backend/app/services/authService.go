@@ -35,12 +35,18 @@ func CheckUserExists(collection *mongo.Collection, ctx context.Context, username
 }
 
 func SignUpUser(collection *mongo.Collection, ctx context.Context, data *models.User) (bool, *mongo.InsertOneResult) {
+	info, err := VerifyGoogleToken(data.UserToken.TokenId)
+	if err != nil {
+		return false, nil
+	}
+
 	user := models.User{
-		UserId:    uuid.New(),
-		FirstName: data.FirstName,
-		LastName:  data.LastName,
+		UserId:    uuid.UUID{},
+		UserToken: data.UserToken,
+		DisplayName: "",
 		Username:  data.Username,
-		Email:     data.Email,
+		Email:     info.Email,
+		Verified:  false,
 		Relations: models.Relationships{},
 	}
 	res, _ := collection.InsertOne(ctx, user)
@@ -55,8 +61,7 @@ func GetUser(collection *mongo.Collection, ctx context.Context, token models.Goo
 		return models.User{
 			UserId:    uuid.New(),
 			UserToken: token,
-			FirstName: "",
-			LastName:  "",
+			DisplayName: "",
 			Username:  "",
 			Email:     info.Email,
 			Verified:  false,

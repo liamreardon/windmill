@@ -18,6 +18,7 @@ struct AuthManager {
     let API_URL = "http://localhost:8080/api/auth"
     let LOGIN = "/login"
     let SIGNUP = "/signup"
+    let CHECK_USER = "/users"
     
     let loginViewController = LoginViewController()
     
@@ -50,6 +51,7 @@ struct AuthManager {
                 
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any] {
+
                         if json["authFlag"] as? String == "1" {
                             // Redirect user to username creation
                             DispatchQueue.main.async {
@@ -61,6 +63,13 @@ struct AuthManager {
                         }
                         else {
                             // Login user
+                            DispatchQueue.main.async {
+                                
+                                let storyboard = UIStoryboard(name: "WindmillMain", bundle: nil)
+                                let vc = storyboard.instantiateViewController(withIdentifier: "windmillHome") as UIViewController
+                                vc.modalPresentationStyle = .fullScreen
+                                UIApplication.topViewController()?.present(vc, animated: true, completion: nil)
+                            }
                         }
                     }
                 } catch let error {
@@ -72,7 +81,7 @@ struct AuthManager {
             
     }
     
-    func checkUsername(username:[String:String]) -> ([String:Any]) {
+    func checkUsername(data:[String:Any]) -> ([String:Any]) {
         
         let semaphore = DispatchSemaphore(value: 0)
         var result: ([String:Any]) = (["":""])
@@ -85,11 +94,14 @@ struct AuthManager {
             request.httpMethod = "POST"
             
             do {
-                request.httpBody = try JSONSerialization.data(withJSONObject: username, options: .prettyPrinted)
+                request.httpBody = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
             } catch let error {
                 result = (["error":error.localizedDescription])
                 print(error.localizedDescription)
             }
+            
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
             
             let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
                 guard error == nil else {
@@ -104,7 +116,9 @@ struct AuthManager {
                 
                 do {
                     if let json = try JSONSerialization.jsonObject(with: data, options: .mutableContainers) as? [String:Any] {
-                         result = (json)
+                        
+                        result = json
+                        
                      }
                 } catch let error {
                     result = (["error":error.localizedDescription])

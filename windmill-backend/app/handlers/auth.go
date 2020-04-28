@@ -44,8 +44,9 @@ func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 
 	// Send user to username creation page
 	if len(e) > 0 {
-		respondJSON(w, http.StatusCreated, map[string]interface{}{
+		respondJSON(w, http.StatusOK, map[string]interface{}{
 			"message":e,
+			"tokenId":user.UserToken.TokenId,
 			"authFlag": "1",
 		})
 		return
@@ -54,20 +55,13 @@ func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	// Login user - redirect to homepage
 	services.GenerateToken(user, w)
 
-	respondJSON(w, http.StatusCreated, map[string]interface{}{
+	respondJSON(w, http.StatusOK ,map[string]interface{}{
 		"message":"Login successful!",
 		"authFlag": "2",
 	})
 }
 
 func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
-	//hash := "$2a$14$ajq8Q7fbtFRQvXpdCq7Jcuy.Rx1h/L4J60Otx.gyNLbAYctGMJ9tK"
-	//ok := services.CheckHashedPassword("secret", hash)
-	//if !ok {
-	//	w.WriteHeader(http.StatusUnauthorized)
-	//	return
-	//}
-	//w.Write([]byte(fmt.Sprintf("auth works", ok)))
 
 	res, err := services.ValidateSignupRequest(r)
 	if len(err) > 0 {
@@ -90,7 +84,15 @@ func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//_, result := services.SignUpUser(collection, ctx, res)
+	result, _ := services.SignUpUser(collection, ctx, res)
+	if result {
+		respondError(w, http.StatusInternalServerError, map[string]interface{}{
+			"message":"error connecting to database",
+			"available":false,
+		})
+		return
+	}
+
 	respondJSON(w, http.StatusCreated, map[string]interface{}{
 		"message":"username available",
 		"available":true,

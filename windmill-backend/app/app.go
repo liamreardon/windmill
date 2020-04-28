@@ -50,10 +50,12 @@ func (app *App) Init() {
 
 // Sets up routes
 func (app *App) setupRoutes() {
+
 	// Auth routes
 	app.Post("/api/auth/login", app.handleRequest(handlers.Login))
 	app.Post("/api/auth/signup", app.handleRequest(handlers.SignUp))
 	app.Get("/api/auth/welcome", app.handleRequest(handlers.Welcome))
+
 }
 
 // Run app on router

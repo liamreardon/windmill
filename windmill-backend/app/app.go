@@ -56,6 +56,9 @@ func (app *App) setupRoutes() {
 	app.Post("/api/auth/signup", app.handleRequest(handlers.SignUp))
 	app.Get("/api/auth/welcome", app.handleRequest(handlers.Welcome))
 
+	// User Routes
+	app.Put("/api/user/{username}/dp", app.handleRequest(handlers.UpdateDisplayPicture))
+
 }
 
 // Run app on router

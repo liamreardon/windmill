@@ -30,8 +30,8 @@ func GenerateToken(user models.User, w http.ResponseWriter) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, error := token.SignedString(jwtKey)
-	if error != nil {
+	tokenString, err := token.SignedString(jwtKey)
+	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

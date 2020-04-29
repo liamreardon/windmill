@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/liamreardon/windmill/windmill-backend/app/services"
+	"github.com/liamreardon/windmill/windmill-backend/app/services/aws"
 	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
 	"time"
@@ -19,20 +20,21 @@ var jwtKey = []byte("my_secret_key")
 
 func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 
+	aws.UpdateDisplayPicture()
+
 	res, err := services.ValidateLoginRequest(r)
-	if len(err) > 0 {
+	if err != nil {
 		respondError(w, http.StatusBadRequest, map[string]interface{}{
-			"message":"Invalid request body",
 			"error":err,
 		})
 		return
 	}
 
-	info, error := services.VerifyGoogleToken(res.TokenId)
-	if error != nil {
+	info, err := services.VerifyGoogleToken(res.TokenId)
+	if err != nil {
 		respondError(w, http.StatusBadRequest, map[string]interface{}{
 			"message":"Token could not be verified",
-			"error":error,
+			"error":err,
 		})
 		return
 	}
@@ -64,9 +66,8 @@ func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 
 	res, err := services.ValidateSignupRequest(r)
-	if len(err) > 0 {
+	if err != nil {
 		respondError(w, http.StatusBadRequest, map[string]interface{}{
-			"message":"Invalid request body",
 			"error":err,
 		})
 		return

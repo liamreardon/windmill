@@ -4,9 +4,10 @@ import (
 	"github.com/liamreardon/windmill/windmill-backend/app/models"
 	"github.com/thedevsaddam/govalidator"
 	"net/http"
+	"errors"
 )
 
-func ValidateLoginRequest(r *http.Request) (models.GoogleToken, map[string]interface{}) {
+func ValidateLoginRequest(r *http.Request) (models.GoogleToken, error) {
 	var token models.GoogleToken
 
 	rules := govalidator.MapData{
@@ -24,14 +25,13 @@ func ValidateLoginRequest(r *http.Request) (models.GoogleToken, map[string]inter
 	e := v.ValidateJSON()
 
 	if len(e) > 0 {
-		err := map[string]interface{}{"validationError": e}
-		return token, err
+		return token, errors.New("Invalid request body")
 	}
 
-	return token, map[string]interface{}{}
+	return token, nil
 }
 
-func ValidateSignupRequest(r *http.Request) (*models.User, map[string]interface{}) {
+func ValidateSignupRequest(r *http.Request) (*models.User, error) {
 	var user models.User
 
 	rules := govalidator.MapData{
@@ -49,9 +49,9 @@ func ValidateSignupRequest(r *http.Request) (*models.User, map[string]interface{
 	e := v.ValidateJSON()
 
 	if len(e) > 0 {
-		err := map[string]interface{}{"validationError": e}
+		err := errors.New("Invalid request body")
 		return &user, err
 	}
 
-	return &user, map[string]interface{}{}
+	return &user, nil
 }

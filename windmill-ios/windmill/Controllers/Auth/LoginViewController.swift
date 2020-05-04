@@ -23,10 +23,6 @@ class LoginViewController: UIViewController {
             
     }
     
-    func goToUsernameCreation() {
-        performSegue(withIdentifier: "usernameCreation", sender: self)
-    }
-    
     @objc func signOut(_ sender: UIButton) {
         print("signing out...")
         GIDSignIn.sharedInstance()?.signOut()

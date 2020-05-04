@@ -8,18 +8,13 @@
 
 import Foundation
 import UIKit
-
-enum NetworkError: Error {
-    case badURL
-}
+import SwiftKeychainWrapper
 
 struct AuthManager {
     
     let API_URL = "http://localhost:8080/api/auth"
     let LOGIN = "/login"
     let SIGNUP = "/signup"
-    
-    let loginViewController = LoginViewController()
     
     func login(params: [String:Any]) {
         
@@ -63,7 +58,10 @@ struct AuthManager {
                         else {
                             // Login user
                             DispatchQueue.main.async {
-                                
+                                let username = json["username"] as! String
+                                let userId = json["userId"] as! String
+                                KeychainWrapper.standard.set(username, forKey: "username")
+                                KeychainWrapper.standard.set(userId, forKey: "userId")
                                 let storyboard = UIStoryboard(name: "WindmillMain", bundle: nil)
                                 let vc = storyboard.instantiateViewController(withIdentifier: "windmillHome") as UIViewController
                                 vc.modalPresentationStyle = .fullScreen
@@ -80,7 +78,7 @@ struct AuthManager {
             
     }
     
-    func checkUsername(data:[String:Any]) -> ([String:Any]) {
+    func signup(data:[String:Any]) -> ([String:Any]) {
         
         let semaphore = DispatchSemaphore(value: 0)
         var result: ([String:Any]) = (["":""])

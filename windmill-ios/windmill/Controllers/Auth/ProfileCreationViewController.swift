@@ -1,19 +1,20 @@
 //
-//  ProfileCreation.swift
+//  ProfileCreationViewController.swift
 //  windmill
 //
-//  Created by Liam  on 2020-04-27.
+//  Created by Liam  on 2020-04-30.
 //  Copyright © 2020 Liam Reardon. All rights reserved.
 //
 
 import Foundation
 import UIKit
+import SwiftKeychainWrapper
 
 class ProfileCreationViewController: UIViewController {
     
     let authManager = AuthManager()
+    let uploadManager = UploadManager()
     var imagePicker: ImagePicker!
-    let defaults = UserDefaults.standard
     
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var profilePictureImageView: UIImageView!
@@ -25,16 +26,20 @@ class ProfileCreationViewController: UIViewController {
     
     @IBAction func setUsername(_ sender: Any) {
         
-        if let tokenId = defaults.string(forKey: "token") {
+        if let tokenId = KeychainWrapper.standard.string(forKey: "token") {
             let data: [String:Any] = [
                 "username":usernameTextField.text!,
                 "userToken": ["tokenId": tokenId]
             ]
             
-            let result = authManager.checkUsername(data: data)
+            let result = authManager.signup(data: data)
             
             if result["available"] as? Int == 1 {
                 // Username available
+                let username = usernameTextField.text!
+                let userId = result["userId"] as! String
+                KeychainWrapper.standard.set(username, forKey: "username")
+                KeychainWrapper.standard.set(userId, forKey: "userId")
                 self.performSegue(withIdentifier: "toProfilePic", sender: nil)
                 
             }
@@ -63,5 +68,6 @@ extension ProfileCreationViewController: ImagePickerDelegate {
 
     func didSelect(image: UIImage?) {
         self.profilePictureImageView.image = image
+        uploadManager.uploadProfilePicture(image: profilePictureImageView.image!)
     }
 }

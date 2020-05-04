@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/liamreardon/windmill/windmill-backend/app/models"
 	"go.mongodb.org/mongo-driver/bson"
@@ -22,6 +23,7 @@ func CheckHashedPassword(password string, hash string) bool {
 func CheckUserExists(collection *mongo.Collection, ctx context.Context, username string) (bool, map[string]interface{}) {
 
 	err := collection.FindOne(ctx, bson.M{"username":username})
+	fmt.Println(err.Err())
 	if err.Err() == nil {
 		return true, map[string]interface{}{
 			"result":"username has been taken",
@@ -34,14 +36,14 @@ func CheckUserExists(collection *mongo.Collection, ctx context.Context, username
 	}
 }
 
-func SignUpUser(collection *mongo.Collection, ctx context.Context, data *models.User) (bool, *mongo.InsertOneResult) {
+func SignUpUser(collection *mongo.Collection, ctx context.Context, data *models.User) (bool, *mongo.InsertOneResult, uuid.UUID) {
 	info, err := VerifyGoogleToken(data.UserToken.TokenId)
 	if err != nil {
-		return false, nil
+		return false, nil, uuid.UUID{}
 	}
 
 	user := models.User{
-		UserId:    uuid.UUID{},
+		UserId:    uuid.New(),
 		UserToken: data.UserToken,
 		DisplayName: "",
 		Username:  data.Username,
@@ -50,7 +52,7 @@ func SignUpUser(collection *mongo.Collection, ctx context.Context, data *models.
 		Relations: models.Relationships{},
 	}
 	res, _ := collection.InsertOne(ctx, user)
-	return true, res
+	return true, res, user.UserId
 }
 
 

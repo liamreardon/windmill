@@ -57,7 +57,7 @@ func (app *App) setupRoutes() {
 	app.Get("/api/auth/welcome", app.handleRequest(handlers.Welcome))
 
 	// User Routes
-	app.Put("/api/user/{username}/dp", app.handleRequest(handlers.UpdateDisplayPicture))
+	app.Put("/api/user/{userId}/dp", app.handleRequest(handlers.UpdateDisplayPicture))
 
 }
 

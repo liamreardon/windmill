@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/liamreardon/windmill/windmill-backend/app/services"
-	"github.com/liamreardon/windmill/windmill-backend/app/services/aws"
 	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
 	"time"
@@ -19,8 +18,6 @@ type Claims struct {
 var jwtKey = []byte("my_secret_key")
 
 func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
-
-	aws.UpdateDisplayPicture()
 
 	res, err := services.ValidateLoginRequest(r)
 	if err != nil {
@@ -60,6 +57,8 @@ func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK ,map[string]interface{}{
 		"message":"Login successful!",
 		"authFlag": "2",
+		"username": user.Username,
+		"userId": user.UserId,
 	})
 }
 
@@ -85,8 +84,8 @@ func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, _ := services.SignUpUser(collection, ctx, res)
-	if result {
+	result, _, userId := services.SignUpUser(collection, ctx, res)
+	if !result {
 		respondError(w, http.StatusInternalServerError, map[string]interface{}{
 			"message":"error connecting to database",
 			"available":false,
@@ -97,6 +96,7 @@ func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusCreated, map[string]interface{}{
 		"message":"username available",
 		"available":true,
+		"userId":userId,
 	})
 }
 

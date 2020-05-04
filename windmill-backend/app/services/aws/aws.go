@@ -1,33 +1,86 @@
 package aws
 
 import (
+	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"os"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"mime/multipart"
+	"path"
 )
-func UpdateDisplayPicture() {
-	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String("us-east-2"),
-	})
 
-	svc := s3.New(sess)
+const (
+	AWS_S3_REGION = "us-east-2"
+	AWS_S3_BUCKET = "windmill-warehouse"
+)
 
-	result, err := svc.ListBuckets(nil)
+var sess = connectAWS()
+
+func connectAWS() *session.Session {
+	sess, err := session.NewSession(
+		&aws.Config{
+			Region: aws.String(AWS_S3_REGION),
+		})
+
 	if err != nil {
-		exitErrorf("Unable to list buckets, %v", err)
+		panic(err)
 	}
-
-	fmt.Println("Buckets: ")
-
-	for _, b := range result.Buckets {
-		fmt.Printf("* %s created on %s\n",
-			aws.StringValue(b.Name), aws.TimeValue(b.CreationDate))
-	}
+	return sess
 }
 
-func exitErrorf(msg string, args ...interface{}) {
-	fmt.Fprintf(os.Stderr, msg+"\n", args...)
-	os.Exit(1)
+func UpdateDisplayPicture(file multipart.File, filename string, username string) (string, error) {
+
+	listBuckets()
+
+	uploader := s3manager.NewUploader(sess)
+
+	_, err := uploader.Upload(&s3manager.UploadInput{
+		Bucket: aws.String(AWS_S3_BUCKET),
+		Key:    aws.String(path.Join("/users/" + username + "/profile", filename)),
+		Body:   file,
+	})
+
+	if err != nil {
+		// Do your error handling here
+		fmt.Println(err)
+		return "", errors.New("error uploading to server")
+	}
+
+	fmt.Println("success")
+	return "successful upload", nil
+
+}
+
+func listBuckets() {
+	svc := s3.New(sess)
+	input := &s3.ListObjectsInput{
+		Bucket: aws.String(AWS_S3_BUCKET),
+	}
+
+	result, err := svc.ListObjects(input)
+	if err != nil {
+		if aerr, ok := err.(awserr.Error); ok {
+			switch aerr.Code() {
+			case s3.ErrCodeNoSuchBucket:
+				fmt.Println(s3.ErrCodeNoSuchBucket, aerr.Error())
+			default:
+				fmt.Println(aerr.Error())
+			}
+		} else {
+			// Print the error, cast err to awserr.Error to get the Code and
+			// Message from an error.
+			fmt.Println(err.Error())
+		}
+		// Do your error handling here
+		return
+	}
+
+	for _, item := range result.Contents {
+		fmt.Println("<li>File %s</li>", *item.Key)
+	}
+
+
 }

@@ -10,7 +10,7 @@
         <!--Username Selection-->
         <scene sceneID="rC1-q1-lmM">
             <objects>
-                <viewController storyboardIdentifier="usernameCreation" id="oqc-fo-uhZ" userLabel="Username Selection" customClass="ProfileCreationViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="usernameCreation" id="oqc-fo-uhZ" userLabel="Username Selection" customClass="UserCreationViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="qhY-RC-Lwo">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -43,10 +43,10 @@
             </objects>
             <point key="canvasLocation" x="778" y="-248"/>
         </scene>
-        <!--Profile Creation View Controller-->
+        <!--User Creation View Controller-->
         <scene sceneID="8kn-zu-X2Y">
             <objects>
-                <viewController storyboardIdentifier="addProfilePic" id="SyZ-te-pNu" customClass="ProfileCreationViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="addProfilePic" id="SyZ-te-pNu" customClass="UserCreationViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="F4O-jM-ZiT">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

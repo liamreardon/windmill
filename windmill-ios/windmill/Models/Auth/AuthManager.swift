@@ -49,7 +49,7 @@ struct AuthManager {
                         if json["authFlag"] as? String == "1" {
                             // Redirect user to username creation
                             DispatchQueue.main.async {
-                                let storyboard = UIStoryboard(name: "ProfileCreation", bundle: nil)
+                                let storyboard = UIStoryboard(name: "UserCreation", bundle: nil)
                                 let vc = storyboard.instantiateViewController(withIdentifier: "usernameCreation") as UIViewController
                                 UIApplication.topViewController()?.present(vc, animated: true, completion: nil)
                             }
@@ -63,7 +63,7 @@ struct AuthManager {
                                 KeychainWrapper.standard.set(username, forKey: "username")
                                 KeychainWrapper.standard.set(userId, forKey: "userId")
                                 let storyboard = UIStoryboard(name: "WindmillMain", bundle: nil)
-                                let vc = storyboard.instantiateViewController(withIdentifier: "windmillHome") as UIViewController
+                                let vc = storyboard.instantiateViewController(withIdentifier: "tabBarController") as UIViewController
                                 vc.modalPresentationStyle = .fullScreen
                                 UIApplication.topViewController()?.present(vc, animated: true, completion: nil)
                             }

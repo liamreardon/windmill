@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import SwiftKeychainWrapper
 
-class ProfileCreationViewController: UIViewController {
+class UserCreationViewController: UIViewController {
     
     let authManager = AuthManager()
     let uploadManager = UploadManager()
@@ -64,7 +64,7 @@ class ProfileCreationViewController: UIViewController {
     
 }
 
-extension ProfileCreationViewController: ImagePickerDelegate {
+extension UserCreationViewController: ImagePickerDelegate {
 
     func didSelect(image: UIImage?) {
         self.profilePictureImageView.image = image

@@ -12,7 +12,7 @@ import SwiftKeychainWrapper
 
 struct AuthManager {
     
-    let API_URL = "http://localhost:8080/api/auth"
+    let API_URL = "http://liam.local:8080/api/auth"
     let LOGIN = "/login"
     let SIGNUP = "/signup"
     

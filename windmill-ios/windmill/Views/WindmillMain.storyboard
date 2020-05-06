@@ -26,7 +26,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="mUu-uC-uj5"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="90V-tc-By8"/>
+                    <tabBarItem key="tabBarItem" title="" image="house" catalog="system" id="90V-tc-By8"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o7x-AI-n2K" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -35,27 +35,28 @@
         <!--Record-->
         <scene sceneID="jZt-ms-TUg">
             <objects>
-                <viewController id="QlD-Sx-Gbs" userLabel="Record" sceneMemberID="viewController">
+                <viewController id="QlD-Sx-Gbs" userLabel="Record" customClass="RecordViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="E0c-zd-t6I">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="RECORD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ubj-nw-JMU">
-                                <rect key="frame" x="174" y="438" width="68" height="21"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FSW-5S-ggY">
+                                <rect key="frame" x="0.0" y="44" width="414" height="769"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="5V4-ir-3SN"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="P9c-vu-5bH"/>
+                    <tabBarItem key="tabBarItem" title="" image="circle" catalog="system" id="P9c-vu-5bH"/>
+                    <connections>
+                        <outlet property="recordView" destination="FSW-5S-ggY" id="GRZ-Vp-URS"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jLi-qg-Tl3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2122" y="-264"/>
+            <point key="canvasLocation" x="2121.739130434783" y="-264.50892857142856"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="kNn-Kb-LpP">
@@ -63,6 +64,7 @@
                 <tabBarController storyboardIdentifier="tabBarController" automaticallyAdjustsScrollViewInsets="NO" id="swj-9Y-wBB" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="T0D-Qi-yWX">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="selectedImageTintColor" red="0.0" green="0.72156862749999995" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -98,7 +100,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="PSn-dm-VZG"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="RjB-b1-Zsz"/>
+                    <tabBarItem key="tabBarItem" title="" image="bolt" catalog="system" id="RjB-b1-Zsz"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JpB-st-3RP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -123,7 +125,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="5ZN-4d-A90"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="meD-77-Y3d"/>
+                    <tabBarItem key="tabBarItem" title="" image="magnifyingglass" catalog="system" id="meD-77-Y3d"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Un-2v-HXw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -148,11 +150,18 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="uPA-aX-MBy"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="2SP-ch-q2b"/>
+                    <tabBarItem key="tabBarItem" title="" image="person" catalog="system" id="2SP-ch-q2b"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OFF-MR-u3p" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2122" y="1156"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="bolt" catalog="system" width="101" height="128"/>
+        <image name="circle" catalog="system" width="128" height="121"/>
+        <image name="house" catalog="system" width="128" height="110"/>
+        <image name="magnifyingglass" catalog="system" width="128" height="115"/>
+        <image name="person" catalog="system" width="128" height="117"/>
+    </resources>
 </document>

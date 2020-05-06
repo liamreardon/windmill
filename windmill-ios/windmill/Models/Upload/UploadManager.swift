@@ -12,7 +12,7 @@ import SwiftKeychainWrapper
 
 struct UploadManager {
     
-    let API_URL = "http://localhost:8080/api/user/"
+    let API_URL = "http://liam.local:8080/api/user/"
     let boundary = "Boundary-\(NSUUID().uuidString)"
     
     func uploadProfilePicture(image: UIImage) {
@@ -36,7 +36,6 @@ struct UploadManager {
                 let body = NSMutableData()
                 body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
                 body.append(NSString(format: "Content-Disposition: form-data; name=\"token\"\r\n\r\n" as NSString).data(using: String.Encoding.utf8.rawValue)!)
-                body.append(NSString(format: (UserDefaults.standard.string(forKey: "token")! as NSString)).data(using: String.Encoding.utf8.rawValue)!)
                 body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
                 body.append(NSString(format:"Content-Disposition: form-data; name=\"profile_img\"; filename=\"testfromios.jpg\"\r\n").data(using: String.Encoding.utf8.rawValue)!)
                 body.append(NSString(format: "Content-Type: application/octet-stream\r\n\r\n").data(using: String.Encoding.utf8.rawValue)!)
@@ -47,10 +46,10 @@ struct UploadManager {
 
                 let task = session.dataTask(with: request as URLRequest, completionHandler: {
                     (data, response, error) -> Void in
-                    if let data = data {
+                    if let _ = data {
                         DispatchQueue.main.async {
                            let storyboard = UIStoryboard(name: "WindmillMain", bundle: nil)
-                           let vc = storyboard.instantiateViewController(withIdentifier: "windmillHome") as UIViewController
+                           let vc = storyboard.instantiateViewController(withIdentifier: "tabBarController") as UIViewController
                            vc.modalPresentationStyle = .fullScreen
                            UIApplication.topViewController()?.present(vc, animated: true, completion: nil)
                         }

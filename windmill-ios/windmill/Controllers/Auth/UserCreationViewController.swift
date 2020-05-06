@@ -15,6 +15,7 @@ class UserCreationViewController: UIViewController {
     let authManager = AuthManager()
     let uploadManager = UploadManager()
     var imagePicker: ImagePicker!
+    var videoPicker: VideoPicker!
     
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var profilePictureImageView: UIImageView!
@@ -71,3 +72,4 @@ extension UserCreationViewController: ImagePickerDelegate {
         uploadManager.uploadProfilePicture(image: profilePictureImageView.image!)
     }
 }
+

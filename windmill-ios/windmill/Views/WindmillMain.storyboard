@@ -30,33 +30,65 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o7x-AI-n2K" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1010.144927536232" y="52.901785714285715"/>
+            <point key="canvasLocation" x="1142" y="53"/>
         </scene>
-        <!--Record-->
-        <scene sceneID="jZt-ms-TUg">
+        <!--Record View Controller-->
+        <scene sceneID="G3A-3P-V7L">
             <objects>
-                <viewController id="QlD-Sx-Gbs" userLabel="Record" customClass="RecordViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="E0c-zd-t6I">
+                <viewController id="dkE-k7-KM0" customClass="RecordViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="4dr-yT-6Vv">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FSW-5S-ggY">
-                                <rect key="frame" x="0.0" y="44" width="414" height="769"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <view contentMode="scaleAspectFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sDo-PF-CHD">
+                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="5V4-ir-3SN"/>
+                        <viewLayoutGuide key="safeArea" id="rL7-5f-XDb"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="circle" catalog="system" id="P9c-vu-5bH"/>
+                    <navigationItem key="navigationItem" id="yLf-Ud-1L3"/>
                     <connections>
-                        <outlet property="recordView" destination="FSW-5S-ggY" id="GRZ-Vp-URS"/>
+                        <outlet property="camPreview" destination="sDo-PF-CHD" id="Mfe-92-I7z"/>
+                        <segue destination="f8u-Rw-Mg1" kind="show" identifier="editVideo" id="jJn-Ay-ugb"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jLi-qg-Tl3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dQN-t0-EJu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2121.739130434783" y="-264.50892857142856"/>
+            <point key="canvasLocation" x="3031.884057971015" y="-274.55357142857139"/>
+        </scene>
+        <!--Video Edit View Controller-->
+        <scene sceneID="Ucz-T8-drv">
+            <objects>
+                <viewController storyboardIdentifier="editVideo" id="f8u-Rw-Mg1" customClass="VideoEditViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="pyG-8e-bP8">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fNL-d9-HlH">
+                                <rect key="frame" x="26" y="44" width="34" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Back"/>
+                            </button>
+                            <view contentMode="scaleAspectFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="U0T-xV-1wv">
+                                <rect key="frame" x="0.0" y="82" width="414" height="814"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="tUx-bF-YIF"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="kq2-ho-wsY"/>
+                    <connections>
+                        <outlet property="videoView" destination="U0T-xV-1wv" id="Gbc-yy-KTD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mGw-lA-hJc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3860.8695652173915" y="-275.22321428571428"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="kNn-Kb-LpP">
@@ -72,7 +104,7 @@
                     <connections>
                         <segue destination="Yaq-sO-9KS" kind="relationship" relationship="viewControllers" id="ngj-3B-wvJ"/>
                         <segue destination="zpP-cb-ia3" kind="relationship" relationship="viewControllers" id="gxt-5z-ujf"/>
-                        <segue destination="QlD-Sx-Gbs" kind="relationship" relationship="viewControllers" id="QhS-WC-yIF"/>
+                        <segue destination="mhF-n5-jl2" kind="relationship" relationship="viewControllers" id="maL-Jz-UM7"/>
                         <segue destination="hev-F6-qAl" kind="relationship" relationship="viewControllers" id="rK2-dh-YgA"/>
                         <segue destination="nAN-RM-oxA" kind="relationship" relationship="viewControllers" id="SaP-cn-72r"/>
                     </connections>
@@ -154,7 +186,26 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OFF-MR-u3p" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2122" y="1156"/>
+            <point key="canvasLocation" x="2122" y="1234"/>
+        </scene>
+        <!--Record-->
+        <scene sceneID="Jkm-3U-cX7">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="mhF-n5-jl2" userLabel="Record" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Record" image="circle" catalog="system" id="b5H-MC-eV2"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="KIn-cJ-Otp">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="dkE-k7-KM0" kind="relationship" relationship="rootViewController" id="lsI-cl-BbL"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="flq-xI-WrU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2121.739130434783" y="-274.55357142857139"/>
         </scene>
     </scenes>
     <resources>

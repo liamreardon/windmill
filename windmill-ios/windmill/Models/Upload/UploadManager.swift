@@ -58,9 +58,7 @@ struct UploadManager {
                         print(error.localizedDescription)
                     }
                 })
-
                 task.resume()
-
             }
         }
     }

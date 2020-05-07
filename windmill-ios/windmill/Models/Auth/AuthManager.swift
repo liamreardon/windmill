@@ -51,6 +51,7 @@ struct AuthManager {
                             DispatchQueue.main.async {
                                 let storyboard = UIStoryboard(name: "UserCreation", bundle: nil)
                                 let vc = storyboard.instantiateViewController(withIdentifier: "usernameCreation") as UIViewController
+                                vc.modalPresentationStyle = .fullScreen
                                 UIApplication.topViewController()?.present(vc, animated: true, completion: nil)
                             }
 

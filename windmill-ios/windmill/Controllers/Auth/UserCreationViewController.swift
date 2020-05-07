@@ -15,7 +15,6 @@ class UserCreationViewController: UIViewController {
     let authManager = AuthManager()
     let uploadManager = UploadManager()
     var imagePicker: ImagePicker!
-    var videoPicker: VideoPicker!
     
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var profilePictureImageView: UIImageView!
@@ -51,8 +50,6 @@ class UserCreationViewController: UIViewController {
                 self.present(alert, animated: true)
             }
         }
-        
-    
     }
     
     @IBAction func uploadImageTapped(_ sender: UIButton) {
@@ -60,7 +57,12 @@ class UserCreationViewController: UIViewController {
     }
     
     @IBAction func dismissUploadTapped(_ sender: Any) {
-        print("redirecting to home...")
+        DispatchQueue.main.async {
+           let storyboard = UIStoryboard(name: "WindmillMain", bundle: nil)
+           let vc = storyboard.instantiateViewController(withIdentifier: "tabBarController") as UIViewController
+           vc.modalPresentationStyle = .fullScreen
+           UIApplication.topViewController()?.present(vc, animated: true, completion: nil)
+        }
     }
     
 }

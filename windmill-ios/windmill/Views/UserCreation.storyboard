@@ -46,9 +46,9 @@
         <!--User Creation View Controller-->
         <scene sceneID="8kn-zu-X2Y">
             <objects>
-                <viewController storyboardIdentifier="addProfilePic" id="SyZ-te-pNu" customClass="UserCreationViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="addProfilePic" modalPresentationStyle="fullScreen" id="SyZ-te-pNu" customClass="UserCreationViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="F4O-jM-ZiT">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o2c-Ni-GeE">

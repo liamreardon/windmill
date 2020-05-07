@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		6B3008CD2457771F00960071 /* UserCreation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B3008CC2457771F00960071 /* UserCreation.storyboard */; };
 		6B37A9C324632AA700E4038C /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B37A9C224632AA700E4038C /* RecordViewController.swift */; };
-		6B37A9C52463309A00E4038C /* VideoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B37A9C42463309A00E4038C /* VideoPicker.swift */; };
+		6B37A9C7246490AF00E4038C /* VideoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B37A9C6246490AF00E4038C /* VideoEditViewController.swift */; };
 		6B5F538C245A9DB400A2610E /* UserCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5F538B245A9DB400A2610E /* UserCreationViewController.swift */; };
 		6B6D0C8F2461153900348955 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6D0C8E2461153900348955 /* ProfileViewController.swift */; };
 		6B84234D245A9AA40027EA1A /* UploadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B84234C245A9AA40027EA1A /* UploadManager.swift */; };
@@ -34,7 +34,7 @@
 		522504E802420F70C6D5FB8A /* Pods-windmill.debug (development).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-windmill.debug (development).xcconfig"; path = "Target Support Files/Pods-windmill/Pods-windmill.debug (development).xcconfig"; sourceTree = "<group>"; };
 		6B3008CC2457771F00960071 /* UserCreation.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = UserCreation.storyboard; sourceTree = "<group>"; };
 		6B37A9C224632AA700E4038C /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
-		6B37A9C42463309A00E4038C /* VideoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPicker.swift; sourceTree = "<group>"; };
+		6B37A9C6246490AF00E4038C /* VideoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditViewController.swift; sourceTree = "<group>"; };
 		6B5F538B245A9DB400A2610E /* UserCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCreationViewController.swift; sourceTree = "<group>"; };
 		6B6D0C8E2461153900348955 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		6B84234C245A9AA40027EA1A /* UploadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadManager.swift; sourceTree = "<group>"; };
@@ -87,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				6B37A9C224632AA700E4038C /* RecordViewController.swift */,
+				6B37A9C6246490AF00E4038C /* VideoEditViewController.swift */,
 			);
 			path = Record;
 			sourceTree = "<group>";
@@ -161,7 +162,6 @@
 			isa = PBXGroup;
 			children = (
 				6B8FBC102458ABE900C1CF26 /* ImagePicker.swift */,
-				6B37A9C42463309A00E4038C /* VideoPicker.swift */,
 			);
 			path = Media;
 			sourceTree = "<group>";
@@ -367,6 +367,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B37A9C7246490AF00E4038C /* VideoEditViewController.swift in Sources */,
 				6B881A5C2450C59F001466CB /* LoginViewController.swift in Sources */,
 				6BB574F124526BFE0065B5CB /* Environment.swift in Sources */,
 				6B6D0C8F2461153900348955 /* ProfileViewController.swift in Sources */,
@@ -376,7 +377,6 @@
 				6B8FBC112458ABE900C1CF26 /* ImagePicker.swift in Sources */,
 				6B881A5A2450C59F001466CB /* SceneDelegate.swift in Sources */,
 				6B5F538C245A9DB400A2610E /* UserCreationViewController.swift in Sources */,
-				6B37A9C52463309A00E4038C /* VideoPicker.swift in Sources */,
 				6B84234D245A9AA40027EA1A /* UploadManager.swift in Sources */,
 				6BFEA989245133E100181287 /* AuthManager.swift in Sources */,
 			);

@@ -64,10 +64,12 @@ func GetUser(collection *mongo.Collection, ctx context.Context, token models.Goo
 			UserId:    uuid.New(),
 			UserToken: token,
 			DisplayName: "",
+			DisplayPicture: "",
 			Username:  "",
 			Email:     info.Email,
 			Verified:  false,
 			Relations: models.Relationships{},
+			Posts: []models.Post{},
 		}, "redirecting to username creation..."
 	}
 	return user, ""

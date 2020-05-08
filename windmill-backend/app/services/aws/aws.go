@@ -31,27 +31,41 @@ func connectAWS() *session.Session {
 	return sess
 }
 
-func UpdateDisplayPicture(file multipart.File, filename string, username string) (string, error) {
-
-	listBuckets()
+func UpdateDisplayPicture(file multipart.File, filename string, userId string) (string, error) {
 
 	uploader := s3manager.NewUploader(sess)
 
 	_, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String(AWS_S3_BUCKET),
-		Key:    aws.String(path.Join("/users/" + username + "/profile", filename)),
+		Key:    aws.String(path.Join("/users/" + userId + "/profile", filename)),
 		Body:   file,
 	})
 
 	if err != nil {
 		// Do your error handling here
-		fmt.Println(err)
+		return "", errors.New("error uploading to server")
+	}
+
+	fmt.Println("success")
+	return "/users/" + userId + "/profile" + filename, nil
+}
+
+func UploadVideoToS3(file multipart.File, filename string, userId string) (string, error) {
+
+	uploader := s3manager.NewUploader(sess)
+
+	_, err := uploader.Upload(&s3manager.UploadInput{
+		Bucket: aws.String(AWS_S3_BUCKET),
+		Key:    aws.String(path.Join("/users/" + userId + "/videos", filename)),
+		Body:   file,
+	})
+
+	if err != nil {
 		return "", errors.New("error uploading to server")
 	}
 
 	fmt.Println("success")
 	return "successful upload", nil
-
 }
 
 func listBuckets() {

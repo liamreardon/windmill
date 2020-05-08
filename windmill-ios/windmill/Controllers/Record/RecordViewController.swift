@@ -25,6 +25,9 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     var activeInput: AVCaptureDeviceInput!
 
     var outputURL: URL!
+    
+    var screenHeight = UIScreen.main.bounds.size.height
+    var screenWidth = UIScreen.main.bounds.size.width
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,12 +43,17 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 
         cameraButton.addGestureRecognizer(cameraButtonRecognizer)
 
-        cameraButton.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        cameraButton.frame = CGRect(x: 50, y: screenHeight - 200, width: 100, height: 100)
+        cameraButton.center.x = self.view.center.x
 
         cameraButton.backgroundColor = UIColor.red
 
         camPreview.addSubview(cameraButton)
 
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
     }
 
     func setupPreview() {
@@ -102,7 +110,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 
     func setupCaptureMode(_ mode: Int) {
         // Video Mode
-
     }
 
     //MARK:- Camera Session

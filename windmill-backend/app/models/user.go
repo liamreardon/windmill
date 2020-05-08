@@ -9,10 +9,12 @@ type User struct {
 	UserId uuid.UUID `json:"userId"`
 	UserToken GoogleToken `json:"userToken"`
 	DisplayName string `json:"firstName"`
+	DisplayPicture string `json:"displayPicture"`
 	Username string `json:"username"`
 	Email string `json:"email"`
 	Verified bool `json:"verified"`
 	Relations Relationships `json:"relations"`
+	Posts []Post `json:"posts"`
 }
 
 // Credentials struct

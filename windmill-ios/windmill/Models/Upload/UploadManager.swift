@@ -46,7 +46,9 @@ struct UploadManager {
 
                 let task = session.dataTask(with: request as URLRequest, completionHandler: {
                     (data, response, error) -> Void in
-                    if let _ = data {
+                    if let data = data {
+                        let str = String(decoding: data, as: UTF8.self)
+                        print(str)
                         DispatchQueue.main.async {
                            let storyboard = UIStoryboard(name: "WindmillMain", bundle: nil)
                            let vc = storyboard.instantiateViewController(withIdentifier: "tabBarController") as UIViewController
@@ -59,6 +61,55 @@ struct UploadManager {
                     }
                 })
                 task.resume()
+            }
+        }
+    }
+    
+    func uploadVideo(videoURL: URL) {
+        if let userId = KeychainWrapper.standard.string(forKey: "userId") {
+            if let url = URL(string: API_URL+userId+"/posts") {
+                
+                let session = URLSession.shared
+
+                var request = URLRequest(url: url)
+                request.httpMethod = "POST"
+                request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+                
+                var movieData: Data?
+                do {
+                    movieData = try Data(contentsOf: videoURL, options: Data.ReadingOptions.alwaysMapped)
+                } catch _ {
+                    movieData = nil
+                    return
+                }
+
+                let body = NSMutableData()
+
+                // change file name whatever you want
+                let filename = "upload.mov"
+                let mimetype = "video/mov"
+                
+                body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
+                body.append(NSString(format: "Content-Disposition: form-data; name=\"token\"\r\n\r\n" as NSString).data(using: String.Encoding.utf8.rawValue)!)
+                body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
+                body.append("Content-Disposition:form-data; name=\"file\"; filename=\"\(filename)\"\r\n".data(using: String.Encoding.utf8)!)
+                body.append("Content-Type: \(mimetype)\r\n\r\n".data(using: String.Encoding.utf8)!)
+                body.append(movieData!)
+                body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
+                request.httpBody = body as Data
+                
+
+                let task = session.dataTask(with: request as URLRequest, completionHandler: {
+                    (data, response, error) -> Void in
+                    if let _ = data {
+                        print(data)
+                        
+                    } else if let error = error {
+                        print(error.localizedDescription)
+                    }
+                })
+                task.resume()
+                
             }
         }
     }

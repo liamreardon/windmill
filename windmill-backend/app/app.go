@@ -58,6 +58,7 @@ func (app *App) setupRoutes() {
 
 	// User Routes
 	app.Put("/api/user/{userId}/dp", app.handleRequest(handlers.UpdateDisplayPicture))
+	app.Post("/api/user/{userId}/posts", app.handleRequest(handlers.UploadVideo))
 
 }
 

@@ -56,13 +56,21 @@ class UserCreationViewController: UIViewController {
         self.imagePicker.present(from: sender)
     }
     
+    @IBAction func saveDisplayPicture(_ sender: Any) {
+        uploadManager.uploadProfilePicture(image: profilePictureImageView.image!)
+        self.goToHome()
+        
+    }
+    
     @IBAction func dismissUploadTapped(_ sender: Any) {
-        DispatchQueue.main.async {
-           let storyboard = UIStoryboard(name: "WindmillMain", bundle: nil)
-           let vc = storyboard.instantiateViewController(withIdentifier: "tabBarController") as UIViewController
-           vc.modalPresentationStyle = .fullScreen
-           UIApplication.topViewController()?.present(vc, animated: true, completion: nil)
-        }
+        self.goToHome()
+    }
+    
+    func goToHome() {
+        let storyboard = UIStoryboard(name: "WindmillMain", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "tabBarController") as UIViewController
+        vc.modalPresentationStyle = .fullScreen
+        UIApplication.topViewController()?.present(vc, animated: true, completion: nil)
     }
     
 }
@@ -71,7 +79,8 @@ extension UserCreationViewController: ImagePickerDelegate {
 
     func didSelect(image: UIImage?) {
         self.profilePictureImageView.image = image
-        uploadManager.uploadProfilePicture(image: profilePictureImageView.image!)
     }
 }
+
+
 

@@ -2,20 +2,11 @@ package handlers
 
 import (
 	"context"
-	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/liamreardon/windmill/windmill-backend/app/services"
 	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
 	"time"
 )
-
-type Claims struct {
-	Username string `json:"username"`
-	jwt.StandardClaims
-}
-
-var jwtKey = []byte("my_secret_key")
 
 func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 
@@ -50,9 +41,6 @@ func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-
-	// Login user - redirect to homepage
-	services.GenerateToken(user, w)
 
 	respondJSON(w, http.StatusOK ,map[string]interface{}{
 		"message":"Login successful!",
@@ -100,38 +88,4 @@ func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func Welcome(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
-	c, err := r.Cookie("token")
-	if err != nil {
-		if err != nil {
-			if err == http.ErrNoCookie {
-				w.WriteHeader(http.StatusUnauthorized)
-				return
-			}
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-	}
-
-	tknStr := c.Value
-	claims := &Claims{}
-
-	tkn, err := jwt.ParseWithClaims(tknStr, claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtKey, nil
-	})
-	if err != nil {
-		if err == jwt.ErrSignatureInvalid {
-			w.WriteHeader(http.StatusUnauthorized)
-			return
-		}
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-	if !tkn.Valid {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
-	}
-
-	w.Write([]byte(fmt.Sprintf("Welcome %s!", claims.Username)))
-}
 

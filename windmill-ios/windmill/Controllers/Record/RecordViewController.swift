@@ -7,7 +7,6 @@
 //
 
 import UIKit
-
 import AVFoundation
 
 class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
@@ -148,8 +147,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 
     }
 
-    //EDIT 1: I FORGOT THIS AT FIRST
-
     func tempURL() -> URL? {
         let directory = NSTemporaryDirectory() as NSString
 
@@ -197,7 +194,6 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 
             }
 
-            //EDIT2: And I forgot this
             outputURL = tempURL()
             movieOutput.startRecording(to: outputURL, recordingDelegate: self)
 

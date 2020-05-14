@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 import SwiftKeychainWrapper
 
 struct UploadManager {
@@ -32,30 +31,25 @@ struct UploadManager {
                     print("UIImageJPEGRepresentation return nil")
                     return
                 }
+                
+                let filename = "displaypic.jpg"
 
                 let body = NSMutableData()
                 body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
                 body.append(NSString(format: "Content-Disposition: form-data; name=\"token\"\r\n\r\n" as NSString).data(using: String.Encoding.utf8.rawValue)!)
                 body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
-                body.append(NSString(format:"Content-Disposition: form-data; name=\"profile_img\"; filename=\"testfromios.jpg\"\r\n").data(using: String.Encoding.utf8.rawValue)!)
+                body.append("Content-Disposition:form-data; name=\"file\"; filename=\"\(filename)\"\r\n".data(using: String.Encoding.utf8)!)
                 body.append(NSString(format: "Content-Type: application/octet-stream\r\n\r\n").data(using: String.Encoding.utf8.rawValue)!)
                 body.append(imageData!)
                 body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
 
+                
                 request.httpBody = body as Data
 
                 let task = session.dataTask(with: request as URLRequest, completionHandler: {
                     (data, response, error) -> Void in
                     if let data = data {
-                        let str = String(decoding: data, as: UTF8.self)
-                        print(str)
-                        DispatchQueue.main.async {
-                           let storyboard = UIStoryboard(name: "WindmillMain", bundle: nil)
-                           let vc = storyboard.instantiateViewController(withIdentifier: "tabBarController") as UIViewController
-                           vc.modalPresentationStyle = .fullScreen
-                           UIApplication.topViewController()?.present(vc, animated: true, completion: nil)
-                        }
-                        
+                        // handle
                     } else if let error = error {
                         print(error.localizedDescription)
                     }
@@ -98,11 +92,12 @@ struct UploadManager {
                 body.append(NSString(format: "\r\n--%@\r\n", boundary).data(using: String.Encoding.utf8.rawValue)!)
                 request.httpBody = body as Data
                 
-
                 let task = session.dataTask(with: request as URLRequest, completionHandler: {
                     (data, response, error) -> Void in
                     if let _ = data {
-                        print(data)
+//                        DispatchQueue.main.async {
+//
+//                        }
                         
                     } else if let error = error {
                         print(error.localizedDescription)

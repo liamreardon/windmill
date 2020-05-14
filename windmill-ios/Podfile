@@ -8,5 +8,6 @@ target 'windmill' do
   # Pods for windmill
   pod 'GoogleSignIn'
   pod 'SwiftKeychainWrapper'
+  pod 'lottie-ios'
 
 end

@@ -1,12 +1,8 @@
 package models
 
-import (
-	"github.com/google/uuid"
-)
-
 // User struct
 type User struct {
-	UserId uuid.UUID `json:"userId"`
+	UserId string `json:"userId"`
 	UserToken GoogleToken `json:"userToken"`
 	DisplayName string `json:"firstName"`
 	DisplayPicture string `json:"displayPicture"`

@@ -4,4 +4,5 @@ type Post struct {
 	Id string `json:"id"`
 	NumLikes int `json:"numlikes"`
 	Likers []string `json:"likers"`
+	Path string `json:"path"`
 }

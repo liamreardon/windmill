@@ -11,7 +11,7 @@ import AVFoundation
 
 class VideoEditViewController: UIViewController {
 
-    let avPlayer = AVPlayer()
+    var avPlayer: AVPlayer?
     var avPlayerLayer: AVPlayerLayer!
 
     var videoURL: URL!
@@ -29,6 +29,7 @@ class VideoEditViewController: UIViewController {
         super.viewDidLoad()
 
         // MARK - Configure Player
+        avPlayer = AVPlayer()
         avPlayerLayer = AVPlayerLayer(player: avPlayer)
         avPlayerLayer.frame = view.bounds
         videoView.layer.insertSublayer(avPlayerLayer, at: 0)
@@ -36,13 +37,13 @@ class VideoEditViewController: UIViewController {
         view.layoutIfNeeded()
 
         let playerItem = AVPlayerItem(url: videoURL as URL)
-        avPlayer.replaceCurrentItem(with: playerItem)
+        avPlayer!.replaceCurrentItem(with: playerItem)
 
-        avPlayer.play()
+        avPlayer!.play()
         
-        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.avPlayer.currentItem, queue: .main) { [weak self] _ in
-            self?.avPlayer.seek(to: CMTime.zero)
-            self?.avPlayer.play()
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: self.avPlayer!.currentItem, queue: .main) { [weak self] _ in
+            self?.avPlayer!.seek(to: CMTime.zero)
+            self?.avPlayer!.play()
         }
         
         // MARK - Configure UI
@@ -59,11 +60,24 @@ class VideoEditViewController: UIViewController {
         videoView.addSubview(postButton)
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
+        if avPlayer != nil {
+            avPlayer?.replaceCurrentItem(with: nil)
+            avPlayer = nil
+        }
+        
+    }
+    
     @objc func postVideo() {
         uploadVideo()
     }
     
     func uploadVideo() {
         uploadManager.uploadVideo(videoURL: videoURL as URL)
+        let storyboard = UIStoryboard(name: "WindmillMain", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "tabBarController") as UIViewController
+        vc.modalPresentationStyle = .fullScreen
+        UIApplication.topViewController()?.present(vc, animated: true, completion: nil)
     }
 }

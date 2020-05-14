@@ -16,10 +16,12 @@ PODS:
   - GTMSessionFetcher/Core (1.3.1)
   - GTMSessionFetcher/Full (1.3.1):
     - GTMSessionFetcher/Core (= 1.3.1)
+  - lottie-ios (3.1.8)
   - SwiftKeychainWrapper (3.4.0)
 
 DEPENDENCIES:
   - GoogleSignIn
+  - lottie-ios
   - SwiftKeychainWrapper
 
 SPEC REPOS:
@@ -28,6 +30,7 @@ SPEC REPOS:
     - GoogleSignIn
     - GTMAppAuth
     - GTMSessionFetcher
+    - lottie-ios
     - SwiftKeychainWrapper
 
 SPEC CHECKSUMS:
@@ -35,8 +38,9 @@ SPEC CHECKSUMS:
   GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
   GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
   GTMSessionFetcher: cea130bbfe5a7edc8d06d3f0d17288c32ffe9925
+  lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
   SwiftKeychainWrapper: 6fc49fbf7d4a6b0772917acb0e53a1639f6078d6
 
-PODFILE CHECKSUM: 61ad579fdc92203d6cde549cbcbd800234551425
+PODFILE CHECKSUM: b38efa33ff9748413b7b317b063de45c930cd2ef
 
 COCOAPODS: 1.8.4

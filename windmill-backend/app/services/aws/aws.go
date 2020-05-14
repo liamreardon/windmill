@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"mime/multipart"
+	"os"
 	"path"
 )
 
@@ -46,17 +47,16 @@ func UpdateDisplayPicture(file multipart.File, filename string, userId string) (
 		return "", errors.New("error uploading to server")
 	}
 
-	fmt.Println("success")
-	return "/users/" + userId + "/profile" + filename, nil
+	return "/users/" + userId + "/profile/" + filename, nil
 }
 
-func UploadVideoToS3(file multipart.File, filename string, userId string) (string, error) {
+func UploadVideoToS3(file multipart.File, videoId string, userId string) (string, error) {
 
 	uploader := s3manager.NewUploader(sess)
 
 	_, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String(AWS_S3_BUCKET),
-		Key:    aws.String(path.Join("/users/" + userId + "/videos", filename)),
+		Key:    aws.String(path.Join("/users/" + userId + "/videos", videoId + ".mov")),
 		Body:   file,
 	})
 
@@ -65,7 +65,7 @@ func UploadVideoToS3(file multipart.File, filename string, userId string) (strin
 	}
 
 	fmt.Println("success")
-	return "successful upload", nil
+	return "/users/" + userId + "/profile/" + videoId, nil
 }
 
 func listBuckets() {
@@ -95,6 +95,27 @@ func listBuckets() {
 	for _, item := range result.Contents {
 		fmt.Println("<li>File %s</li>", *item.Key)
 	}
+}
 
+func GetUserDisplayPicture(dpPath string) (*os.File, error){
 
+	item := "displaypic.jpg"
+
+	file, err := os.Create(item)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	downloader := s3manager.NewDownloader(sess)
+
+	numBytes, err := downloader.Download(file,
+		&s3.GetObjectInput{
+			Bucket: aws.String(AWS_S3_BUCKET),
+			Key: aws.String(dpPath),
+		})
+	if err != nil {
+		return nil, errors.New("couldn't download profile picture")
+	}
+	fmt.Println("Downloaded", file.Name(), numBytes, "bytes")
+	return file, nil
 }

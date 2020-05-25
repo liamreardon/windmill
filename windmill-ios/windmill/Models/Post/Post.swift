@@ -16,7 +16,7 @@ struct Post: Decodable {
     var url: String?
     
     init?(dictionary: [String: Any]) {
-        let id = dictionary["id"] as? String
+        let id = dictionary["postid"] as? String
         let userId = dictionary["userid"] as? String
         let numlikes = dictionary["numlikes"] as? Int
         let likers = dictionary["likers"] as? [String]

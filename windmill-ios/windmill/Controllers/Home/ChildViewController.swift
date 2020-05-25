@@ -9,20 +9,27 @@
 import UIKit
 import AVKit
 import AVFoundation
+import SwiftKeychainWrapper
 
 class ChildViewController: UIViewController {
 
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var promptLabel: UILabel!
-    @IBOutlet weak var thumbnailView: UIImageView!
+    @IBOutlet weak var likeButton: UIButton!
     
     fileprivate var videoURL: URL?
     fileprivate var queuePlayer: AVQueuePlayer?
     fileprivate var playerLayer: AVPlayerLayer?
     fileprivate var playbackLooper: AVPlayerLooper?
+    
     var index: Int?
-    var url: String?
+    var isChecked: Bool = false
     public var isPaused: Bool = false
+    
+    let postManager = PostManager()
+    var post: Post?
+    
+    let userId = KeychainWrapper.standard.string(forKey: "userId")
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -37,14 +44,53 @@ class ChildViewController: UIViewController {
         }
         
         prepareVideo()
+        isChecked = didUserLikePost()
+        configPostUI()
     
     }
-
-    // MARK: Player Functions
     
+    // MARK: User Interactions
+    @IBAction func likeButton(_ sender: UIButton) {
+        isChecked = !isChecked
+        
+        if isChecked == true {
+            likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+            postManager.likeRequest(userId: userId!, postId: post!.id!, likedStatus: true) { (data) in
+                 print(data)
+             }
+        } else {
+            likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+            postManager.likeRequest(userId: userId!, postId: post!.id!, likedStatus: false) { (data) in
+                 print(data)
+             }
+        }
+    }
+    
+    // MARK: Post Data
+    func didUserLikePost() -> Bool {
+
+        for i in 0 ..< post!.likers!.count {
+            if post!.likers![i] == userId {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func configPostUI() {
+        if isChecked {
+            likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+            return
+        }
+        likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+    }
+    
+
+    
+    // MARK: Player Functions
     func prepareVideo() {
         
-        let playerItem = AVPlayerItem(url: URL.init(string: url!)!)
+        let playerItem = AVPlayerItem(url: URL.init(string: post!.url!)!)
         
         self.queuePlayer = AVQueuePlayer(playerItem: playerItem)
         self.playerLayer = AVPlayerLayer(player: self.queuePlayer)

@@ -25,7 +25,7 @@ func AssignUserDisplayPicturePath(collection *mongo.Collection, ctx context.Cont
 
 func AddVideoToUserPosts(collection *mongo.Collection, ctx context.Context, userId string, videoId string, url string) (string, error) {
 	post := models.Post{
-		Id:	videoId,
+		PostId:	videoId,
 		UserId: userId,
 		NumLikes: 0,
 		Likers: nil,

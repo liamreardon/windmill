@@ -66,7 +66,7 @@ class HomeViewController: PageboyViewController {
         for i in 0 ..< postsData.count {
             let viewController = storyboard.instantiateViewController(withIdentifier: "ChildViewController") as! ChildViewController
             viewController.index = i + 1
-            viewController.url = postsData[i].url
+            viewController.post = postsData[i]
             pageControllers.append(viewController)
         }
         

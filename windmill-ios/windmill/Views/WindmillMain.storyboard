@@ -91,7 +91,6 @@
         <!--Activity-->
         <scene sceneID="hXw-oW-w7E">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="JpB-st-3RP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController id="hev-F6-qAl" userLabel="Activity" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ecm-wL-75u">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -110,6 +109,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="bolt" catalog="system" id="RjB-b1-Zsz"/>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JpB-st-3RP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2122" y="459"/>
         </scene>
@@ -219,18 +219,28 @@
                                 <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ydh-1O-f9l">
+                                <rect key="frame" x="357.5" y="807" width="20.5" height="22"/>
+                                <state key="normal" image="heart" catalog="system"/>
+                                <connections>
+                                    <action selector="likeButton:" destination="V2M-bZ-vBC" eventType="touchUpInside" id="kfd-Y1-otm"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="RLs-Ou-SIq" firstAttribute="top" secondItem="f6T-s5-Id1" secondAttribute="bottom" constant="8" id="0bI-mO-I9o"/>
                             <constraint firstItem="f6T-s5-Id1" firstAttribute="centerX" secondItem="7de-9H-0DB" secondAttribute="centerX" id="29M-nZ-G7K"/>
                             <constraint firstItem="f6T-s5-Id1" firstAttribute="centerY" secondItem="xhM-xn-htE" secondAttribute="centerY" id="BnX-lD-Q6S"/>
+                            <constraint firstItem="7de-9H-0DB" firstAttribute="trailing" secondItem="ydh-1O-f9l" secondAttribute="trailing" constant="36" id="Dql-cy-whi"/>
                             <constraint firstItem="RLs-Ou-SIq" firstAttribute="centerX" secondItem="7de-9H-0DB" secondAttribute="centerX" id="QFd-Dk-heM"/>
+                            <constraint firstItem="7de-9H-0DB" firstAttribute="bottom" secondItem="ydh-1O-f9l" secondAttribute="bottom" constant="33" id="evz-TG-Ltd"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="7de-9H-0DB"/>
                     </view>
                     <connections>
                         <outlet property="label" destination="f6T-s5-Id1" id="WPg-wY-VWB"/>
+                        <outlet property="likeButton" destination="ydh-1O-f9l" id="Kzn-pX-lV3"/>
                         <outlet property="promptLabel" destination="RLs-Ou-SIq" id="0eH-vv-h33"/>
                     </connections>
                 </viewController>
@@ -295,6 +305,7 @@
     <resources>
         <image name="bolt" catalog="system" width="101" height="128"/>
         <image name="circle" catalog="system" width="128" height="121"/>
+        <image name="heart" catalog="system" width="128" height="109"/>
         <image name="house" catalog="system" width="128" height="110"/>
         <image name="magnifyingglass" catalog="system" width="128" height="115"/>
         <image name="person" catalog="system" width="128" height="117"/>

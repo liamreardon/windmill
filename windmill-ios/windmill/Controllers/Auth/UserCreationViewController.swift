@@ -1,5 +1,5 @@
 //
-//  ProfileCreationViewController.swift
+//  UserCreationViewController.swift
 //  windmill
 //
 //  Created by Liam  on 2020-04-30.
@@ -14,10 +14,11 @@ class UserCreationViewController: UIViewController {
     
     let authManager = AuthManager()
     let uploadManager = UploadManager()
+    let storageManager = StorageManager()
     var imagePicker: ImagePicker!
     
     @IBOutlet weak var usernameTextField: UITextField!
-    @IBOutlet weak var profilePictureImageView: UIImageView!
+    @IBOutlet weak var displayPictureImageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,7 +58,9 @@ class UserCreationViewController: UIViewController {
     }
     
     @IBAction func saveDisplayPicture(_ sender: Any) {
-        uploadManager.uploadProfilePicture(image: profilePictureImageView.image!)
+        let userId = KeychainWrapper.standard.string(forKey: "userId") 
+        self.storageManager.store(image: displayPictureImageView.image!, forKey: userId!+"displayPicture", withStorageType: .fileSystem)
+        uploadManager.uploadProfilePicture(image: displayPictureImageView.image!)
         self.goToHome()
         
     }
@@ -76,9 +79,8 @@ class UserCreationViewController: UIViewController {
 }
 
 extension UserCreationViewController: ImagePickerDelegate {
-
     func didSelect(image: UIImage?) {
-        self.profilePictureImageView.image = image
+        self.displayPictureImageView.image = image
     }
 }
 

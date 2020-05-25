@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
@@ -56,7 +55,7 @@ func UploadVideoToS3(file multipart.File, videoId string, userId string) (string
 
 	_, err := uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String(AWS_S3_BUCKET),
-		Key:    aws.String(path.Join("/users/" + userId + "/videos", videoId + ".mov")),
+		Key:    aws.String(path.Join("/users/" + userId + "/videos", videoId + ".mp4")),
 		Body:   file,
 	})
 
@@ -65,36 +64,7 @@ func UploadVideoToS3(file multipart.File, videoId string, userId string) (string
 	}
 
 	fmt.Println("success")
-	return "/users/" + userId + "/profile/" + videoId, nil
-}
-
-func listBuckets() {
-	svc := s3.New(sess)
-	input := &s3.ListObjectsInput{
-		Bucket: aws.String(AWS_S3_BUCKET),
-	}
-
-	result, err := svc.ListObjects(input)
-	if err != nil {
-		if aerr, ok := err.(awserr.Error); ok {
-			switch aerr.Code() {
-			case s3.ErrCodeNoSuchBucket:
-				fmt.Println(s3.ErrCodeNoSuchBucket, aerr.Error())
-			default:
-				fmt.Println(aerr.Error())
-			}
-		} else {
-			// Print the error, cast err to awserr.Error to get the Code and
-			// Message from an error.
-			fmt.Println(err.Error())
-		}
-		// Do your error handling here
-		return
-	}
-
-	for _, item := range result.Contents {
-		fmt.Println("<li>File %s</li>", *item.Key)
-	}
+	return "https://windmill-warehouse.s3.us-east-2.amazonaws.com/users/"+userId+"/videos/"+videoId+".mp4", nil
 }
 
 func GetUserDisplayPicture(dpPath string) (*os.File, error){

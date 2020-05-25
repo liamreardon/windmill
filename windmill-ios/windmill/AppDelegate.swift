@@ -12,6 +12,8 @@ import SwiftKeychainWrapper
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
+    
+    let storageManager = StorageManager()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
@@ -64,10 +66,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!,
               withError error: Error!) {
-
+        let userId = KeychainWrapper.standard.string(forKey: "userId")
+        storageManager.removeImage(forKey: userId!+"displayPicture", inStorageType: .fileSystem)
         KeychainWrapper.standard.removeObject(forKey: "token")
         KeychainWrapper.standard.removeObject(forKey: "username")
         KeychainWrapper.standard.removeObject(forKey: "userId")
+        
+        
     }
     
     

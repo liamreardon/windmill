@@ -1,4 +1,4 @@
-package services
+package upload
 
 import (
 	"context"
@@ -23,12 +23,13 @@ func AssignUserDisplayPicturePath(collection *mongo.Collection, ctx context.Cont
 	return fmt.Sprintf("successfully uploaded display picture, upserted %d", res.UpsertedCount), nil
 }
 
-func AddVideoToUserPosts(collection *mongo.Collection, ctx context.Context, userId string, videoId string, path string) (string, error) {
+func AddVideoToUserPosts(collection *mongo.Collection, ctx context.Context, userId string, videoId string, url string) (string, error) {
 	post := models.Post{
 		Id:	videoId,
+		UserId: userId,
 		NumLikes: 0,
 		Likers: nil,
-		Path: path,
+		Url: url,
 	}
 
 	res, err := collection.UpdateOne(ctx, bson.M{"userid":userId}, bson.D{

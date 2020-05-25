@@ -1,4 +1,4 @@
-package services
+package request
 
 import (
 	"github.com/liamreardon/windmill/windmill-backend/app/models"

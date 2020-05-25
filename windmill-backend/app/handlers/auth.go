@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"context"
-	"github.com/liamreardon/windmill/windmill-backend/app/services"
+	"github.com/liamreardon/windmill/windmill-backend/app/services/auth"
+	"github.com/liamreardon/windmill/windmill-backend/app/services/request"
+	"github.com/liamreardon/windmill/windmill-backend/app/services/token"
 	"go.mongodb.org/mongo-driver/mongo"
 	"net/http"
 	"time"
@@ -10,7 +12,7 @@ import (
 
 func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 
-	res, err := services.ValidateLoginRequest(r)
+	res, err := request.ValidateLoginRequest(r)
 	if err != nil {
 		respondError(w, http.StatusBadRequest, map[string]interface{}{
 			"error":err,
@@ -18,7 +20,7 @@ func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	info, err := services.VerifyGoogleToken(res.TokenId)
+	info, err := token.VerifyGoogleToken(res.TokenId)
 	if err != nil {
 		respondError(w, http.StatusBadRequest, map[string]interface{}{
 			"message":"Token could not be verified",
@@ -30,7 +32,7 @@ func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	collection := client.Database("windmill-master").Collection("Users")
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 
-	user, e := services.GetUser(collection, ctx, res, info)
+	user, e := auth.GetUser(collection, ctx, res, info)
 
 	// Send user to username creation page
 	if len(e) > 0 {
@@ -52,7 +54,7 @@ func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 
 func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 
-	res, err := services.ValidateSignupRequest(r)
+	res, err := request.ValidateSignupRequest(r)
 	if err != nil {
 		respondError(w, http.StatusBadRequest, map[string]interface{}{
 			"error":err,
@@ -63,7 +65,7 @@ func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	collection := client.Database("windmill-master").Collection("Users")
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 
-	userExists, message := services.CheckUserExists(collection, ctx, res.Username)
+	userExists, message := auth.CheckUserExists(collection, ctx, res.Username)
 	if userExists {
 		respondError(w, http.StatusConflict, map[string]interface{}{
 			"message":message["result"],
@@ -72,7 +74,7 @@ func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, _, userId := services.SignUpUser(collection, ctx, res)
+	result, _, userId := auth.SignUpUser(collection, ctx, res)
 	if !result {
 		respondError(w, http.StatusInternalServerError, map[string]interface{}{
 			"message":"error connecting to database",

@@ -51,7 +51,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o2c-Ni-GeE">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o2c-Ni-GeE" userLabel="displayPictureImageView">
                                 <rect key="frame" x="87" y="121" width="240" height="240"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
@@ -101,7 +101,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="bzV-qv-Rd4"/>
                     <connections>
-                        <outlet property="profilePictureImageView" destination="o2c-Ni-GeE" id="rQl-Xd-niR"/>
+                        <outlet property="displayPictureImageView" destination="o2c-Ni-GeE" id="uqC-JZ-sCL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RZn-3N-uZy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

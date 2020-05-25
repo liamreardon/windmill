@@ -1,9 +1,10 @@
-package services
+package auth
 
 import (
 	"context"
 	"github.com/google/uuid"
 	"github.com/liamreardon/windmill/windmill-backend/app/models"
+	"github.com/liamreardon/windmill/windmill-backend/app/services/token"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
@@ -35,7 +36,7 @@ func CheckUserExists(collection *mongo.Collection, ctx context.Context, username
 }
 
 func SignUpUser(collection *mongo.Collection, ctx context.Context, data *models.User) (bool, *mongo.InsertOneResult, string) {
-	info, err := VerifyGoogleToken(data.UserToken.TokenId)
+	info, err := token.VerifyGoogleToken(data.UserToken.TokenId)
 	if err != nil {
 		return false, nil, ""
 	}

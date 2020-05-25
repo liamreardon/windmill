@@ -4,8 +4,9 @@ import (
 	"context"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"github.com/liamreardon/windmill/windmill-backend/app/services"
 	"github.com/liamreardon/windmill/windmill-backend/app/services/aws"
+	"github.com/liamreardon/windmill/windmill-backend/app/services/upload"
+	"github.com/liamreardon/windmill/windmill-backend/app/services/user"
 	"go.mongodb.org/mongo-driver/mongo"
 	"io"
 	"net/http"
@@ -39,7 +40,7 @@ func UpdateDisplayPicture(client *mongo.Client, w http.ResponseWriter, r *http.R
 
 	collection := client.Database("windmill-master").Collection("Users")
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	res, err := services.AssignUserDisplayPicturePath(collection, ctx, userId, path)
+	res, err := upload.AssignUserDisplayPicturePath(collection, ctx, userId, path)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, map[string]interface{}{
 			"message":err,
@@ -68,7 +69,7 @@ func UploadVideo(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 
 	videoId := uuid.New().String()
 
-	path, err := aws.UploadVideoToS3(file, videoId, userId)
+	url, err := aws.UploadVideoToS3(file, videoId, userId)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, map[string]interface{}{
 			"message":"error uploading file",
@@ -78,7 +79,7 @@ func UploadVideo(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 
 	collection := client.Database("windmill-master").Collection("Users")
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	res, err := services.AddVideoToUserPosts(collection, ctx, userId, videoId, path)
+	res, err := upload.AddVideoToUserPosts(collection, ctx, userId, videoId, url)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, map[string]interface{}{
 			"message":err,
@@ -91,13 +92,13 @@ func UploadVideo(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func GetUserDetails(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
+func GetDisplayPicture(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	 vars := mux.Vars(r)
 	 userId := vars["userId"]
 	 collection := client.Database("windmill-master").Collection("Users")
 	 ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 
-	 dp, err := services.GetDisplayPicture(collection, ctx, userId)
+	 dp, err := user.GetDisplayPicture(collection, ctx, userId)
 
 	 if err != nil {
 		 respondError(w, http.StatusInternalServerError, map[string]interface{}{

@@ -9,5 +9,6 @@ target 'windmill' do
   pod 'GoogleSignIn'
   pod 'SwiftKeychainWrapper'
   pod 'lottie-ios'
-
+  pod 'Pageboy', '~> 3.6'
+  
 end

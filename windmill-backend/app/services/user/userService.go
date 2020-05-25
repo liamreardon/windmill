@@ -1,4 +1,4 @@
-package services
+package user
 
 import (
 	"context"
@@ -13,14 +13,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-
 func GetDisplayPicture(collection *mongo.Collection, ctx context.Context, userId string) (*os.File, error) {
 	var user = models.User{}
 	res := collection.FindOne(ctx, bson.M{"userid": userId})
 
 	if res.Err() != nil {
-
+		return nil, errors.New("couldn't get image")
 	}
+
 	res.Decode(&user)
 	dpPath := user.DisplayPicture
 	dp, err := aws.GetUserDisplayPicture(dpPath)

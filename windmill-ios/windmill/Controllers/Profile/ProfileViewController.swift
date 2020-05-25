@@ -16,12 +16,24 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var usernameLabel: UILabel!
     
     let userManager = UserManager()
+    let storageManager = StorageManager()
+    let feedManager = FeedManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.getUserDetails()
         self.initSignOutButton()
         self.initGraphics()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        self.getDisplayPicture()
+        self.getUserFeed()
+    }
+    
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
     
     
@@ -37,14 +49,28 @@ class ProfileViewController: UIViewController {
         
     }
     
-    func getUserDetails() {
-        usernameLabel.text = KeychainWrapper.standard.string(forKey: "username")
-        userManager.getUserDisplayPicture { (data) in
-            DispatchQueue.main.async {
-                let image = UIImage(data: data!)
-                self.displayPicture.image = image
+    func getDisplayPicture() {
+        let userId = KeychainWrapper.standard.string(forKey: "userId")
+        let image = storageManager.retrieveImage(forKey: userId!+"displayPicture", inStorageType: .fileSystem)
+        if image == nil {
+            userManager.getUserDisplayPicture { (data) in
+                DispatchQueue.main.async {
+                    let retrievedImage = UIImage(data: data!)
+                    if retrievedImage != nil {
+                        self.displayPicture.image = image
+                        self.storageManager.store(image: retrievedImage!, forKey: userId!+"displayPicture", withStorageType: .fileSystem)
+                    }
+                }
             }
         }
+        else {
+            self.displayPicture.image = image
+        }
+
+    }
+    
+    func getUserDetails() {
+        usernameLabel.text = KeychainWrapper.standard.string(forKey: "username")
     }
     
     func initSignOutButton() {
@@ -65,4 +91,19 @@ class ProfileViewController: UIViewController {
         displayPicture.layer.cornerRadius = displayPicture.frame.height / 2
         displayPicture.clipsToBounds = true
     }
+    
+    func getUserFeed() {
+        let userId = KeychainWrapper.standard.string(forKey: "userId")
+        feedManager.getUserFeed(userId: userId!) { (data) in
+            do {
+                if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
+                    print(json)
+                }
+            } catch let error {
+                print("failed to load posts", error.localizedDescription)
+            }
+        }
+    }
+    
+    
 }

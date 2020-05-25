@@ -58,10 +58,14 @@ func (app *App) setupRoutes() {
 	// User Routes
 	app.Put("/api/user/{userId}/dp", app.handleRequest(handlers.UpdateDisplayPicture))
 	app.Post("/api/user/{userId}/posts", app.handleRequest(handlers.UploadVideo))
-	app.Get("/api/user/{userId}", app.handleRequest(handlers.GetUserDetails))
+	app.Get("/api/user/{userId}", app.handleRequest(handlers.GetDisplayPicture))
 
 	// Search Routes
 	app.Get("/api/search/{substring}", app.handleRequest(handlers.SearchForUser))
+
+	// Feed Routes
+	app.Get("/api/feed/{userId}", app.handleRequest(handlers.GetUserFeed))
+	app.Get("/api/feed/all", app.handleRequest(handlers.GetUserFollowingFeed))
 
 }
 

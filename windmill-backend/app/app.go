@@ -68,7 +68,7 @@ func (app *App) setupRoutes() {
 	app.Get("/api/feed/all", app.handleRequest(handlers.GetUserFollowingFeed))
 
 	// Post Routes
-	app.Post("/api/user/{userId}/post/{postId}/{likedStatus}", app.handleRequest(handlers.PostLikedHandler))
+	app.Post("/api/user/{postUserId}/post/{postId}/likers/{userId}/{likedStatus}", app.handleRequest(handlers.PostLikedHandler))
 
 }
 

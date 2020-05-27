@@ -24,11 +24,23 @@ func AssignUserDisplayPicturePath(collection *mongo.Collection, ctx context.Cont
 }
 
 func AddVideoToUserPosts(collection *mongo.Collection, ctx context.Context, userId string, videoId string, url string) (string, error) {
+
+	user := models.User{}
+
+	collection.FindOne(ctx, bson.M{"userid":userId}).Decode(&user)
+
+	if len(user.Username) == 0 {
+		return "", errors.New("Couldn't retrieve user from database")
+	}
+
 	post := models.Post{
 		PostId:	videoId,
-		UserId: userId,
+		UserId: user.UserId,
+		Username: user.Username,
+		Caption: "",
+		Comments: []models.Comment{},
 		NumLikes: 0,
-		Likers: nil,
+		Likers: []string{},
 		Url: url,
 	}
 

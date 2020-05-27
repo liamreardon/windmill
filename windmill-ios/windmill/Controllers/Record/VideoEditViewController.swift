@@ -66,7 +66,6 @@ class VideoEditViewController: UIViewController {
             avPlayer?.replaceCurrentItem(with: nil)
             avPlayer = nil
         }
-        
     }
     
     @objc func postVideo() {

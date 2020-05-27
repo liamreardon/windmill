@@ -97,7 +97,7 @@ class ProfileViewController: UIViewController {
         feedManager.getUserFeed(userId: userId!) { (data) in
             do {
                 if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
-                    print(json)
+                    // user feed
                 }
             } catch let error {
                 print("failed to load posts", error.localizedDescription)

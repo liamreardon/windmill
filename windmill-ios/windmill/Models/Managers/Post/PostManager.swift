@@ -14,9 +14,9 @@ struct PostManager {
     
     let API_URL = "http://liam.local:8080/api/user/"
     
-    func likeRequest(userId: String, postId: String, likedStatus: Bool, completionHandler: @escaping (_ data: Data?) -> Void) {
+    func likeRequest(postUserId: String, userId: String, postId: String, likedStatus: Bool, completionHandler: @escaping (_ data: Data?) -> Void) {
         
-        if let url = URL(string: API_URL+userId+"/post/"+postId+"/"+String(likedStatus)) {
+        if let url = URL(string: API_URL+postUserId+"/post/"+postId+"/likers/"+userId+"/"+String(likedStatus)) {
             print(url)
             let session = URLSession.shared
             var request = URLRequest(url: url)

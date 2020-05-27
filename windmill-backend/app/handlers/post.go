@@ -12,6 +12,7 @@ import (
 
 func PostLikedHandler(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
+	postUserId := vars["postUserId"]
 	userId := vars["userId"]
 	postId := vars["postId"]
 	likedStatus, _ := strconv.ParseBool(vars["likedStatus"])
@@ -19,5 +20,16 @@ func PostLikedHandler(client *mongo.Client, w http.ResponseWriter, r *http.Reque
 	collection := client.Database("windmill-master").Collection("Users")
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 
-	post.PostLikedService(collection, ctx, userId, postId, likedStatus)
+	err := post.PostLikedService(collection, ctx, postUserId, userId, postId, likedStatus)
+
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, map[string]interface{}{
+			"error":err,
+		})
+		return
+	}
+
+	respondJSON(w, http.StatusOK, map[string]interface{}{
+		"message":"successfully updated users liked status on post",
+	})
 }

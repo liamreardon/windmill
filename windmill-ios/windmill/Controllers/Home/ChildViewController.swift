@@ -13,14 +13,18 @@ import SwiftKeychainWrapper
 
 class ChildViewController: UIViewController {
 
-    @IBOutlet weak var label: UILabel!
-    @IBOutlet weak var promptLabel: UILabel!
     @IBOutlet weak var likeButton: UIButton!
+    @IBOutlet var childView: UIView!
+    @IBOutlet weak var usernameLabel: UILabel!
+    let previewLayer = CALayer()
+    
+    var thumbnail: UIImage?
     
     fileprivate var videoURL: URL?
-    fileprivate var queuePlayer: AVQueuePlayer?
-    fileprivate var playerLayer: AVPlayerLayer?
-    fileprivate var playbackLooper: AVPlayerLooper?
+    fileprivate var queuePlayer: AVQueuePlayer!
+    fileprivate var playerLayer: AVPlayerLayer!
+    fileprivate var playbackLooper: AVPlayerLooper!
+    fileprivate var playerItemContext = 0
     
     var index: Int?
     var isChecked: Bool = false
@@ -35,34 +39,41 @@ class ChildViewController: UIViewController {
         return .lightContent
     }
     
+    // MARK: Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        if let index = self.index {
-            label.text = "Page " + String(index)
-            promptLabel.isHidden = index != 1
-        }
         
         prepareVideo()
         isChecked = didUserLikePost()
-        configPostUI()
-    
+        showSpinner(onView: childView)
+        initGraphics()
+        
+        usernameLabel.text = "@\(post!.username!)"
+        
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+    }
+    
     
     // MARK: User Interactions
     @IBAction func likeButton(_ sender: UIButton) {
         isChecked = !isChecked
         
         if isChecked == true {
-            likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-            postManager.likeRequest(userId: userId!, postId: post!.id!, likedStatus: true) { (data) in
-                 print(data)
-             }
+            let imageIcon = UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(UIColor(rgb: 0xE71C23), renderingMode: .alwaysOriginal)
+            likeButton.setImage(imageIcon, for: .normal)
+            postManager.likeRequest(postUserId: post!.userId!, userId: userId!, postId: post!.id!, likedStatus: true) { (data) in
+                // res
+            }
         } else {
-            likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
-            postManager.likeRequest(userId: userId!, postId: post!.id!, likedStatus: false) { (data) in
-                 print(data)
-             }
+            let imageIcon = UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            likeButton.setImage(imageIcon, for: .normal)
+            postManager.likeRequest(postUserId: post!.userId!, userId: userId!, postId: post!.id!, likedStatus: false) { (data) in
+                // res
+            }
         }
     }
     
@@ -77,55 +88,117 @@ class ChildViewController: UIViewController {
         return false
     }
     
-    func configPostUI() {
+    // MARK: UI
+    func initGraphics() {
         if isChecked {
-            likeButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+            let imageIcon = UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(UIColor(rgb: 0xE71C23), renderingMode: .alwaysOriginal)
+            likeButton.setImage(imageIcon, for: .normal)
             return
         }
-        likeButton.setImage(UIImage(systemName: "heart"), for: .normal)
+    
+        let imageIcon = UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        likeButton.setImage(imageIcon, for: .normal)
+    }
+    
+    
+    
+    func displayThumbnail() {
+        previewLayer.frame = view.bounds
+        previewLayer.contents = thumbnail
+        view.layer.addSublayer(previewLayer)
+    }
+    
+    func removeThumbnail() {
+        previewLayer.removeFromSuperlayer()
     }
     
 
-    
     // MARK: Player Functions
     func prepareVideo() {
-        
         let playerItem = AVPlayerItem(url: URL.init(string: post!.url!)!)
+        playerItem.addObserver(self,
+                               forKeyPath: #keyPath(AVPlayerItem.status),
+                               options: [.old, .new],
+                               context: &playerItemContext)
         
-        self.queuePlayer = AVQueuePlayer(playerItem: playerItem)
-        self.playerLayer = AVPlayerLayer(player: self.queuePlayer)
-        guard let playerLayer = self.playerLayer else {return}
-        guard let queuePlayer = self.queuePlayer else {return}
-        self.playbackLooper = AVPlayerLooper.init(player: queuePlayer, templateItem: playerItem)
+        queuePlayer = AVQueuePlayer(playerItem: playerItem)
+        playerLayer = AVPlayerLayer(player: queuePlayer)
+        guard let playerLayer = playerLayer else {return}
+        guard let queuePlayer = queuePlayer else {return}
+        playbackLooper = AVPlayerLooper.init(player: queuePlayer, templateItem: playerItem)
         
         playerLayer.videoGravity = .resizeAspectFill
         playerLayer.frame = CGRect.init(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.height)
+        
         view.layer.insertSublayer(playerLayer, at: 0)
         
     }
     
     func play() {
-        self.isPaused = false
-        self.queuePlayer?.play()
+        isPaused = false
+        queuePlayer?.play()
     }
      
     func pause() {
-        self.isPaused = true
-        self.queuePlayer?.pause()
+        isPaused = true
+        queuePlayer?.pause()
     }
      
     func stop() {
-        self.isPaused = true
-        self.queuePlayer?.pause()
-        self.queuePlayer?.seek(to: CMTime.init(seconds: 0, preferredTimescale: 1))
+        isPaused = true
+        queuePlayer?.pause()
+        queuePlayer?.seek(to: CMTime.init(seconds: 0, preferredTimescale: 1))
     }
      
     func unload() {
-        self.isPaused = true
-        self.playerLayer?.removeFromSuperlayer()
-        self.playerLayer = nil
-        self.queuePlayer = nil
-        self.playbackLooper = nil
+        isPaused = true
+        playerLayer?.removeFromSuperlayer()
+        playerLayer = nil
+        queuePlayer = nil
+        playbackLooper = nil
+    }
+    
+    
+    // MARK: Observers
+    override func observeValue(forKeyPath keyPath: String?,
+                               of object: Any?,
+                               change: [NSKeyValueChangeKey : Any]?,
+                               context: UnsafeMutableRawPointer?) {
+
+        // Only handle observations for the playerItemContext
+        guard context == &playerItemContext else {
+            super.observeValue(forKeyPath: keyPath,
+                               of: object,
+                               change: change,
+                               context: context)
+            return
+        }
+
+        if keyPath == #keyPath(AVPlayerItem.status) {
+            let status: AVPlayerItem.Status
+            if let statusNumber = change?[.newKey] as? NSNumber {
+                status = AVPlayerItem.Status(rawValue: statusNumber.intValue)!
+            } else {
+                status = .unknown
+            }
+            
+            // Switch over status value
+            switch status {
+            case .readyToPlay:
+                // Player item is ready to play.
+                print("playing")
+                removeSpinner()
+            case .failed:
+                // Player item failed. See error.
+                print("failed")
+            case .unknown:
+                // Player item is not yet ready.
+                print("unknown")
+            @unknown default:
+                print("player default")
+            }
+            
+        }
     }
     
           

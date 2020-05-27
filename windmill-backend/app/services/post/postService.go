@@ -1,16 +1,15 @@
 package post
 
 import (
-	"fmt"
+	"context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"context"
 )
 
-func PostLikedService(collection *mongo.Collection, ctx context.Context, userId string, postId string, likedStatus bool) {
+func PostLikedService(collection *mongo.Collection, ctx context.Context, postUserId string, userId string, postId string, likedStatus bool) error {
 
 	if likedStatus == true {
-		res, err := collection.UpdateOne(ctx, bson.M{"userid":userId, "posts.postid":postId}, bson.D{
+		_, err := collection.UpdateOne(ctx, bson.M{"userid":postUserId, "posts.postid":postId}, bson.D{
 			{"$push", bson.D{
 				{"posts.$.likers", userId},
 			}},
@@ -19,10 +18,14 @@ func PostLikedService(collection *mongo.Collection, ctx context.Context, userId 
 			}},
 		})
 
-		fmt.Println(res)
-		fmt.Println(err)
+		if err != nil {
+			return err
+		}
+
+		return nil
+
 	} else {
-		res, err := collection.UpdateOne(ctx, bson.M{"userid":userId, "posts.postid":postId}, bson.D{
+		_, err := collection.UpdateOne(ctx, bson.M{"userid":userId, "posts.postid":postId}, bson.D{
 			{"$pull", bson.D{
 				{"posts.$.likers", userId},
 			}},
@@ -31,8 +34,11 @@ func PostLikedService(collection *mongo.Collection, ctx context.Context, userId 
 			}},
 		})
 
-		fmt.Println(res)
-		fmt.Println(err)
+		if err != nil {
+			return err
+		}
+
+		return nil
 	}
 
 

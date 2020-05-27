@@ -95,10 +95,7 @@ struct UploadManager {
                 let task = session.dataTask(with: request as URLRequest, completionHandler: {
                     (data, response, error) -> Void in
                     if let _ = data {
-//                        DispatchQueue.main.async {
-//
-//                        }
-                        
+                        // call reload data 
                     } else if let error = error {
                         print(error.localizedDescription)
                     }

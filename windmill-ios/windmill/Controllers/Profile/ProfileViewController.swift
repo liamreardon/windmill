@@ -15,20 +15,35 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var displayPicture: UIImageView!
     @IBOutlet weak var usernameLabel: UILabel!
     
+    var currentUserProfile: Bool = true
+    var followingUser: User?
+    
     let userManager = UserManager()
     let storageManager = StorageManager()
     let feedManager = FeedManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.getUserDetails()
-        self.initSignOutButton()
-        self.initGraphics()
+        print(currentUserProfile)
+        if currentUserProfile {
+            self.getUserDetails()
+            self.initSignOutButton()
+            self.initGraphics()
+        }
+        else {
+        
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        self.getDisplayPicture()
-        self.getUserFeed()
+        if currentUserProfile {
+            self.getDisplayPicture()
+            self.getUserFeed()
+        }
+        else {
+            
+        }
+
     }
     
     
@@ -48,6 +63,8 @@ class ProfileViewController: UIViewController {
         }
         
     }
+    
+    // MARK: Current User Setup
     
     func getDisplayPicture() {
         let userId = KeychainWrapper.standard.string(forKey: "userId")
@@ -104,6 +121,8 @@ class ProfileViewController: UIViewController {
             }
         }
     }
+    
+    // MARK: Following User Setup
     
     
 }

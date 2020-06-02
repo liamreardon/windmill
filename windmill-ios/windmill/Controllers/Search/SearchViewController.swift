@@ -9,8 +9,8 @@
 import Foundation
 import UIKit
 
-class SearchViewController: UIViewController, UISearchBarDelegate {
-    
+class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
+
 
     @IBOutlet weak var searchTableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -24,6 +24,8 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
+        searchTableView.delegate = self
+        searchTableView.dataSource = self
         initGraphics()
     }
     
@@ -49,8 +51,11 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
                     
                     self.usersData.append(user)
                 }
-                    
-                print(self.usersData)
+                
+                DispatchQueue.main.async {
+                    self.searchTableView.reloadData()
+                }
+                
             
             } catch let parsingError {
                  print("Error", parsingError)
@@ -73,9 +78,20 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
         searchUsers()
     }
     
-
-    // MARK: Delegate Functions
+    // MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let cell = sender as? UITableViewCell {
+            let i = searchTableView.indexPath(for: cell)!.row
+            if segue.identifier == "searchToProfileSegue" {
+                let vc = segue.destination as! ProfileViewController
+                vc.currentUserProfile = false
+                vc.followingUser = self.usersData[i]
+            }
+        }
+    }
     
+
+    // MARK: Search Delegate Functions
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
@@ -91,5 +107,22 @@ class SearchViewController: UIViewController, UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         print("started")
+    }
+    
+    // MARK: TableView Delegate Functions
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return usersData.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath)
+        cell.textLabel?.text = usersData[indexPath.item].username
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)
+        searchTableView.deselectRow(at: indexPath, animated: true)
+        performSegue(withIdentifier: "searchToProfileSegue", sender: cell)
     }
 }

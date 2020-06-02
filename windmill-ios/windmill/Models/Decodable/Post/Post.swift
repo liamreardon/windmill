@@ -11,6 +11,7 @@ import Foundation
 struct Post: Decodable {
     var id: String?
     var userId: String?
+    var verified: Bool?
     var username: String?
     var caption: String?
     var numlikes: Int?
@@ -20,6 +21,7 @@ struct Post: Decodable {
     init?(dictionary: [String: Any]) {
         let id = dictionary["postid"] as? String
         let userId = dictionary["userid"] as? String
+        let verified = dictionary["verified"] as? Bool
         let username = dictionary["username"] as? String
         let caption = dictionary["caption"] as? String
         let numlikes = dictionary["numlikes"] as? Int
@@ -28,6 +30,7 @@ struct Post: Decodable {
       
         self.id = id
         self.userId = userId
+        self.verified = verified
         self.username = username
         self.caption = caption
         self.numlikes = numlikes

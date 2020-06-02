@@ -49,7 +49,11 @@ func SignUpUser(collection *mongo.Collection, ctx context.Context, data *models.
 		Username:  data.Username,
 		Email:     info.Email,
 		Verified:  false,
-		Relations: models.Relationships{},
+		Relations: models.Relationships{
+			Followers:  []string{},
+			Following:  []string{},
+			LikedPosts: []string{},
+		},
 		Posts: []models.Post{},
 	}
 	res, _ := collection.InsertOne(ctx, user)
@@ -69,7 +73,11 @@ func GetUser(collection *mongo.Collection, ctx context.Context, token models.Goo
 			Username:  "",
 			Email:     info.Email,
 			Verified:  false,
-			Relations: models.Relationships{},
+			Relations: models.Relationships{
+				Followers:  []string{},
+				Following:  []string{},
+				LikedPosts: []string{},
+			},
 			Posts: []models.Post{},
 		}, "redirecting to username creation..."
 	}

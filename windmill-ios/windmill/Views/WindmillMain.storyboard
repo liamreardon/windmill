@@ -6,6 +6,14 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Ubuntu-Bold.ttf">
+            <string>Ubuntu-Bold</string>
+        </array>
+        <array key="Ubuntu-Light.ttf">
+            <string>Ubuntu-Light</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Record View Controller-->
         <scene sceneID="G3A-3P-V7L">
@@ -233,41 +241,54 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ydh-1O-f9l">
-                                <rect key="frame" x="357" y="808" width="21" height="21"/>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="18"/>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" image="heart" catalog="system">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="likeButton:" destination="V2M-bZ-vBC" eventType="touchUpInside" id="kfd-Y1-otm"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="atc-K9-HBn">
-                                <rect key="frame" x="47" y="808" width="42" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="Uce-em-KgE"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="atc-K9-HBn">
+                                <rect key="frame" x="20" y="771" width="84.5" height="21"/>
+                                <fontDescription key="fontDescription" name="Ubuntu-Bold" family="Ubuntu" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check" translatesAutoresizingMaskIntoConstraints="NO" id="d1r-Bd-6Sm">
+                                <rect key="frame" x="107" y="773.5" width="16" height="16"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="748" text="caption" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ly0-58-IRp">
+                                <rect key="frame" x="20" y="796" width="47" height="16"/>
+                                <viewLayoutGuide key="safeArea" id="RKy-a0-ynT"/>
+                                <fontDescription key="fontDescription" name="Ubuntu-Light" family="Ubuntu" pointSize="14"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DQz-JX-Nrh">
+                                <rect key="frame" x="379" y="683" width="8" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Ubuntu-Light" family="Ubuntu" pointSize="14"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="heart" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ioc-Uj-ecU">
+                                <rect key="frame" x="368" y="656.5" width="30" height="27.5"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="7de-9H-0DB" firstAttribute="trailing" secondItem="ydh-1O-f9l" secondAttribute="trailing" constant="36" id="Dql-cy-whi"/>
-                            <constraint firstItem="atc-K9-HBn" firstAttribute="leading" secondItem="7de-9H-0DB" secondAttribute="leading" constant="47" id="KNl-XN-xi5"/>
-                            <constraint firstItem="7de-9H-0DB" firstAttribute="bottom" secondItem="ydh-1O-f9l" secondAttribute="bottom" constant="33" id="evz-TG-Ltd"/>
-                            <constraint firstItem="7de-9H-0DB" firstAttribute="bottom" secondItem="atc-K9-HBn" secondAttribute="bottom" constant="33" id="moc-Vg-Ldx"/>
+                            <constraint firstItem="7de-9H-0DB" firstAttribute="bottom" secondItem="ly0-58-IRp" secondAttribute="bottom" constant="50" id="3DW-WO-FTG"/>
+                            <constraint firstItem="7de-9H-0DB" firstAttribute="trailing" secondItem="ly0-58-IRp" secondAttribute="trailing" priority="749" constant="27" id="68z-xU-m2W"/>
+                            <constraint firstItem="ly0-58-IRp" firstAttribute="top" secondItem="atc-K9-HBn" secondAttribute="bottom" constant="4" id="967-Ir-5nD"/>
+                            <constraint firstItem="atc-K9-HBn" firstAttribute="leading" secondItem="7de-9H-0DB" secondAttribute="leading" constant="20" id="Bnj-jS-kbV"/>
+                            <constraint firstItem="ly0-58-IRp" firstAttribute="leading" secondItem="7de-9H-0DB" secondAttribute="leading" constant="20" id="K7p-ry-f78"/>
+                            <constraint firstItem="d1r-Bd-6Sm" firstAttribute="leading" secondItem="atc-K9-HBn" secondAttribute="trailing" constant="2.5" id="e6E-ME-HsV"/>
+                            <constraint firstItem="d1r-Bd-6Sm" firstAttribute="centerY" secondItem="atc-K9-HBn" secondAttribute="centerY" id="yvy-VZ-5Uq"/>
+                            <constraint firstItem="7de-9H-0DB" firstAttribute="bottom" secondItem="ly0-58-IRp" secondAttribute="bottom" constant="50" id="zer-Na-y52"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="7de-9H-0DB"/>
                     </view>
                     <connections>
+                        <outlet property="captionLabel" destination="ly0-58-IRp" id="Erg-xc-VWG"/>
                         <outlet property="childView" destination="xhM-xn-htE" id="3zk-0c-6R7"/>
-                        <outlet property="likeButton" destination="ydh-1O-f9l" id="Kzn-pX-lV3"/>
+                        <outlet property="likeBtn" destination="ioc-Uj-ecU" id="eVR-z1-Xai"/>
+                        <outlet property="numberOfLikesLabel" destination="DQz-JX-Nrh" id="utC-Lt-oKB"/>
                         <outlet property="usernameLabel" destination="atc-K9-HBn" id="bUI-JL-03q"/>
+                        <outlet property="verifiedIcon" destination="d1r-Bd-6Sm" id="TzF-LM-GDR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I2F-CB-lZF" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -294,6 +315,7 @@
     </scenes>
     <resources>
         <image name="bolt" catalog="system" width="101" height="128"/>
+        <image name="check" width="16" height="16"/>
         <image name="circle" catalog="system" width="128" height="121"/>
         <image name="heart" catalog="system" width="128" height="109"/>
         <image name="house" catalog="system" width="128" height="110"/>

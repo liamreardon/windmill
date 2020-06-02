@@ -36,6 +36,7 @@ func AddVideoToUserPosts(collection *mongo.Collection, ctx context.Context, user
 	post := models.Post{
 		PostId:	videoId,
 		UserId: user.UserId,
+		Verified: user.Verified,
 		Username: user.Username,
 		Caption: "",
 		Comments: []models.Comment{},

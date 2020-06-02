@@ -51,6 +51,10 @@
 	<string>$(ROOT_URL)</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Ubuntu-Light.ttf</string>
+		<string>Ubuntu-Bold.ttf</string>
+		<string>Ubuntu-Regular.ttf</string>
+		<string>Ubuntu-Medium.ttf</string>
 		<string>Pacifico-Regular.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
@@ -80,6 +84,8 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

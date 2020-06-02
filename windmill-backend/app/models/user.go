@@ -4,10 +4,19 @@ package models
 type User struct {
 	UserId string `json:"userId"`
 	UserToken GoogleToken `json:"userToken"`
-	DisplayName string `json:"firstName"`
+	DisplayName string `json:"displayName"`
 	DisplayPicture string `json:"displayPicture"`
 	Username string `json:"username"`
 	Email string `json:"email"`
+	Verified bool `json:"verified"`
+	Relations Relationships `json:"relations"`
+	Posts []Post `json:"posts"`
+}
+
+type ProtectedUser struct {
+	Username string `json:"username"`
+	DisplayName string `json:"displayName"`
+	DisplayPicture string `json:"displayPicture"`
 	Verified bool `json:"verified"`
 	Relations Relationships `json:"relations"`
 	Posts []Post `json:"posts"`

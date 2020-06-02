@@ -3,6 +3,7 @@ package models
 type Post struct {
 	PostId string `json:"postid"`
 	UserId string `json:"userid"`
+	Verified bool `json:"verified"`
 	Username string `json:"username"`
 	Caption string `json:"caption"`
 	Comments []Comment `json:"comments"`

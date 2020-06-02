@@ -13,9 +13,12 @@ import SwiftKeychainWrapper
 
 class ChildViewController: UIViewController {
 
-    @IBOutlet weak var likeButton: UIButton!
+    @IBOutlet weak var likeBtn: UIImageView!
     @IBOutlet var childView: UIView!
     @IBOutlet weak var usernameLabel: UILabel!
+    @IBOutlet weak var captionLabel: UILabel!
+    @IBOutlet weak var verifiedIcon: UIImageView!
+    @IBOutlet weak var numberOfLikesLabel: UILabel!
     let previewLayer = CALayer()
     
     var thumbnail: UIImage?
@@ -34,6 +37,7 @@ class ChildViewController: UIViewController {
     var post: Post?
     
     let userId = KeychainWrapper.standard.string(forKey: "userId")
+    let tapRec = UITapGestureRecognizer()
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -49,8 +53,6 @@ class ChildViewController: UIViewController {
         showSpinner(onView: childView)
         initGraphics()
         
-        usernameLabel.text = "@\(post!.username!)"
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,22 +62,30 @@ class ChildViewController: UIViewController {
     
     // MARK: User Interactions
     @IBAction func likeButton(_ sender: UIButton) {
+
+        
+    }
+    
+    @objc func likeTapped() {
         isChecked = !isChecked
         
-        if isChecked == true {
+        if isChecked {
             let imageIcon = UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(UIColor(rgb: 0xE71C23), renderingMode: .alwaysOriginal)
-            likeButton.setImage(imageIcon, for: .normal)
+            likeBtn.image = imageIcon
+            numberOfLikesLabel.text = String(Int(numberOfLikesLabel.text!)! + 1)
             postManager.likeRequest(postUserId: post!.userId!, userId: userId!, postId: post!.id!, likedStatus: true) { (data) in
                 // res
             }
         } else {
             let imageIcon = UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
-            likeButton.setImage(imageIcon, for: .normal)
+            likeBtn.image = imageIcon
+            numberOfLikesLabel.text = String(Int(numberOfLikesLabel.text!)! - 1)
             postManager.likeRequest(postUserId: post!.userId!, userId: userId!, postId: post!.id!, likedStatus: false) { (data) in
                 // res
             }
         }
     }
+
     
     // MARK: Post Data
     func didUserLikePost() -> Bool {
@@ -92,13 +102,27 @@ class ChildViewController: UIViewController {
     func initGraphics() {
         if isChecked {
             let imageIcon = UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(UIColor(rgb: 0xE71C23), renderingMode: .alwaysOriginal)
-            likeButton.setImage(imageIcon, for: .normal)
-            return
+            likeBtn.image = imageIcon
         }
-    
-        let imageIcon = UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
-        likeButton.setImage(imageIcon, for: .normal)
+        else {
+            let imageIcon = UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            likeBtn.image = imageIcon
+        }
+
+        if !post!.verified! {
+            verifiedIcon.image = nil
+        }
+        
+        numberOfLikesLabel.text = String(post!.numlikes!)
+        captionLabel.text = post?.caption
+        usernameLabel.text = "@\(post!.username!)"
+        tapRec.addTarget(self, action: #selector(ChildViewController.likeTapped))
+        likeBtn.addGestureRecognizer(tapRec)
+        likeBtn.isUserInteractionEnabled = true
+
     }
+    
+    
     
     
     

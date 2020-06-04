@@ -12,7 +12,6 @@ import (
 )
 
 func SearchForUser(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
-
 	vars := mux.Vars(r)
 	substring := strings.ToLower(vars["substring"])
 	fmt.Println(substring)

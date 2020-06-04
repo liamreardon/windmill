@@ -11,7 +11,7 @@ import SwiftKeychainWrapper
 
 struct FeedManager {
     
-    let API_URL = "http://liam.local:8080/api/feed/"
+    let API_URL = Environment.rootURL+"/api/feed/"
     
     func getUserFeed(userId: String, completionHandler: @escaping (_ data: Data?) -> Void) {
         if let userId = KeychainWrapper.standard.string(forKey: "userId") {

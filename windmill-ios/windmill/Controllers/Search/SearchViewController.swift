@@ -8,9 +8,9 @@
 
 import Foundation
 import UIKit
+import SwiftKeychainWrapper
 
 class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
-
 
     @IBOutlet weak var searchTableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -27,6 +27,16 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         searchTableView.delegate = self
         searchTableView.dataSource = self
         initGraphics()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
     func searchUsers() {
@@ -56,7 +66,6 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
                     self.searchTableView.reloadData()
                 }
                 
-            
             } catch let parsingError {
                  print("Error", parsingError)
             }
@@ -71,6 +80,8 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         searchBar.layer.cornerRadius = 10.0
         
         searchTableView.rowHeight = 100.0
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     
     }
     
@@ -80,12 +91,19 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let username = KeychainWrapper.standard.string(forKey: "username")
         if let cell = sender as? UITableViewCell {
             let i = searchTableView.indexPath(for: cell)!.row
             if segue.identifier == "searchToProfileSegue" {
                 let vc = segue.destination as! ProfileViewController
-                vc.currentUserProfile = false
-                vc.followingUser = self.usersData[i]
+                if cell.textLabel?.text == username! {
+                    vc.currentUserProfile = true
+                    vc.followingUser = self.usersData[i]
+                }
+                else {
+                    vc.currentUserProfile = false
+                    vc.followingUser = self.usersData[i]
+                }
             }
         }
     }
@@ -97,16 +115,22 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText == "" {
+            usersData = []
+            searchTableView.reloadData()
+            return
+        }
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(SearchViewController.reload), object: nil)
         self.perform( #selector(SearchViewController.reload), with: nil, afterDelay: 1.0)
+
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        print("ended")
+        
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        print("started")
+        
     }
     
     // MARK: TableView Delegate Functions

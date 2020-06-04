@@ -32,7 +32,6 @@ func connectAWS() *session.Session {
 }
 
 func UpdateDisplayPicture(file multipart.File, filename string, userId string) (string, error) {
-
 	uploader := s3manager.NewUploader(sess)
 
 	_, err := uploader.Upload(&s3manager.UploadInput{
@@ -46,11 +45,10 @@ func UpdateDisplayPicture(file multipart.File, filename string, userId string) (
 		return "", errors.New("error uploading to server")
 	}
 
-	return "/users/" + userId + "/profile/" + filename, nil
+	return "https://windmill-warehouse.s3.us-east-2.amazonaws.com/users/" + userId + "/profile/" + filename, nil
 }
 
 func UploadVideoToS3(file multipart.File, videoId string, userId string) (string, error) {
-
 	uploader := s3manager.NewUploader(sess)
 
 	_, err := uploader.Upload(&s3manager.UploadInput{
@@ -68,7 +66,6 @@ func UploadVideoToS3(file multipart.File, videoId string, userId string) (string
 }
 
 func GetUserDisplayPicture(dpPath string) (*os.File, error){
-
 	item := "displaypic.jpg"
 
 	file, err := os.Create(item)

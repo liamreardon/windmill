@@ -14,9 +14,16 @@ class ProfileViewController: UIViewController {
     
     @IBOutlet weak var displayPicture: UIImageView!
     @IBOutlet weak var usernameLabel: UILabel!
+    @IBOutlet weak var followButton: UIButton!
+    @IBOutlet weak var followingLabel: UILabel!
+    @IBOutlet weak var followersLabel: UILabel!
     
     var currentUserProfile: Bool = true
     var followingUser: User?
+    var isFollowing: Bool? = false
+    
+    var numberOfFollowers: Int = 0
+    var numberOfFollowing: Int = 0
     
     let userManager = UserManager()
     let storageManager = StorageManager()
@@ -24,26 +31,62 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(currentUserProfile)
         if currentUserProfile {
-            self.getUserDetails()
-            self.initSignOutButton()
-            self.initGraphics()
+            getUserDetails()
+            initSignOutButton()
+            initGraphics()
         }
         else {
-        
+            loadUserData()
+            initGraphics()
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         if currentUserProfile {
-            self.getDisplayPicture()
-            self.getUserFeed()
+            getUserDetails()
+            getDisplayPicture()
+            getUserFeed()
+            initGraphics()
         }
         else {
-            
+            initGraphics()
+            loadUserData()
         }
 
+    }
+    
+    // MARK: User Interaction
+    
+    @IBAction func followButtonTapped(_ sender: Any) {
+        isFollowing! = !isFollowing!
+        let username = KeychainWrapper.standard.string(forKey: "username")
+        var following = UserDefaults.standard.stringArray(forKey: "following") ?? [String]()
+        let numFollowing = UserDefaults.standard.integer(forKey: "numFollowing")
+ 
+        if isFollowing! {
+            following.append(followingUser!.username!)
+            userManager.updateUserFollowingStatus(username: username!, followingUsername: followingUser!.username!, followingStatus: true) { (data) in
+                UserDefaults.standard.set(following, forKey: "following")
+                UserDefaults.standard.set(numFollowing + 1, forKey: "numFollowers")
+            }
+            
+            followButton.setTitle("Unfollow", for: .normal)
+            numberOfFollowers += 1
+            followersLabel.text = "followers: " + String(numberOfFollowers)
+            
+        }
+        else {
+            let newFollowing = following.filter {$0 != followingUser?.username}
+            userManager.updateUserFollowingStatus(username: username!, followingUsername: followingUser!.username!, followingStatus: false) { (data) in
+                UserDefaults.standard.set(newFollowing, forKey: "following")
+                UserDefaults.standard.set(numFollowing - 1, forKey: "numFollowers")
+            }
+            
+            followButton.setTitle("Follow", for: .normal)
+            numberOfFollowers -= 1
+            followersLabel.text = "followers: " + String(numberOfFollowers)
+        }
     }
     
     
@@ -70,11 +113,11 @@ class ProfileViewController: UIViewController {
         let userId = KeychainWrapper.standard.string(forKey: "userId")
         let image = storageManager.retrieveImage(forKey: userId!+"displayPicture", inStorageType: .fileSystem)
         if image == nil {
-            userManager.getUserDisplayPicture { (data) in
+            userManager.getUserDisplayPicture(userId: userId!) { (data) in
                 DispatchQueue.main.async {
                     let retrievedImage = UIImage(data: data!)
                     if retrievedImage != nil {
-                        self.displayPicture.image = image
+                        self.displayPicture.image = retrievedImage
                         self.storageManager.store(image: retrievedImage!, forKey: userId!+"displayPicture", withStorageType: .fileSystem)
                     }
                 }
@@ -88,6 +131,11 @@ class ProfileViewController: UIViewController {
     
     func getUserDetails() {
         usernameLabel.text = KeychainWrapper.standard.string(forKey: "username")
+        numberOfFollowers = UserDefaults.standard.integer(forKey: "numFollowers")
+        numberOfFollowing = UserDefaults.standard.integer(forKey: "numFollowing")
+        followersLabel.text = "followers: " + String(numberOfFollowers)
+        followingLabel.text = "following: " + String(numberOfFollowing)
+        followButton.isHidden = true
     }
     
     func initSignOutButton() {
@@ -123,6 +171,38 @@ class ProfileViewController: UIViewController {
     }
     
     // MARK: Following User Setup
+    func loadUserData() {
+       
+        let BUCKET_URL = Environment.bucketURL
+        if followingUser?.displaypicture != nil {
+            let url = URL(string: BUCKET_URL+followingUser!.displaypicture!)
+            displayPicture.load(url: url!)
+        }
+        
+        usernameLabel.text = followingUser?.username
+        isFollowing = isUserFollowing()
+        if isFollowing! {
+            followButton.setTitle("Unfollow", for: .normal)
+        }
+        else {
+            followButton.setTitle("Follow", for: .normal)
+        }
+        
+        numberOfFollowers = followingUser!.relations!.followers!.count
+        
+        followersLabel.text = "followers: " + String(followingUser!.relations!.followers!.count)
+        followingLabel.text = "following: " + String(followingUser!.relations!.following!.count)
+
+    }
     
-    
+    func isUserFollowing() -> Bool {
+        let following = UserDefaults.standard.stringArray(forKey: "following") ?? [String]()
+        for i in 0 ..< following.count {
+            if following[i] == followingUser!.username! {
+                return true
+            }
+        }
+        return false
+    }
+
 }

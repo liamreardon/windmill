@@ -14,6 +14,7 @@ public enum Environment {
     enum Plist {
       static let rootURL = "ROOT_URL"
       static let googleClientId = "GOOGLE_CLIENT_ID"
+      static let bucketURL = "BUCKET_URL"
     }
   }
 
@@ -26,12 +27,9 @@ public enum Environment {
   }()
 
   // MARK: - Plist values
-  static let rootURL: URL = {
-    guard let rootURLstring = Environment.infoDictionary[Keys.Plist.rootURL] as? String else {
+  static let rootURL: String = {
+    guard let url = Environment.infoDictionary[Keys.Plist.rootURL] as? String else {
       fatalError("Root URL not set in plist for this environment")
-    }
-    guard let url = URL(string: rootURLstring) else {
-      fatalError("Root URL is invalid")
     }
     return url
   }()
@@ -42,4 +40,12 @@ public enum Environment {
     }
     return googleClientId
   }()
+    
+  static let bucketURL: String = {
+    guard let bucketURL = Environment.infoDictionary[Keys.Plist.bucketURL] as? String else {
+      fatalError("Bucket URL not set in plist for this environment")
+    }
+    return bucketURL
+  }()
+  
 }

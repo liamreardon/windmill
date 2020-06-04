@@ -61,8 +61,16 @@ struct AuthManager {
                             DispatchQueue.main.async {
                                 let username = json["username"] as! String
                                 let userId = json["userId"] as! String
+                                let followers = json["followers"] as! [String]
+                                let following = json["following"] as! [String]
+                                let numFollowers = json["numFollowers"] as! Int
+                                let numFollowing = json["numFollowing"] as! Int
                                 KeychainWrapper.standard.set(username, forKey: "username")
                                 KeychainWrapper.standard.set(userId, forKey: "userId")
+                                UserDefaults.standard.set(followers, forKey: "followers")
+                                UserDefaults.standard.set(following, forKey: "following")
+                                UserDefaults.standard.set(numFollowers, forKey: "numFollowers")
+                                UserDefaults.standard.set(numFollowing, forKey: "numFollowing")
                                 let storyboard = UIStoryboard(name: "WindmillMain", bundle: nil)
                                 let vc = storyboard.instantiateViewController(withIdentifier: "tabBarController") as UIViewController
                                 vc.modalPresentationStyle = .fullScreen

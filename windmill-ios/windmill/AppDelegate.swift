@@ -18,9 +18,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         // Initialize sign-in
-        
         GIDSignIn.sharedInstance().clientID = Environment.googleClientId
         GIDSignIn.sharedInstance().delegate = self
+        
+        // Sets background to a blank/empty image
+        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+        // Sets shadow (line below the bar) to a blank image
+        UINavigationBar.appearance().shadowImage = UIImage()
+        // Sets the translucent background color
+        UINavigationBar.appearance().backgroundColor = .clear
+        // Set translucent. (Default value is already true, so this can be removed if desired.)
+        UINavigationBar.appearance().isTranslucent = true
+
         return true
     }
 
@@ -64,6 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
     }
     
+    
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!,
               withError error: Error!) {
         let userId = KeychainWrapper.standard.string(forKey: "userId")
@@ -71,8 +81,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         KeychainWrapper.standard.removeObject(forKey: "token")
         KeychainWrapper.standard.removeObject(forKey: "username")
         KeychainWrapper.standard.removeObject(forKey: "userId")
-        
-        
+        UserDefaults.standard.removeObject(forKey: "followers")
+        UserDefaults.standard.removeObject(forKey: "following")
+        UserDefaults.standard.removeObject(forKey: "numFollowers")
+        UserDefaults.standard.removeObject(forKey: "numFollowing")
     }
     
     

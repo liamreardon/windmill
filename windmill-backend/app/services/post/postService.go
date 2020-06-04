@@ -7,8 +7,7 @@ import (
 )
 
 func PostLikedService(collection *mongo.Collection, ctx context.Context, postUserId string, userId string, postId string, likedStatus bool) error {
-
-	if likedStatus == true {
+	if likedStatus {
 		_, err := collection.UpdateOne(ctx, bson.M{"userid":postUserId, "posts.postid":postId}, bson.D{
 			{"$push", bson.D{
 				{"posts.$.likers", userId},
@@ -40,7 +39,4 @@ func PostLikedService(collection *mongo.Collection, ctx context.Context, postUse
 
 		return nil
 	}
-
-
-
 }

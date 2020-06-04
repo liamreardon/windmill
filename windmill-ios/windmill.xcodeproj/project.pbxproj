@@ -16,6 +16,7 @@
 		6B5F538C245A9DB400A2610E /* UserCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5F538B245A9DB400A2610E /* UserCreationViewController.swift */; };
 		6B642A7D24868F7600F760D8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B642A7C24868F7600F760D8 /* User.swift */; };
 		6B642A81248698E400F760D8 /* Relations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B642A80248698E400F760D8 /* Relations.swift */; };
+		6B642A83248705F400F760D8 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B642A82248705F400F760D8 /* Image.swift */; };
 		6B6D0C8F2461153900348955 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6D0C8E2461153900348955 /* ProfileViewController.swift */; };
 		6B84234D245A9AA40027EA1A /* UploadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B84234C245A9AA40027EA1A /* UploadManager.swift */; };
 		6B881A582450C59F001466CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B881A572450C59F001466CB /* AppDelegate.swift */; };
@@ -58,6 +59,7 @@
 		6B5F538B245A9DB400A2610E /* UserCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCreationViewController.swift; sourceTree = "<group>"; };
 		6B642A7C24868F7600F760D8 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6B642A80248698E400F760D8 /* Relations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Relations.swift; sourceTree = "<group>"; };
+		6B642A82248705F400F760D8 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		6B6D0C8E2461153900348955 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		6B84234C245A9AA40027EA1A /* UploadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadManager.swift; sourceTree = "<group>"; };
 		6B881A542450C59F001466CB /* windmill.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = windmill.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,6 +125,7 @@
 				6B1FE28D247C8196008618E7 /* Color.swift */,
 				6B1FE28F247CE92A008618E7 /* ViewController.swift */,
 				6BD91BD5247DB8D600F98C6B /* Notifications.swift */,
+				6B642A82248705F400F760D8 /* Image.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -537,6 +540,7 @@
 				6B881A5A2450C59F001466CB /* SceneDelegate.swift in Sources */,
 				6B5F538C245A9DB400A2610E /* UserCreationViewController.swift in Sources */,
 				6B84234D245A9AA40027EA1A /* UploadManager.swift in Sources */,
+				6B642A83248705F400F760D8 /* Image.swift in Sources */,
 				6BFEA989245133E100181287 /* AuthManager.swift in Sources */,
 				6BD91BD6247DB8D600F98C6B /* Notifications.swift in Sources */,
 				6B642A7D24868F7600F760D8 /* User.swift in Sources */,

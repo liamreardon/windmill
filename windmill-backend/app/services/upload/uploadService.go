@@ -24,7 +24,6 @@ func AssignUserDisplayPicturePath(collection *mongo.Collection, ctx context.Cont
 }
 
 func AddVideoToUserPosts(collection *mongo.Collection, ctx context.Context, userId string, videoId string, url string) (string, error) {
-
 	user := models.User{}
 
 	collection.FindOne(ctx, bson.M{"userid":userId}).Decode(&user)

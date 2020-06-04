@@ -61,11 +61,7 @@ class ChildViewController: UIViewController {
     
     
     // MARK: User Interactions
-    @IBAction func likeButton(_ sender: UIButton) {
 
-        
-    }
-    
     @objc func likeTapped() {
         isChecked = !isChecked
         
@@ -121,10 +117,6 @@ class ChildViewController: UIViewController {
         likeBtn.isUserInteractionEnabled = true
 
     }
-    
-    
-    
-    
     
     func displayThumbnail() {
         previewLayer.frame = view.bounds

@@ -2,9 +2,11 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/liamreardon/windmill/windmill-backend/app/services/aws"
+	"github.com/liamreardon/windmill/windmill-backend/app/services/following"
 	"github.com/liamreardon/windmill/windmill-backend/app/services/upload"
 	"github.com/liamreardon/windmill/windmill-backend/app/services/user"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -15,7 +17,6 @@ import (
 )
 
 func UpdateDisplayPicture(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
-
 	vars := mux.Vars(r)
 	userId := vars["userId"]
 
@@ -55,7 +56,6 @@ func UpdateDisplayPicture(client *mongo.Client, w http.ResponseWriter, r *http.R
 }
 
 func UploadVideo(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
-
 	vars := mux.Vars(r)
 	userId := vars["userId"]
 	file, _, err := r.FormFile("file")
@@ -121,6 +121,29 @@ func GetDisplayPicture(client *mongo.Client, w http.ResponseWriter, r *http.Requ
 	 io.Copy(w, dp)
 	 dp.Close()
 	 return
+}
+
+func UserFollowingHandler(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	fmt.Println(vars)
+	username := vars["username"]
+	followingUsername := vars["followingUsername"]
+	followingStatus, _ := strconv.ParseBool(vars["followingStatus"])
+	collection := client.Database("windmill-master").Collection("Users")
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
+	err := following.UserFollowingService(collection, ctx, username, followingUsername, followingStatus)
+
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, map[string]interface{}{
+			"message":err,
+		})
+		return
+	}
+
+	respondJSON(w, http.StatusOK, map[string]interface{}{
+		"message":"successfully updated following user status",
+	})
 }
 
 

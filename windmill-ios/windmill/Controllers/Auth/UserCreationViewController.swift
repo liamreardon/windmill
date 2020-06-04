@@ -39,8 +39,16 @@ class UserCreationViewController: UIViewController {
                 // Username available
                 let username = usernameTextField.text!
                 let userId = result["userId"] as! String
+                let followers = result["followers"] as! [String]
+                let following = result["following"] as! [String]
+                let numFollowers = result["numFollowers"] as! Int
+                let numFollowing = result["numFollowing"] as! Int
                 KeychainWrapper.standard.set(username, forKey: "username")
                 KeychainWrapper.standard.set(userId, forKey: "userId")
+                UserDefaults.standard.set(followers, forKey: "followers")
+                UserDefaults.standard.set(following, forKey: "following")
+                UserDefaults.standard.set(numFollowers, forKey: "numFollowers")
+                UserDefaults.standard.set(numFollowing, forKey: "numFollowing")
                 self.performSegue(withIdentifier: "toProfilePic", sender: nil)
                 
             }

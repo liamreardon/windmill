@@ -214,33 +214,68 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mdk-ev-K1z">
-                                <rect key="frame" x="36" y="72" width="111" height="111"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Mdk-ev-K1z">
+                                <rect key="frame" x="20" y="114" width="111" height="111"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="111" id="EkP-Jc-Seu"/>
+                                    <constraint firstAttribute="height" constant="111" id="azV-86-eRu"/>
+                                    <constraint firstAttribute="width" constant="111" id="cFD-BR-yVa"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cEq-fc-EMb">
-                                <rect key="frame" x="105" y="191" width="42" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="cEq-fc-EMb">
+                                <rect key="frame" x="20" y="233" width="111" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mcP-tb-ntr">
+                                <rect key="frame" x="349" y="114" width="44" height="30"/>
+                                <state key="normal" title="Follow"/>
+                                <connections>
+                                    <action selector="followButtonTapped:" destination="nAN-RM-oxA" eventType="touchUpInside" id="0y0-k9-hEc"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="followers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bfD-hR-3cn">
+                                <rect key="frame" x="139" y="174" width="69" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="following" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yNh-6U-r2t">
+                                <rect key="frame" x="139" y="145" width="69" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="yNh-6U-r2t" firstAttribute="top" secondItem="uPA-aX-MBy" secondAttribute="top" constant="57" id="1MC-R3-2Wn"/>
+                            <constraint firstItem="Mdk-ev-K1z" firstAttribute="leading" secondItem="uPA-aX-MBy" secondAttribute="leading" constant="20" id="Cge-6d-h80"/>
+                            <constraint firstItem="mcP-tb-ntr" firstAttribute="top" secondItem="uPA-aX-MBy" secondAttribute="top" constant="26" id="HS3-To-Cvw"/>
+                            <constraint firstItem="yNh-6U-r2t" firstAttribute="leading" secondItem="bfD-hR-3cn" secondAttribute="leading" id="KCs-rr-GKl"/>
+                            <constraint firstItem="Mdk-ev-K1z" firstAttribute="top" secondItem="uPA-aX-MBy" secondAttribute="top" constant="26" id="UbM-in-5sY"/>
+                            <constraint firstItem="cEq-fc-EMb" firstAttribute="leading" secondItem="Mdk-ev-K1z" secondAttribute="leading" id="iSS-N6-0xd"/>
+                            <constraint firstItem="cEq-fc-EMb" firstAttribute="top" secondItem="Mdk-ev-K1z" secondAttribute="bottom" constant="8" id="mR9-zR-JqU"/>
+                            <constraint firstItem="uPA-aX-MBy" firstAttribute="trailing" secondItem="mcP-tb-ntr" secondAttribute="trailing" constant="21" id="mfB-ID-wmO"/>
+                            <constraint firstItem="bfD-hR-3cn" firstAttribute="top" secondItem="yNh-6U-r2t" secondAttribute="bottom" constant="8" id="pv3-W9-Eu2"/>
+                            <constraint firstItem="yNh-6U-r2t" firstAttribute="leading" secondItem="Mdk-ev-K1z" secondAttribute="trailing" constant="8" id="sOj-VP-JEz"/>
+                            <constraint firstItem="cEq-fc-EMb" firstAttribute="trailing" secondItem="Mdk-ev-K1z" secondAttribute="trailing" id="sVJ-YH-inr"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="uPA-aX-MBy"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="person" catalog="system" id="2SP-ch-q2b"/>
                     <navigationItem key="navigationItem" id="pP0-AV-Mmb"/>
                     <connections>
                         <outlet property="displayPicture" destination="Mdk-ev-K1z" id="jKd-tn-587"/>
+                        <outlet property="followButton" destination="mcP-tb-ntr" id="OFS-zJ-24P"/>
+                        <outlet property="followersLabel" destination="bfD-hR-3cn" id="dV6-YS-dzU"/>
+                        <outlet property="followingLabel" destination="yNh-6U-r2t" id="jgY-cB-mmJ"/>
                         <outlet property="usernameLabel" destination="cEq-fc-EMb" id="1gu-q3-cba"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OFF-MR-u3p" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6126" y="53"/>
+            <point key="canvasLocation" x="6124.6376811594209" y="52.901785714285715"/>
         </scene>
         <!--Record-->
         <scene sceneID="Jkm-3U-cX7">

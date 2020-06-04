@@ -14,14 +14,12 @@ import (
 	//"net/http"
 )
 
-
 func CheckHashedPassword(password string, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
 }
 
 func CheckUserExists(collection *mongo.Collection, ctx context.Context, username string) (bool, map[string]interface{}) {
-
 	err := collection.FindOne(ctx, bson.M{"username":username})
 	if err.Err() == nil {
 		return true, map[string]interface{}{
@@ -52,6 +50,8 @@ func SignUpUser(collection *mongo.Collection, ctx context.Context, data *models.
 		Relations: models.Relationships{
 			Followers:  []string{},
 			Following:  []string{},
+			NumFollowers: 0,
+			NumFollowing: 0,
 			LikedPosts: []string{},
 		},
 		Posts: []models.Post{},
@@ -76,6 +76,8 @@ func GetUser(collection *mongo.Collection, ctx context.Context, token models.Goo
 			Relations: models.Relationships{
 				Followers:  []string{},
 				Following:  []string{},
+				NumFollowers: 0,
+				NumFollowing: 0,
 				LikedPosts: []string{},
 			},
 			Posts: []models.Post{},

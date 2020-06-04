@@ -50,7 +50,6 @@ func (app *App) Init() {
 
 // Sets up routes
 func (app *App) setupRoutes() {
-
 	// Auth routes
 	app.Post("/api/auth/login", app.handleRequest(handlers.Login))
 	app.Post("/api/auth/signup", app.handleRequest(handlers.SignUp))
@@ -58,7 +57,8 @@ func (app *App) setupRoutes() {
 	// User Routes
 	app.Put("/api/user/{userId}/dp", app.handleRequest(handlers.UpdateDisplayPicture))
 	app.Post("/api/user/{userId}/posts", app.handleRequest(handlers.UploadVideo))
-	app.Get("/api/user/{userId}", app.handleRequest(handlers.GetDisplayPicture))
+	app.Get("/api/user/{userId}/dp", app.handleRequest(handlers.GetDisplayPicture))
+	app.Post("/api/user/{username}/following/{followingUsername}/{followingStatus}", app.handleRequest(handlers.UserFollowingHandler))
 
 	// Search Routes
 	app.Get("/api/search/{substring}", app.handleRequest(handlers.SearchForUser))
@@ -69,7 +69,6 @@ func (app *App) setupRoutes() {
 
 	// Post Routes
 	app.Post("/api/user/{postUserId}/post/{postId}/likers/{userId}/{likedStatus}", app.handleRequest(handlers.PostLikedHandler))
-
 }
 
 // Run app on router

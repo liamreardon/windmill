@@ -26,7 +26,7 @@ struct User: Decodable {
 
         self.username = username
         self.displayname = displayname
-        self.displayname = displaypicture
+        self.displaypicture = displaypicture
         self.verified = verified
         self.posts = []
         

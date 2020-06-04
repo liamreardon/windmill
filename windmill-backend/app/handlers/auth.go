@@ -11,7 +11,6 @@ import (
 )
 
 func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
-
 	res, err := request.ValidateLoginRequest(r)
 	if err != nil {
 		respondError(w, http.StatusBadRequest, map[string]interface{}{
@@ -49,11 +48,14 @@ func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		"authFlag": "2",
 		"username": user.Username,
 		"userId": user.UserId,
+		"followers": user.Relations.Followers,
+		"following": user.Relations.Following,
+		"numFollowers": user.Relations.NumFollowers,
+		"numFollowing": user.Relations.NumFollowing,
 	})
 }
 
 func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
-
 	res, err := request.ValidateSignupRequest(r)
 	if err != nil {
 		respondError(w, http.StatusBadRequest, map[string]interface{}{

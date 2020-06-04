@@ -35,20 +35,8 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             setupPreview()
             startSession()
         }
-
-        cameraButton.isUserInteractionEnabled = true
-
-        let cameraButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(RecordViewController.startCapture))
-
-        cameraButton.addGestureRecognizer(cameraButtonRecognizer)
-
-        cameraButton.frame = CGRect(x: 50, y: screenHeight - 200, width: 100, height: 100)
-        cameraButton.center.x = self.view.center.x
-
-        cameraButton.backgroundColor = UIColor.red
-
-        camPreview.addSubview(cameraButton)
-
+        
+        initGraphics()
     }
     
     override func didReceiveMemoryWarning() {
@@ -229,6 +217,28 @@ class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelega
 
         }
 
+    }
+    
+    // MARK: User Interface
+    
+    func setupRecordButton() {
+        cameraButton.isUserInteractionEnabled = true
+
+        let cameraButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(RecordViewController.startCapture))
+
+        cameraButton.addGestureRecognizer(cameraButtonRecognizer)
+
+        cameraButton.frame = CGRect(x: 50, y: screenHeight - 200, width: 100, height: 100)
+        cameraButton.center.x = self.view.center.x
+
+        cameraButton.backgroundColor = UIColor.red
+
+        camPreview.addSubview(cameraButton)
+    }
+    
+    func initGraphics() {
+        setupRecordButton()
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
 

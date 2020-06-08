@@ -17,13 +17,17 @@ PODS:
   - GTMSessionFetcher/Full (1.3.1):
     - GTMSessionFetcher/Core (= 1.3.1)
   - lottie-ios (3.1.8)
+  - NextLevel (0.16.3)
   - Pageboy (3.6.0)
+  - RPCircularProgress (0.5.0)
   - SwiftKeychainWrapper (3.4.0)
 
 DEPENDENCIES:
   - GoogleSignIn
   - lottie-ios
+  - NextLevel (~> 0.16.3)
   - Pageboy (~> 3.6)
+  - RPCircularProgress (= 0.5.0)
   - SwiftKeychainWrapper
 
 SPEC REPOS:
@@ -33,7 +37,9 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - lottie-ios
+    - NextLevel
     - Pageboy
+    - RPCircularProgress
     - SwiftKeychainWrapper
 
 SPEC CHECKSUMS:
@@ -42,9 +48,11 @@ SPEC CHECKSUMS:
   GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
   GTMSessionFetcher: cea130bbfe5a7edc8d06d3f0d17288c32ffe9925
   lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
+  NextLevel: 76dab336f758e6a98ef6b4917de1481324cffe04
   Pageboy: 490c26be405987158660bb45ee2f404567395007
+  RPCircularProgress: 4499d4a1453dfbd3fe5bd8c6f344fd51cff3ad00
   SwiftKeychainWrapper: 6fc49fbf7d4a6b0772917acb0e53a1639f6078d6
 
-PODFILE CHECKSUM: 96c17bb3a8173a483ab2a01617d1719054c7bcb7
+PODFILE CHECKSUM: 7133a74f54974fa8a2400d872b8b3c9502278aef
 
 COCOAPODS: 1.8.4

@@ -20,10 +20,14 @@ class UserCreationViewController: UIViewController {
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var displayPictureImageView: UIImageView!
     
+    // MARK: Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.imagePicker = ImagePicker(presentationController: self, delegate: self)
     }
+    
+    // MARK: User Interaction
     
     @IBAction func setUsername(_ sender: Any) {
         
@@ -65,6 +69,10 @@ class UserCreationViewController: UIViewController {
         self.imagePicker.present(from: sender)
     }
     
+    @IBAction func dismissUploadTapped(_ sender: Any) {
+        self.goToHome()
+    }
+    
     @IBAction func saveDisplayPicture(_ sender: Any) {
         let userId = KeychainWrapper.standard.string(forKey: "userId") 
         self.storageManager.store(image: displayPictureImageView.image!, forKey: userId!+"displayPicture", withStorageType: .fileSystem)
@@ -73,9 +81,7 @@ class UserCreationViewController: UIViewController {
         
     }
     
-    @IBAction func dismissUploadTapped(_ sender: Any) {
-        self.goToHome()
-    }
+    // MARK: Segue
     
     func goToHome() {
         let storyboard = UIStoryboard(name: "WindmillMain", bundle: nil)

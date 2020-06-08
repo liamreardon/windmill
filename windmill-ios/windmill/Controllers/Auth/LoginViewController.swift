@@ -11,6 +11,8 @@ import GoogleSignIn
 
 class LoginViewController: UIViewController {
     
+    // MARK Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         GIDSignIn.sharedInstance()?.presentingViewController = self
@@ -22,6 +24,8 @@ class LoginViewController: UIViewController {
         view.addSubview(googleSignIn)
             
     }
+    
+    // MARK: User Interface
     
     @objc func signOut(_ sender: UIButton) {
         print("signing out...")

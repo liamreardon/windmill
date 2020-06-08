@@ -73,7 +73,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
     }
     
-    
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!,
               withError error: Error!) {
         let userId = KeychainWrapper.standard.string(forKey: "userId")
@@ -86,12 +85,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         UserDefaults.standard.removeObject(forKey: "numFollowers")
         UserDefaults.standard.removeObject(forKey: "numFollowing")
     }
-    
-    
 }
 
 //MARK: - UIApplication Extension
+
 extension UIApplication {
+    
     class func topViewController(viewController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
         if let nav = viewController as? UINavigationController {
             return topViewController(viewController: nav.visibleViewController)

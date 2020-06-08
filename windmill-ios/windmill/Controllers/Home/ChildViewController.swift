@@ -12,16 +12,15 @@ import AVFoundation
 import SwiftKeychainWrapper
 
 class ChildViewController: UIViewController {
+    
+    // IVARS
 
     @IBOutlet weak var likeBtn: UIImageView!
     @IBOutlet var childView: UIView!
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var captionLabel: UILabel!
-    @IBOutlet weak var verifiedIcon: UIImageView!
     @IBOutlet weak var numberOfLikesLabel: UILabel!
     let previewLayer = CALayer()
-    
-    var thumbnail: UIImage?
     
     fileprivate var videoURL: URL?
     fileprivate var queuePlayer: AVQueuePlayer!
@@ -38,6 +37,8 @@ class ChildViewController: UIViewController {
     
     let userId = KeychainWrapper.standard.string(forKey: "userId")
     let tapRec = UITapGestureRecognizer()
+    
+    var vSpinner: UIView?
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -59,8 +60,7 @@ class ChildViewController: UIViewController {
         
     }
     
-    
-    // MARK: User Interactions
+    // MARK: User Interaction
 
     @objc func likeTapped() {
         isChecked = !isChecked
@@ -82,8 +82,8 @@ class ChildViewController: UIViewController {
         }
     }
 
-    
     // MARK: Post Data
+    
     func didUserLikePost() -> Bool {
 
         for i in 0 ..< post!.likers!.count {
@@ -94,7 +94,8 @@ class ChildViewController: UIViewController {
         return false
     }
     
-    // MARK: UI
+    // MARK: User Interface
+    
     func initGraphics() {
         if isChecked {
             let imageIcon = UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(UIColor(rgb: 0xE71C23), renderingMode: .alwaysOriginal)
@@ -104,32 +105,50 @@ class ChildViewController: UIViewController {
             let imageIcon = UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
             likeBtn.image = imageIcon
         }
+        
 
         if !post!.verified! {
-            verifiedIcon.image = nil
+            usernameLabel.text = "@\(post!.username!)"
+        }
+            
+        else {
+            let fullString = NSMutableAttributedString(string: "@\(post!.username!)")
+            let image1Attachment = NSTextAttachment()
+            image1Attachment.image = UIImage(named: "check.png")
+            let image1String = NSAttributedString(attachment: image1Attachment)
+            fullString.append(image1String)
+            usernameLabel.attributedText = fullString
         }
         
         numberOfLikesLabel.text = String(post!.numlikes!)
         captionLabel.text = post?.caption
-        usernameLabel.text = "@\(post!.username!)"
         tapRec.addTarget(self, action: #selector(ChildViewController.likeTapped))
         likeBtn.addGestureRecognizer(tapRec)
         likeBtn.isUserInteractionEnabled = true
 
     }
     
-    func displayThumbnail() {
-        previewLayer.frame = view.bounds
-        previewLayer.contents = thumbnail
-        view.layer.addSublayer(previewLayer)
+    func showSpinner(onView : UIView) {
+        let spinnerView = UIView.init(frame: onView.bounds)
+        let ai = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.large)
+        ai.color = .white
+        ai.startAnimating()
+        ai.center = spinnerView.center
+        
+       
+        spinnerView.addSubview(ai)
+        onView.addSubview(spinnerView)
+        
+        vSpinner = spinnerView
     }
     
-    func removeThumbnail() {
-        previewLayer.removeFromSuperlayer()
+    func removeSpinner() {
+        vSpinner?.removeFromSuperview()
+        vSpinner = nil
     }
     
-
     // MARK: Player Functions
+    
     func prepareVideo() {
         let playerItem = AVPlayerItem(url: URL.init(string: post!.url!)!)
         playerItem.addObserver(self,
@@ -176,6 +195,7 @@ class ChildViewController: UIViewController {
     
     
     // MARK: Observers
+    
     override func observeValue(forKeyPath keyPath: String?,
                                of object: Any?,
                                change: [NSKeyValueChangeKey : Any]?,
@@ -198,12 +218,13 @@ class ChildViewController: UIViewController {
                 status = .unknown
             }
             
+            removeSpinner()
+            
             // Switch over status value
             switch status {
             case .readyToPlay:
                 // Player item is ready to play.
                 print("playing")
-                removeSpinner()
             case .failed:
                 // Player item failed. See error.
                 print("failed")
@@ -216,6 +237,4 @@ class ChildViewController: UIViewController {
             
         }
     }
-    
-          
 }

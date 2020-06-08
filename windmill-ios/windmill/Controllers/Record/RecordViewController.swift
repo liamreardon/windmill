@@ -8,238 +8,219 @@
 
 import UIKit
 import AVFoundation
+import NextLevel
 
-class RecordViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
-
-    @IBOutlet weak var camPreview: UIView!
+class RecordViewController: UIViewController {
     
-    let cameraButton = UIView()
-
-    let captureSession = AVCaptureSession()
-
-    let movieOutput = AVCaptureMovieFileOutput()
-
-    var previewLayer: AVCaptureVideoPreviewLayer!
-
-    var activeInput: AVCaptureDeviceInput!
-
-    var outputURL: URL!
+    // MARK: IVARS
     
-    var screenHeight = UIScreen.main.bounds.size.height
-    var screenWidth = UIScreen.main.bounds.size.width
-
+    internal var previewView: UIView!
+    internal var nextLevel: NextLevel?
+    
+    // MARK: Lifecycle
+    
     override func viewDidLoad() {
-        super.viewDidLoad()
-
-        if setupSession() {
-            setupPreview()
-            startSession()
-        }
+        self.setupCamera()
         
-        initGraphics()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.startCamera()
     }
-
-    func setupPreview() {
-        // Configure previewLayer
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer.frame = camPreview.bounds
-        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        camPreview.layer.addSublayer(previewLayer)
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.stopCamera()
     }
+}
 
-    //MARK:- Setup Camera
+// MARK: Camera Setup
 
-    func setupSession() -> Bool {
+extension RecordViewController {
+    internal func setupCamera() {
+        self.nextLevel = NextLevel()
+        let screenBounds = UIScreen.main.bounds
+        self.previewView = UIView(frame: screenBounds)
+        if let nextLevel = self.nextLevel {
+            if let previewView = self.previewView {
+                
+                nextLevel.delegate = self
+                nextLevel.videoDelegate = self
 
-        captureSession.sessionPreset = AVCaptureSession.Preset.high
-
-        // Setup Camera
-        let camera = AVCaptureDevice.default(for: AVMediaType.video)!
-
-        do {
-
-            let input = try AVCaptureDeviceInput(device: camera)
-
-            if captureSession.canAddInput(input) {
-                captureSession.addInput(input)
-                activeInput = input
-            }
-        } catch {
-            print("Error setting device video input: \(error)")
-            return false
-        }
-
-        // Setup Microphone
-        let microphone = AVCaptureDevice.default(for: AVMediaType.audio)!
-
-        do {
-            let micInput = try AVCaptureDeviceInput(device: microphone)
-            if captureSession.canAddInput(micInput) {
-                captureSession.addInput(micInput)
-            }
-        } catch {
-            print("Error setting device audio input: \(error)")
-            return false
-        }
-
-
-        // Movie output
-        if captureSession.canAddOutput(movieOutput) {
-            captureSession.addOutput(movieOutput)
-        }
-
-        return true
-    }
-
-    func setupCaptureMode(_ mode: Int) {
-        // Video Mode
-    }
-
-    //MARK:- Camera Session
-    func startSession() {
-
-        if !captureSession.isRunning {
-            videoQueue().async {
-                self.captureSession.startRunning()
+                nextLevel.videoConfiguration.maximumCaptureDuration = CMTimeMakeWithSeconds(5, preferredTimescale: 600)
+                nextLevel.audioConfiguration.bitRate = 44000
+            
+                previewView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                previewView.backgroundColor = UIColor.black
+                nextLevel.previewLayer.frame = previewView.bounds
+                previewView.layer.addSublayer(nextLevel.previewLayer)
+                self.view.addSubview(previewView)
             }
         }
     }
+    
+    internal func startCamera() {
+        if NextLevel.authorizationStatus(forMediaType: AVMediaType.video) == .authorized &&
+            NextLevel.authorizationStatus(forMediaType: AVMediaType.audio) == .authorized {
 
-    func stopSession() {
-        if captureSession.isRunning {
-            videoQueue().async {
-                self.captureSession.stopRunning()
+            do {
+                try self.nextLevel?.start()
+            } catch let error {
+                print("failed to start camera \(error)")
             }
-        }
-    }
-
-    func videoQueue() -> DispatchQueue {
-        return DispatchQueue.main
-    }
-
-    func currentVideoOrientation() -> AVCaptureVideoOrientation {
-        var orientation: AVCaptureVideoOrientation
-
-        orientation = AVCaptureVideoOrientation.portrait
-
-        return orientation
-     }
-
-    @objc func startCapture() {
-
-        startRecording()
-
-    }
-
-    func tempURL() -> URL? {
-        let directory = NSTemporaryDirectory() as NSString
-
-        if directory != "" {
-            let path = directory.appendingPathComponent(NSUUID().uuidString + ".mp4")
-            return URL(fileURLWithPath: path)
-        }
-
-        return nil
-    }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-
-        let vc = segue.destination as! VideoEditViewController
-
-        vc.videoURL = sender as? URL
-
-    }
-
-    func startRecording() {
-
-        if movieOutput.isRecording == false {
-
-            let connection = movieOutput.connection(with: AVMediaType.video)
-
-            if (connection?.isVideoOrientationSupported)! {
-                connection?.videoOrientation = currentVideoOrientation()
-            }
-
-            if (connection?.isVideoStabilizationSupported)! {
-                connection?.preferredVideoStabilizationMode = AVCaptureVideoStabilizationMode.auto
-            }
-
-            let device = activeInput.device
-
-            if (device.isSmoothAutoFocusSupported) {
-
-                do {
-                    try device.lockForConfiguration()
-                    device.isSmoothAutoFocusEnabled = false
-                    device.unlockForConfiguration()
-                } catch {
-                   print("Error setting configuration: \(error)")
-                }
-
-            }
-
-            outputURL = tempURL()
-            movieOutput.startRecording(to: outputURL, recordingDelegate: self)
-
-            }
-            else {
-                stopRecording()
-            }
-
-       }
-
-   func stopRecording() {
-
-       if movieOutput.isRecording == true {
-           movieOutput.stopRecording()
-        }
-   }
-
-    func capture(_ captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAt fileURL: URL!, fromConnections connections: [Any]!) {
-
-    }
-
-    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-
-        if (error != nil) {
-
-            print("Error recording movie: \(error!.localizedDescription)")
-
         } else {
-
-            let videoRecorded = outputURL! as URL
-
-            performSegue(withIdentifier: "editVideo", sender: videoRecorded)
-
+            NextLevel.requestAuthorization(forMediaType: .video) { (mediaType, status) in
+                print("NextLevel, authorization updated for media \(mediaType) status \(status)")
+                if NextLevel.authorizationStatus(forMediaType: AVMediaType.video) == .authorized &&
+                    NextLevel.authorizationStatus(forMediaType: AVMediaType.audio) == .authorized {
+                    self.startCamera()
+                }
+            }
+            
+            NextLevel.requestAuthorization(forMediaType: AVMediaType.audio) { (mediaType, status) in
+                print("NextLevel, authorization updated for media \(mediaType) status \(status)")
+                if NextLevel.authorizationStatus(forMediaType: AVMediaType.video) == .authorized &&
+                    NextLevel.authorizationStatus(forMediaType: AVMediaType.audio) == .authorized {
+                    self.startCamera()
+                }
+            }
         }
-
     }
     
-    // MARK: User Interface
+    internal func stopCamera() {
+        self.nextLevel?.stop()
+    }
+}
+
+// MARK: User Interface
+
+extension RecordViewController {
     
-    func setupRecordButton() {
-        cameraButton.isUserInteractionEnabled = true
+    internal func setupRecordButton() {
+        
+    }
+}
 
-        let cameraButtonRecognizer = UITapGestureRecognizer(target: self, action: #selector(RecordViewController.startCapture))
+// MARK: - NextLevel Delegate
 
-        cameraButton.addGestureRecognizer(cameraButtonRecognizer)
-
-        cameraButton.frame = CGRect(x: 50, y: screenHeight - 200, width: 100, height: 100)
-        cameraButton.center.x = self.view.center.x
-
-        cameraButton.backgroundColor = UIColor.red
-
-        camPreview.addSubview(cameraButton)
+extension RecordViewController: NextLevelDelegate {
+    
+    public func nextLevel(_ nextLevel: NextLevel, didUpdateAuthorizationStatus status: NextLevelAuthorizationStatus, forMediaType mediaType: AVMediaType) {
     }
     
-    func initGraphics() {
-        setupRecordButton()
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    // configuration
+    public func nextLevel(_ nextLevel: NextLevel, didUpdateVideoConfiguration videoConfiguration: NextLevelVideoConfiguration) {
     }
     
+    public func nextLevel(_ nextLevel: NextLevel, didUpdateAudioConfiguration audioConfiguration: NextLevelAudioConfiguration) {
+    }
+    
+    // session
+    public func nextLevelSessionWillStart(_ nextLevel: NextLevel) {
+        #if PROTOTYPE
+        TinyConsole.print("📷 will start")
+        #endif
+    }
+    
+    public func nextLevelSessionDidStart(_ nextLevel: NextLevel) {
+        #if PROTOTYPE
+        TinyConsole.print("📷 did start")
+        #endif
+    }
+    
+    public func nextLevelSessionDidStop(_ nextLevel: NextLevel) {
+    }
+    
+    // session interruption
+    public func nextLevelSessionWasInterrupted(_ nextLevel: NextLevel) {
+    }
+    
+    public func nextLevelSessionInterruptionEnded(_ nextLevel: NextLevel) {
+    }
+    
+    // preview
+    public func nextLevelWillStartPreview(_ nextLevel: NextLevel) {
+    }
+    
+    public func nextLevelDidStopPreview(_ nextLevel: NextLevel) {
+    }
+    
+    // mode
+    public func nextLevelCaptureModeWillChange(_ nextLevel: NextLevel) {
+    }
+    
+    public func nextLevelCaptureModeDidChange(_ nextLevel: NextLevel) {
+    }
+    
+}
 
+extension RecordViewController: NextLevelVideoDelegate {
+    
+    // video zoom
+    public func nextLevel(_ nextLevel: NextLevel, didUpdateVideoZoomFactor videoZoomFactor: Float) {
+    }
+    
+    // video frame processing
+    public func nextLevel(_ nextLevel: NextLevel, willProcessRawVideoSampleBuffer sampleBuffer: CMSampleBuffer, onQueue queue: DispatchQueue) {
+    }
+    
+    public func nextLevel(_ nextLevel: NextLevel, willProcessFrame frame: AnyObject, timestamp: TimeInterval, onQueue queue: DispatchQueue) {
+    }
+    
+    // enabled by isCustomContextVideoRenderingEnabled
+    public func nextLevel(_ nextLevel: NextLevel, renderToCustomContextWithImageBuffer imageBuffer: CVPixelBuffer, onQueue queue: DispatchQueue) {
+//        if let frame = self._bufferRenderer?.videoBufferOutput {
+//            nextLevel.videoCustomContextImageBuffer = frame
+//        }
+    }
+    
+    // video recording session
+    
+    public func nextLevel(_ nextLevel: NextLevel, didSetupVideoInSession session: NextLevelSession) {
+    }
+    
+    public func nextLevel(_ nextLevel: NextLevel, didSetupAudioInSession session: NextLevelSession) {
+    }
+    
+    public func nextLevel(_ nextLevel: NextLevel, didStartClipInSession session: NextLevelSession) {
+    }
+    
+    public func nextLevel(_ nextLevel: NextLevel, didCompleteClip clip: NextLevelClip, inSession session: NextLevelSession) {
+    }
+    
+    public func nextLevel(_ nextLevel: NextLevel, didAppendVideoSampleBuffer sampleBuffer: CMSampleBuffer, inSession session: NextLevelSession) {
+    }
+    
+    public func nextLevel(_ nextLevel: NextLevel, didAppendAudioSampleBuffer sampleBuffer: CMSampleBuffer, inSession session: NextLevelSession) {
+    }
+    
+    public func nextLevel(_ nextLevel: NextLevel, didAppendVideoPixelBuffer pixelBuffer: CVPixelBuffer, timestamp: TimeInterval, inSession session: NextLevelSession) {
+//        let currentProgress = (session.totalDuration.seconds / 12.0).clamped(to: 0...1)
+//        self._recordButton.updateProgress(progress: Float(currentProgress), animated: true)
+    }
+    
+    public func nextLevel(_ nextLevel: NextLevel, didSkipVideoPixelBuffer pixelBuffer: CVPixelBuffer, timestamp: TimeInterval, inSession session: NextLevelSession) {
+    }
+    
+    public func nextLevel(_ nextLevel: NextLevel, didSkipVideoSampleBuffer sampleBuffer: CMSampleBuffer, inSession session: NextLevelSession) {
+    }
+    
+    public func nextLevel(_ nextLevel: NextLevel, didSkipAudioSampleBuffer sampleBuffer: CMSampleBuffer, inSession session: NextLevelSession) {
+    }
+    
+    public func nextLevel(_ nextLevel: NextLevel, didCompleteSession session: NextLevelSession) {
+//        self.endCapture()
+    }
+    
+    // video frame photo
+        
+    public func nextLevel(_ nextLevel: NextLevel, didCompletePhotoCaptureFromVideoFrame photoDict: [String : Any]?) {
+//        if let dictionary = photoDict,
+//            let photoData = dictionary[NextLevelPhotoJPEGKey] as? Data,
+//            let photoImage = UIImage(data: photoData) {
+//            self.savePhoto(photoImage: photoImage)
+//        }
+    }
+    
 }

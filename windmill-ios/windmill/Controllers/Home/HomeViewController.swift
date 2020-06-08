@@ -14,67 +14,58 @@ import AVFoundation
 
 class HomeViewController: PageboyViewController {
     
-
-    // MARK: Init Vars
+    // MARK: IVARS
 
     var previousBarButton: UIBarButtonItem?
     var nextBarButton: UIBarButtonItem?
     let feedManager = FeedManager()
     var postsData: [Post] = []
     var pageControllers: [ChildViewController] = []
-    var pageThumbails: [UIImage] = []
     var index: Int = 0
     var refreshControl = UIRefreshControl()
+    var feedLoaded: Bool = false
+    var vSpinner : UIView?
 
+    @IBOutlet var homeView: UIView!
+    
     // MARK: Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         getFeed()
-        getPageThumbnails()
-        createPageControllers()
         
         dataSource = self
         delegate = self
         navigationOrientation = .vertical
-    
-    
+        
+        if !feedLoaded {
+            showSpinner(onView: homeView)
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        if feedLoaded {
+            self.reloadData()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
-        let prevPostDataCount = postsData.count
-        getFeed()
-        if postsData.count > prevPostDataCount {
-            getPageThumbnails()
-            createPageControllers()
-        }
-        
-        if pageControllers.count == 0 {
-            // show no posts screen
-            return
-        }
-        
-        self.reloadData()
-        
-        let vc = pageControllers[0]
-        if vc.isPaused {
-            vc.play()
-        }
-    
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         if pageControllers.count == 0 { return }
         let vc = pageControllers[index]
         vc.stop()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+
+    }
+    
+    // MARK: Pageboy Data Source
     
     func createPageControllers() {
         
@@ -85,25 +76,14 @@ class HomeViewController: PageboyViewController {
         let storyboard = UIStoryboard(name: "WindmillMain", bundle: Bundle.main)
         
         if postsData.count == 0 { return }
-        if pageThumbails.count == 0 { return }
+
         for i in 0 ..< postsData.count {
             let viewController = storyboard.instantiateViewController(withIdentifier: "ChildViewController") as! ChildViewController
             viewController.index = i + 1
             viewController.post = postsData[i]
-            viewController.thumbnail = pageThumbails[i]
             pageControllers.append(viewController)
         }
-        
-        
     }
-    
-    func getPageThumbnails() {
-        for i in 0 ..< postsData.count {
-            let thumbnail = createVideoThumbnail(from: URL.init(string: postsData[i].url!)!)
-            pageThumbails.append(thumbnail!)
-        }
-    }
-    
     
     func updateVideoLoop(index: Int, direction: PageboyViewController.NavigationDirection) {
 
@@ -123,27 +103,15 @@ class HomeViewController: PageboyViewController {
         vc.play()
     }
 
-    
-    // MARK: Actions
-    
-    @objc func nextPage(_ sender: UIBarButtonItem) {
-        scrollToPage(.next, animated: true)
-    }
-    
-    @objc func previousPage(_ sender: UIBarButtonItem) {
-        scrollToPage(.previous, animated: true)
-    }
-    
-    
     // MARK: API Functions
   
     func getFeed() {
         if postsData.count > 0 {
             postsData = []
         }
-        let dGroup = DispatchGroup()
+        
         let userId = KeychainWrapper.standard.string(forKey: "userId")
-        dGroup.enter()
+    
         feedManager.getUserFeed(userId: userId!) { (data) in
             
             do {
@@ -153,38 +121,44 @@ class HomeViewController: PageboyViewController {
                     let p = Post(dictionary: posts[i])!
                     self.postsData.append(p)
                 }
-                dGroup.leave()
-            
+                
+                DispatchQueue.main.async {
+                    self.createPageControllers()
+                    self.reloadData()
+                    self.removeSpinner()
+                    self.feedLoaded = true
+                }
+                
             } catch let parsingError {
                  print("Error", parsingError)
             }
         }
-        dGroup.wait()
     }
     
-    private func createVideoThumbnail(from url: URL) -> UIImage? {
-
-        let asset = AVAsset(url: url)
-        let assetImgGenerate = AVAssetImageGenerator(asset: asset)
-        assetImgGenerate.appliesPreferredTrackTransform = true
-        assetImgGenerate.maximumSize = CGSize(width: view.frame.width, height: view.frame.height)
-
-        let time = CMTimeMakeWithSeconds(0.0, preferredTimescale: 600)
-        do {
-            let img = try assetImgGenerate.copyCGImage(at: time, actualTime: nil)
-            let thumbnail = UIImage(cgImage: img)
-            return thumbnail
-        }
-        catch {
-          print(error.localizedDescription)
-          return nil
-        }
-
+    // MARK: User Interface
+    
+    func showSpinner(onView : UIView) {
+        let spinnerView = UIView.init(frame: onView.bounds)
+        let ai = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.large)
+        ai.color = .white
+        ai.startAnimating()
+        ai.center = spinnerView.center
+        
+       
+        spinnerView.addSubview(ai)
+        onView.addSubview(spinnerView)
+        
+        vSpinner = spinnerView
+    }
+    
+    func removeSpinner() {
+        vSpinner?.removeFromSuperview()
+        vSpinner = nil
     }
     
 }
 
-// MARK: PageboyViewControllerDataSource
+// MARK: Pageboy Data Source
 
 extension HomeViewController: PageboyViewControllerDataSource {
     
@@ -202,7 +176,7 @@ extension HomeViewController: PageboyViewControllerDataSource {
     }
 }
 
-// MARK: PageboyViewControllerDelegate
+// MARK: Pageboy Delegates
 
 extension HomeViewController: PageboyViewControllerDelegate {
     

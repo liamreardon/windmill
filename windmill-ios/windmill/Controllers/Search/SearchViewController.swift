@@ -11,6 +11,8 @@ import UIKit
 import SwiftKeychainWrapper
 
 class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
+    
+    // MARK: IVARS
 
     @IBOutlet weak var searchTableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -20,6 +22,8 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     let searchManager = SearchManager()
     
     var usersData: [User] = []
+    
+    // MARK: Lifecycle
      
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +43,22 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
+    // MARK: User Interface
+    
+    func initGraphics() {
+        let green = UIColor(rgb: 0x00B894)
+        
+        searchBar.layer.borderColor = green.cgColor
+        searchBar.layer.borderWidth = 1.0
+        searchBar.layer.cornerRadius = 10.0
+        
+        searchTableView.rowHeight = 100.0
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
+    
+    // MARK: API Functions
+    
     func searchUsers() {
         searchManager.searchForUsers(substring: searchBar.text!) { (data) in
             do {
@@ -47,11 +67,6 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
                 let users = jsonResponse["users"] as! [[String:Any]]
                 for i in 0..<users.count {
                     var user = User(dictionary: users[i])!
-                    let posts = users[i]["posts"] as! [[String:Any]]
-                    for i in 0..<posts.count {
-                        let post = Post(dictionary: posts[i])
-                        user.posts!.append(post!)
-                    }
                     
                     let relations = users[i]["relations"] as! [String:Any]
 
@@ -72,24 +87,12 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         }
     }
     
-    func initGraphics() {
-        let green = UIColor(rgb: 0x00B894)
-        
-        searchBar.layer.borderColor = green.cgColor
-        searchBar.layer.borderWidth = 1.0
-        searchBar.layer.cornerRadius = 10.0
-        
-        searchTableView.rowHeight = 100.0
-        
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-    
-    }
-    
     @objc func reload() {
         searchUsers()
     }
     
     // MARK: - Navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let username = KeychainWrapper.standard.string(forKey: "username")
         if let cell = sender as? UITableViewCell {
@@ -108,8 +111,8 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         }
     }
     
-
     // MARK: Search Delegate Functions
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
@@ -134,6 +137,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     }
     
     // MARK: TableView Delegate Functions
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return usersData.count
     }

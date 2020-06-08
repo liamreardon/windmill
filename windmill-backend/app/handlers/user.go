@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/liamreardon/windmill/windmill-backend/app/services/aws"
@@ -125,10 +124,10 @@ func GetDisplayPicture(client *mongo.Client, w http.ResponseWriter, r *http.Requ
 
 func UserFollowingHandler(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	fmt.Println(vars)
 	username := vars["username"]
 	followingUsername := vars["followingUsername"]
 	followingStatus, _ := strconv.ParseBool(vars["followingStatus"])
+
 	collection := client.Database("windmill-master").Collection("Users")
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 
@@ -143,6 +142,28 @@ func UserFollowingHandler(client *mongo.Client, w http.ResponseWriter, r *http.R
 
 	respondJSON(w, http.StatusOK, map[string]interface{}{
 		"message":"successfully updated following user status",
+	})
+}
+
+func GetUser(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+
+	collection := client.Database("windmill-master").Collection("Users")
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
+	usr, err := user.GetUser(collection, ctx, username)
+
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, map[string]interface{}{
+			"message":err,
+		})
+		return
+	}
+
+	respondJSON(w, http.StatusOK, map[string]interface{}{
+		"message":"successfully retrieved user",
+		"user":usr,
 	})
 }
 

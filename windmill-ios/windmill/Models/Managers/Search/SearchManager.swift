@@ -11,7 +11,7 @@ import SwiftKeychainWrapper
 
 struct SearchManager {
     
-    let API_URL = "http://liam.local:8080/api/search/"
+    let API_URL = Environment.rootURL+"/api/search/"
     
     func searchForUsers(substring: String, completionHandler: @escaping (_ data: Data?) -> Void) {
         if let url = URL(string: API_URL+substring) {

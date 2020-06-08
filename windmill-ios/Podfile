@@ -10,5 +10,7 @@ target 'windmill' do
   pod 'SwiftKeychainWrapper'
   pod 'lottie-ios'
   pod 'Pageboy', '~> 3.6'
+  pod "NextLevel", "~> 0.16.3"
+  pod 'RPCircularProgress', '0.5.0'
   
 end

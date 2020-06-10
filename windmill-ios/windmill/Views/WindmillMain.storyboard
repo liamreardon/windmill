@@ -22,15 +22,30 @@
         <!--Record View Controller-->
         <scene sceneID="G3A-3P-V7L">
             <objects>
-                <viewController id="dkE-k7-KM0" customClass="RecordViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="recordController" id="dkE-k7-KM0" customClass="RecordViewController" customModule="windmill" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4dr-yT-6Vv">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="rL7-5f-XDb"/>
                     </view>
-                    <navigationItem key="navigationItem" id="yLf-Ud-1L3"/>
+                    <navigationItem key="navigationItem" id="yLf-Ud-1L3">
+                        <barButtonItem key="leftBarButtonItem" title="Item" image="xmark" catalog="system" id="wOg-rX-HYu">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="exitButtonTapped:" destination="dkE-k7-KM0" id="9n0-6T-KRk"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="arrow.right" catalog="system" id="3em-Z3-Ebi">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="nextButtonTapped:" destination="dkE-k7-KM0" id="IFc-3R-41u"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="exitButton" destination="wOg-rX-HYu" id="bJY-qR-Ly8"/>
+                        <outlet property="nextButton" destination="3em-Z3-Ebi" id="jNo-js-elb"/>
                         <segue destination="f8u-Rw-Mg1" kind="show" identifier="editVideo" id="jJn-Ay-ugb"/>
                     </connections>
                 </viewController>
@@ -211,20 +226,20 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Mdk-ev-K1z">
-                                <rect key="frame" x="20" y="114" width="111" height="111"/>
+                                <rect key="frame" x="20" y="70" width="111" height="111"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="111" id="azV-86-eRu"/>
                                     <constraint firstAttribute="width" constant="111" id="cFD-BR-yVa"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="cEq-fc-EMb">
-                                <rect key="frame" x="20" y="233" width="111" height="20"/>
+                                <rect key="frame" x="20" y="189" width="111" height="20"/>
                                 <fontDescription key="fontDescription" name="Ubuntu-Bold" family="Ubuntu" pointSize="18"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mcP-tb-ntr">
-                                <rect key="frame" x="341" y="114" width="52" height="32"/>
+                                <rect key="frame" x="341" y="70" width="52" height="32"/>
                                 <fontDescription key="fontDescription" name="Ubuntu-Regular" family="Ubuntu" pointSize="17"/>
                                 <state key="normal" title="Follow"/>
                                 <connections>
@@ -232,19 +247,19 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="followers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bfD-hR-3cn">
-                                <rect key="frame" x="139" y="173" width="73" height="20"/>
+                                <rect key="frame" x="139" y="129" width="73" height="20"/>
                                 <fontDescription key="fontDescription" name="Ubuntu-Regular" family="Ubuntu" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="following" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yNh-6U-r2t">
-                                <rect key="frame" x="139" y="145" width="73" height="20"/>
+                                <rect key="frame" x="139" y="101" width="73" height="20"/>
                                 <fontDescription key="fontDescription" name="Ubuntu-Regular" family="Ubuntu" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="9Yc-gp-LXG">
-                                <rect key="frame" x="0.0" y="280" width="414" height="533"/>
+                                <rect key="frame" x="0.0" y="236" width="414" height="577"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="8N5-rd-uoV">
                                     <size key="itemSize" width="128" height="128"/>
@@ -305,7 +320,7 @@
         <!--Record-->
         <scene sceneID="Jkm-3U-cX7">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="mhF-n5-jl2" userLabel="Record" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="recordNav" title="recordController" automaticallyAdjustsScrollViewInsets="NO" id="mhF-n5-jl2" userLabel="Record" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Record" image="circle" catalog="system" id="b5H-MC-eV2"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="KIn-cJ-Otp">
@@ -437,14 +452,16 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="C5X-Ni-dwg"/>
+        <segue reference="SaP-cn-72r"/>
     </inferredMetricsTieBreakers>
     <resources>
+        <image name="arrow.right" catalog="system" width="128" height="98"/>
         <image name="bolt" catalog="system" width="101" height="128"/>
         <image name="circle" catalog="system" width="128" height="121"/>
         <image name="heart" catalog="system" width="128" height="109"/>
         <image name="house" catalog="system" width="128" height="110"/>
         <image name="magnifyingglass" catalog="system" width="128" height="115"/>
         <image name="person" catalog="system" width="128" height="117"/>
+        <image name="xmark" catalog="system" width="128" height="113"/>
     </resources>
 </document>

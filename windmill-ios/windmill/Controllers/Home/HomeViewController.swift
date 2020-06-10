@@ -33,8 +33,9 @@ class HomeViewController: PageboyViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        getFeed()
+        self.tabBarController?.delegate = UIApplication.shared.delegate as? UITabBarControllerDelegate
         
+        getFeed()
         dataSource = self
         delegate = self
         navigationOrientation = .vertical

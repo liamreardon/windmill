@@ -19,17 +19,14 @@ class RecordViewController: UIViewController {
     internal var nextLevel: NextLevel?
     internal var tapGestureRecognizer: UITapGestureRecognizer?
     internal var bufferRenderer: NextLevelBufferRenderer?
-    internal var recordingStatus: Bool = false
+    internal var isRecording: Bool = false
     internal var videoURL: URL?
-
+    @IBOutlet weak var exitButton: UIBarButtonItem!
+    @IBOutlet weak var nextButton: UIBarButtonItem!
+    
     
     internal var recordButton: RecordButton = {
         let button = RecordButton(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)))
-        return button
-    }()
-    
-    internal var nextButton: UIButton = {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 80, height: 50))
         return button
     }()
     
@@ -37,10 +34,10 @@ class RecordViewController: UIViewController {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 80, height: 50))
         return button
     }()
-    
+
     internal lazy var videoLongPressGestureRecognizer: UILongPressGestureRecognizer = {
         let videoLongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleVideoLongPressGestureRecognizer(_:)))
-        videoLongPressGestureRecognizer.minimumPressDuration = 0.2
+        videoLongPressGestureRecognizer.minimumPressDuration = 0
         videoLongPressGestureRecognizer.numberOfTouchesRequired = 1
         videoLongPressGestureRecognizer.allowableMovement = 10.0
         return videoLongPressGestureRecognizer
@@ -51,8 +48,8 @@ class RecordViewController: UIViewController {
     override func viewDidLoad() {
         self.setupCamera()
         self.setupRecordButton()
-        self.setupNextButton()
         self.setupResetButton()
+        self.setupBarButtonItems()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,6 +61,7 @@ class RecordViewController: UIViewController {
         super.viewWillDisappear(animated)
         self.resetCapture()
         self.stopCamera()
+        self.resetButton.isHidden = true
     }
     
     // MARK: Segue
@@ -72,12 +70,13 @@ class RecordViewController: UIViewController {
         let vc = segue.destination as! VideoEditViewController
         vc.videoURL = sender as? URL
     }
-    
+
 }
 
 // MARK: Camera Setup
 
 extension RecordViewController {
+    
     internal func setupCamera() {
         self.nextLevel = NextLevel()
         let screenBounds = UIScreen.main.bounds
@@ -150,9 +149,9 @@ extension RecordViewController {
     }
     
     internal func resetCapture() {
-        self.nextButton.isHidden = true
         self.recordButton.reset()
         self.nextLevel?.session?.removeAllClips()
+        self.resetButton.isHidden = true
     }
     
     internal func endCapture() {
@@ -174,42 +173,48 @@ extension RecordViewController {
         self.view.addSubview(self.recordButton)
     }
     
-    internal func setupNextButton() {
-        var safeAreaBottom: CGFloat = 0.0
-        let height = self.recordButton.frame.size.height * 0.5
-        safeAreaBottom = self.view.safeAreaInsets.bottom + 50.0
-        self.nextButton.backgroundColor = UIColor(white: 1, alpha: 0.5)
-        self.nextButton.layer.cornerRadius = 1
-        self.nextButton.setTitle("Next", for: .normal)
-        self.nextButton.center = CGPoint(x: (self.view.bounds.midX + self.view.bounds.maxX) / 2, y: self.view.bounds.size.height - safeAreaBottom - (height) - 50.0)
-        self.nextButton.addTarget(self, action: #selector(self.nextButtonTapped), for: .touchUpInside)
-        self.nextButton.isHidden = true
-        self.view.addSubview(self.nextButton)
-    }
-    
     internal func setupResetButton() {
         var safeAreaBottom: CGFloat = 0.0
         let height = self.recordButton.frame.size.height * 0.5
         safeAreaBottom = self.view.safeAreaInsets.bottom + 50.0
-        self.resetButton.backgroundColor = UIColor(white: 1, alpha: 0.5)
-        self.resetButton.layer.cornerRadius = 1
-        self.resetButton.setTitle("Reset", for: .normal)
+        let icon = UIImage(systemName: "backward", withConfiguration: UIImage.SymbolConfiguration(pointSize: 33, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        self.resetButton.setImage(icon, for: .normal)
         self.resetButton.center = CGPoint(x: (self.view.bounds.minX + self.view.bounds.midX) / 2, y: self.view.bounds.size.height - safeAreaBottom - (height) - 50.0)
         self.resetButton.addTarget(self, action: #selector(self.resetButtonTapped), for: .touchUpInside)
         self.resetButton.isHidden = true
         self.view.addSubview(self.resetButton)
+    }
+    
+    internal func setupBarButtonItems() {
+        let icon = UIImage(systemName: "arrow.right", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let button = UIButton()
+        button.frame = CGRect(x:0, y:0, width: 51, height: 31)
+        button.setImage(icon, for: .normal)
+        button.addTarget(self, action: #selector(self.nextButtonTapped), for: .touchUpInside)
+        let barButton = UIBarButtonItem()
+        barButton.customView = button
+        self.navigationItem.rightBarButtonItem = barButton
+        self.nextButton = self.navigationItem.rightBarButtonItem
+        
+        let icon2 = UIImage(systemName: "xmark", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let button2 = UIButton()
+        button2.frame = CGRect(x:0, y:0, width: 51, height: 31)
+        button2.setImage(icon2, for: .normal)
+        button2.addTarget(self, action: #selector(self.exitButtonTapped), for: .touchUpInside)
+        let barButton2 = UIBarButtonItem()
+        barButton2.customView = button2
+        self.navigationItem.leftBarButtonItem = barButton2
+        self.exitButton = self.navigationItem.rightBarButtonItem
     }
 }
 
 // MARK: Gestures
 
 extension RecordViewController {
-    
     @objc internal func handleVideoLongPressGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) {
         switch gestureRecognizer.state {
         case .began:
-            // self.setStatus(status: .recording, animated: true)
-            self.recordingStatus = true
+            self.isRecording = true
             self.recordButton.startRecordingAnimation()
             self.startCapture()
             break
@@ -220,7 +225,7 @@ extension RecordViewController {
         case .cancelled:
             fallthrough
         case .ended:
-            self.recordingStatus = false
+            self.isRecording = false
             self.recordButton.stopRecordingAnimation()
             self.endCapture()
             fallthrough
@@ -259,9 +264,17 @@ extension RecordViewController {
         }
     }
     
+    @objc internal func exitButtonTapped() {
+        self.tabBarController?.selectedIndex = 0
+    }
+    
     @objc internal func resetButtonTapped() {
-        self.resetCapture()
-        self.resetButton.isHidden = true
+        self.nextLevel?.session?.removeLastClip()
+        let currentProgress = (self.nextLevel!.session!.totalDuration.seconds / 12.0).clamped(to: 0...1)
+        self.recordButton.updateProgress(progress: Float(currentProgress), animated: true)
+        if currentProgress == 0 {
+            self.resetButton.isHidden = true
+        }
     }
 }
 
@@ -352,15 +365,13 @@ extension RecordViewController: NextLevelVideoDelegate {
     }
     
     public func nextLevel(_ nextLevel: NextLevel, didAppendVideoSampleBuffer sampleBuffer: CMSampleBuffer, inSession session: NextLevelSession) {
-        if self.recordingStatus {
+        if self.isRecording {
             let currentProgress = (session.totalDuration.seconds / 12.0).clamped(to: 0...1)
             self.recordButton.updateProgress(progress: Float(currentProgress), animated: true)
             if session.totalDuration.seconds > 0 {
                 self.resetButton.isHidden = false
             }
-            if session.totalDuration.seconds > 3 {
-                self.nextButton.isHidden = false
-            }
+
         }
     }
     
@@ -388,7 +399,6 @@ extension RecordViewController: NextLevelVideoDelegate {
     // video frame photo
         
     public func nextLevel(_ nextLevel: NextLevel, didCompletePhotoCaptureFromVideoFrame photoDict: [String : Any]?) {
-        
     }
     
 }

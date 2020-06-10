@@ -150,7 +150,6 @@
 				6B9D2D42246CA3D200C6E416 /* User */,
 				6B9D2D3F246CA06800C6E416 /* Search */,
 				6B84234B245A9A7B0027EA1A /* Upload */,
-				6BFEA9852451335A00181287 /* Auth */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -305,6 +304,7 @@
 		6B9D2D42246CA3D200C6E416 /* User */ = {
 			isa = PBXGroup;
 			children = (
+				6BFEA9852451335A00181287 /* Auth */,
 				6B9D2D43246CA3E500C6E416 /* UserManager.swift */,
 			);
 			path = User;

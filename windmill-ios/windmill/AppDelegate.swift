@@ -11,7 +11,7 @@ import GoogleSignIn
 import SwiftKeychainWrapper
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UITabBarControllerDelegate, GIDSignInDelegate {
     
     let storageManager = StorageManager()
 
@@ -85,6 +85,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         UserDefaults.standard.removeObject(forKey: "numFollowers")
         UserDefaults.standard.removeObject(forKey: "numFollowing")
     }
+    
+//    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+//        if viewController.title == "recordController" {
+//            if let newVC = tabBarController.storyboard?.instantiateViewController(withIdentifier: "recordController") {
+//                newVC.modalPresentationStyle = .fullScreen
+//                tabBarController.present(newVC, animated: true)
+//                return false
+//            }
+//        }
+//
+//        return true
+//    }
 }
 
 //MARK: - UIApplication Extension

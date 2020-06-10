@@ -21,9 +21,9 @@ class RecordViewController: UIViewController {
     internal var bufferRenderer: NextLevelBufferRenderer?
     internal var isRecording: Bool = false
     internal var videoURL: URL?
+    internal var vSpinner: UIView?
     @IBOutlet weak var exitButton: UIBarButtonItem!
     @IBOutlet weak var nextButton: UIBarButtonItem!
-    
     
     internal var recordButton: RecordButton = {
         let button = RecordButton(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)))
@@ -31,6 +31,11 @@ class RecordViewController: UIViewController {
     }()
     
     internal var resetButton: UIButton = {
+        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 80, height: 50))
+        return button
+    }()
+    
+    internal var flipCameraButton: UIButton = {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 80, height: 50))
         return button
     }()
@@ -49,6 +54,7 @@ class RecordViewController: UIViewController {
         self.setupCamera()
         self.setupRecordButton()
         self.setupResetButton()
+        self.setupFlipCameraButton()
         self.setupBarButtonItems()
     }
     
@@ -62,6 +68,11 @@ class RecordViewController: UIViewController {
         self.resetCapture()
         self.stopCamera()
         self.resetButton.isHidden = true
+        self.removeSpinner()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        self.enableUI()
     }
     
     // MARK: Segue
@@ -70,7 +81,6 @@ class RecordViewController: UIViewController {
         let vc = segue.destination as! VideoEditViewController
         vc.videoURL = sender as? URL
     }
-
 }
 
 // MARK: Camera Setup
@@ -177,12 +187,23 @@ extension RecordViewController {
         var safeAreaBottom: CGFloat = 0.0
         let height = self.recordButton.frame.size.height * 0.5
         safeAreaBottom = self.view.safeAreaInsets.bottom + 50.0
-        let icon = UIImage(systemName: "backward", withConfiguration: UIImage.SymbolConfiguration(pointSize: 33, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let icon = UIImage(systemName: "delete.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 33, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
         self.resetButton.setImage(icon, for: .normal)
         self.resetButton.center = CGPoint(x: (self.view.bounds.minX + self.view.bounds.midX) / 2, y: self.view.bounds.size.height - safeAreaBottom - (height) - 50.0)
         self.resetButton.addTarget(self, action: #selector(self.resetButtonTapped), for: .touchUpInside)
         self.resetButton.isHidden = true
         self.view.addSubview(self.resetButton)
+    }
+    
+    internal func setupFlipCameraButton() {
+        var safeAreaBottom: CGFloat = 0.0
+        let height = self.recordButton.frame.size.height * 0.5
+        safeAreaBottom = self.view.safeAreaInsets.bottom + 50.0
+        let icon = UIImage(systemName: "camera.rotate", withConfiguration: UIImage.SymbolConfiguration(pointSize: 33, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        self.flipCameraButton.setImage(icon, for: .normal)
+        self.flipCameraButton.center = CGPoint(x: (self.view.bounds.midX + self.view.bounds.maxX) / 2, y: self.view.bounds.size.height - safeAreaBottom - (height) - 50.0)
+        self.flipCameraButton.addTarget(self, action: #selector(self.flipCameraButtonTapped), for: .touchUpInside)
+        self.view.addSubview(self.flipCameraButton)
     }
     
     internal func setupBarButtonItems() {
@@ -195,6 +216,7 @@ extension RecordViewController {
         barButton.customView = button
         self.navigationItem.rightBarButtonItem = barButton
         self.nextButton = self.navigationItem.rightBarButtonItem
+        self.nextButton.isEnabled = false
         
         let icon2 = UIImage(systemName: "xmark", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
         let button2 = UIButton()
@@ -204,9 +226,40 @@ extension RecordViewController {
         let barButton2 = UIBarButtonItem()
         barButton2.customView = button2
         self.navigationItem.leftBarButtonItem = barButton2
-        self.exitButton = self.navigationItem.rightBarButtonItem
+        self.exitButton = self.navigationItem.leftBarButtonItem
     }
-}
+    
+    internal func showSpinner(onView: UIView) {
+        let spinnerView = UIView.init(frame: onView.bounds)
+        let ai = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.large)
+        ai.color = .white
+        ai.startAnimating()
+        ai.center = spinnerView.center
+        
+        spinnerView.addSubview(ai)
+        onView.addSubview(spinnerView)
+        
+        vSpinner = spinnerView
+    }
+    
+    internal func removeSpinner() {
+        vSpinner?.removeFromSuperview()
+        vSpinner = nil
+    }
+    
+    internal func disableUI() {
+        self.exitButton.isEnabled = false
+        self.nextButton.isEnabled = false
+        self.resetButton.isEnabled = false
+        self.flipCameraButton.isEnabled = false
+    }
+    
+    internal func enableUI() {
+        self.exitButton.isEnabled = true
+        self.nextButton.isEnabled = false
+        self.resetButton.isEnabled = true
+        self.flipCameraButton.isEnabled = true
+    }}
 
 // MARK: Gestures
 
@@ -236,6 +289,8 @@ extension RecordViewController {
     
     @objc internal func nextButtonTapped() {
         if let session = self.nextLevel?.session {
+            self.showSpinner(onView: self.previewView)
+            self.disableUI()
             if session.clips.count > 1 {
                 session.mergeClips(usingPreset: AVAssetExportPresetHighestQuality, completionHandler: { (url: URL?, error: Error?) in
                     if let url = url {
@@ -255,7 +310,8 @@ extension RecordViewController {
                     }
                 })
             } else {
-                // prompt that the video has been saved
+                self.removeSpinner()
+                self.enableUI()
                 let alertController = UIAlertController(title: "Video Failed", message: "Not enough video captured!", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
                 alertController.addAction(okAction)
@@ -275,6 +331,13 @@ extension RecordViewController {
         if currentProgress == 0 {
             self.resetButton.isHidden = true
         }
+        if currentProgress < 3 {
+            self.nextButton.isEnabled = false
+        }
+    }
+    
+    @objc internal func flipCameraButtonTapped() {
+        nextLevel?.flipCaptureDevicePosition()
     }
 }
 
@@ -368,6 +431,9 @@ extension RecordViewController: NextLevelVideoDelegate {
         if self.isRecording {
             let currentProgress = (session.totalDuration.seconds / 12.0).clamped(to: 0...1)
             self.recordButton.updateProgress(progress: Float(currentProgress), animated: true)
+            if session.totalDuration.seconds > 3 {
+                self.nextButton.isEnabled = true
+            }
             if session.totalDuration.seconds > 0 {
                 self.resetButton.isHidden = false
             }
@@ -402,6 +468,9 @@ extension RecordViewController: NextLevelVideoDelegate {
     }
     
 }
+
+
+
 
 
 

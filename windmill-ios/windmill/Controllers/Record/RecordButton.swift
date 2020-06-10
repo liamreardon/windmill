@@ -37,7 +37,7 @@ public class RecordButton: UIView {
         self.recordIndicatorProgressBackground.isUserInteractionEnabled = false
         self.recordIndicatorProgressBackground.frame = self.bounds.insetBy(dx: 10.0, dy: 10.0)
         self.recordIndicatorProgressBackground.layer.cornerRadius = self.recordIndicatorProgressBackground.frame.size.height * 0.5
-        self.recordIndicatorProgressBackground.layer.borderWidth = 2.0
+        self.recordIndicatorProgressBackground.layer.borderWidth = 4.5
         self.recordIndicatorProgressBackground.layer.borderColor = UIColor.white.cgColor
         
         self.recordIndicatorProgressBackground.center = self.center

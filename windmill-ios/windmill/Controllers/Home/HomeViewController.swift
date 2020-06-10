@@ -24,7 +24,7 @@ class HomeViewController: PageboyViewController {
     var index: Int = 0
     var refreshControl = UIRefreshControl()
     var feedLoaded: Bool = false
-    var vSpinner : UIView?
+    var vSpinner: UIView?
 
     @IBOutlet var homeView: UIView!
     
@@ -138,7 +138,7 @@ class HomeViewController: PageboyViewController {
     
     // MARK: User Interface
     
-    func showSpinner(onView : UIView) {
+    func showSpinner(onView: UIView) {
         let spinnerView = UIView.init(frame: onView.bounds)
         let ai = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.large)
         ai.color = .white

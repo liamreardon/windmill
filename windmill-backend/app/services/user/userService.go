@@ -37,7 +37,7 @@ func GetUser(collection *mongo.Collection, ctx context.Context, username string)
 		return models.ProtectedUser{}, errors.New("couldn't get user")
 	}
 
-	usr := models.ProtectedUser{
+	usr := models.ProtectedUser {
 		Username:       user.Username,
 		DisplayName:    user.DisplayName,
 		DisplayPicture: user.DisplayPicture,

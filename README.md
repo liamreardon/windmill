@@ -18,6 +18,7 @@
 
 ```ruby
 # Install dependencies
+
 pod install
 ```
 
@@ -47,3 +48,6 @@ func GetConfig() *Config {
 
 
 
+## License
+
+windmill is available under the MIT license, see the [LICENSE]() file for more information.

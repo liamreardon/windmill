@@ -53,13 +53,13 @@ func GetConfig() *Config {
 * [NextLevel](https://github.com/NextLevel/NextLevel) - Rad Media Capture in Swift 
 * [Pageboy](https://github.com/uias/Pageboy) - A simple, highly informative page view controller
 * [RPCircularProgress](https://github.com/iwasrobbed/RPCircularProgress) - Circular progress UIView subclass with UIProgressView properties
-* [SwiftKeychainWrapper](https://github.com/jrendel/SwiftKeychainWrapper) - A simple wrapper for the iOS Keychain to allow you to use it in a similar fashion to User Defaults. Written in Swift
+* [SwiftKeychainWrapper](https://github.com/jrendel/SwiftKeychainWrapper) - A simple wrapper for the iOS Keychain to allow you to use it in a similar fashion to User Defaults
 * [lottie-ios](https://github.com/airbnb/lottie-ios) - An iOS library to natively render After Effects vector animations
 * [GoogleSignIn](https://developers.google.com/identity/sign-in/ios#swift) - Add Google Sign-In to Your iOS App
 
 ### Go
 
-* [Google/UUID](https://github.com/google/uuid) - Go package for UUIDs based on RFC 4122 and DCE 1.1: Authentication and Security Services.
+* [Google/UUID](https://github.com/google/uuid) - Go package for UUIDs based on RFC 4122 and DCE 1.1: Authentication and Security Services
 * [mongo-go-driver](https://github.com/mongodb/mongo-go-driver) - The Go driver for MongoDB
 * [bcrypt](https://godoc.org/golang.org/x/crypto/bcrypt) - Go package for the bcrypt hashing algorithm
 * [aws-sdk-go](https://github.com/aws/aws-sdk-go) - AWS SDK for the Go programming language

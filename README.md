@@ -16,7 +16,7 @@
 
 ### Swift 
 
-```ruby
+```swift
 # Install dependencies
 
 pod install
@@ -24,13 +24,13 @@ pod install
 
 ### Go
 
-```ruby
+```go
 # Install dependencies
 
 go get ./...
 ```
 
-```ruby
+```golang
 # Add MongoDB URL to config.go
 
 func GetConfig() *Config {

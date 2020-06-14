@@ -291,22 +291,12 @@ extension RecordViewController {
         if let session = self.nextLevel?.session {
             self.showSpinner(onView: self.previewView)
             self.disableUI()
-            if session.clips.count > 1 {
+            if session.clips.count > 0 {
                 session.mergeClips(usingPreset: AVAssetExportPresetHighestQuality, completionHandler: { (url: URL?, error: Error?) in
                     if let url = url {
                         self.performSegue(withIdentifier: "editVideo", sender: url)
                     } else if let _ = error {
                         print("failed to merge clips at the end of capture \(String(describing: error))")
-                    }
-                })
-            } else if let lastClipUrl = session.lastClipUrl {
-                self.performSegue(withIdentifier: "editVideo", sender: lastClipUrl)
-            } else if session.currentClipHasStarted {
-                session.endClip(completionHandler: { (clip, error) in
-                    if error == nil {
-                        print("end clip")
-                    } else {
-                        print("Error saving video: \(error?.localizedDescription ?? "")")
                     }
                 })
             } else {
@@ -321,7 +311,33 @@ extension RecordViewController {
     }
     
     @objc internal func exitButtonTapped() {
-        self.tabBarController?.selectedIndex = 0
+        if let session = self.nextLevel?.session {
+            if session.totalDuration.seconds > 0 {
+                let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+                let reportAction = UIAlertAction(title: "Start Over", style: .default) { (action) in
+                    self.resetCapture()
+                }
+
+                let blockAction = UIAlertAction(title: "Exit", style: .destructive) { (action) in
+                    self.tabBarController?.selectedIndex = 0
+                }
+
+                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+                    return
+                }
+
+                actionSheet.addAction(reportAction)
+                actionSheet.addAction(blockAction)
+                actionSheet.addAction(cancelAction)
+
+                self.present(actionSheet, animated: true, completion: nil)
+            }
+            else {
+                self.tabBarController?.selectedIndex = 0
+            }
+        }
+        
     }
     
     @objc internal func resetButtonTapped() {

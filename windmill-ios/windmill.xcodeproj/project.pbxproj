@@ -28,7 +28,6 @@
 		6B881A6E2450D5F8001466CB /* Pacifico-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6B881A6D2450D5F8001466CB /* Pacifico-Regular.ttf */; };
 		6B8FBC112458ABE900C1CF26 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B8FBC102458ABE900C1CF26 /* ImagePicker.swift */; };
 		6B8FBC162458DABB00C1CF26 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B8FBC152458DABB00C1CF26 /* HomeViewController.swift */; };
-		6B99B4BB24777F2C009011EA /* WindmillMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6B99B4BA24777F2C009011EA /* WindmillMain.storyboard */; };
 		6B99B4BD24779600009011EA /* ChildViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B99B4BC24779600009011EA /* ChildViewController.swift */; };
 		6B99B4C9247C2F31009011EA /* PostManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B99B4C8247C2F31009011EA /* PostManager.swift */; };
 		6B9D2D3E246C9EFB00C6E416 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B9D2D3D246C9EFB00C6E416 /* SearchViewController.swift */; };
@@ -37,6 +36,9 @@
 		6BAD80A8246DBD5900C6D046 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BAD80A7246DBD5900C6D046 /* StorageManager.swift */; };
 		6BAD80AB246E09F500C6D046 /* FeedManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BAD80AA246E09F500C6D046 /* FeedManager.swift */; };
 		6BB574F124526BFE0065B5CB /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BB574F024526BFE0065B5CB /* Environment.swift */; };
+		6BC4F8A024958E370027D3D4 /* UploadVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC4F89F24958E370027D3D4 /* UploadVideoViewController.swift */; };
+		6BC4F8A22495AC620027D3D4 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC4F8A12495AC620027D3D4 /* View.swift */; };
+		6BC4F8A42495DCAA0027D3D4 /* WindmillMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6BC4F8A32495DCAA0027D3D4 /* WindmillMain.storyboard */; };
 		6BD91BD6247DB8D600F98C6B /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD91BD5247DB8D600F98C6B /* Notifications.swift */; };
 		6BD91BEA2480C4BA00F98C6B /* Ubuntu-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6BD91BE92480C27000F98C6B /* Ubuntu-Medium.ttf */; };
 		6BD91BEB2480C4C400F98C6B /* Ubuntu-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6BD91BE32480C27000F98C6B /* Ubuntu-Regular.ttf */; };
@@ -75,7 +77,6 @@
 		6B881A6D2450D5F8001466CB /* Pacifico-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pacifico-Regular.ttf"; sourceTree = "<group>"; };
 		6B8FBC102458ABE900C1CF26 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		6B8FBC152458DABB00C1CF26 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
-		6B99B4BA24777F2C009011EA /* WindmillMain.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WindmillMain.storyboard; sourceTree = "<group>"; };
 		6B99B4BC24779600009011EA /* ChildViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildViewController.swift; sourceTree = "<group>"; };
 		6B99B4C8247C2F31009011EA /* PostManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostManager.swift; sourceTree = "<group>"; };
 		6B9D2D3D246C9EFB00C6E416 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -87,6 +88,9 @@
 		6BB54AD92452632A00BD4418 /* Staging.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Staging.xcconfig; sourceTree = "<group>"; };
 		6BB54ADA2452633A00BD4418 /* Production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Production.xcconfig; sourceTree = "<group>"; };
 		6BB574F024526BFE0065B5CB /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
+		6BC4F89F24958E370027D3D4 /* UploadVideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadVideoViewController.swift; sourceTree = "<group>"; };
+		6BC4F8A12495AC620027D3D4 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
+		6BC4F8A32495DCAA0027D3D4 /* WindmillMain.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WindmillMain.storyboard; sourceTree = "<group>"; };
 		6BD91BD5247DB8D600F98C6B /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		6BD91BE32480C27000F98C6B /* Ubuntu-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ubuntu-Regular.ttf"; sourceTree = "<group>"; };
 		6BD91BE52480C27000F98C6B /* Ubuntu-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ubuntu-Bold.ttf"; sourceTree = "<group>"; };
@@ -129,6 +133,7 @@
 				6B1FE28D247C8196008618E7 /* Color.swift */,
 				6BD91BD5247DB8D600F98C6B /* Notifications.swift */,
 				6B642A82248705F400F760D8 /* Image.swift */,
+				6BC4F8A12495AC620027D3D4 /* View.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -140,6 +145,7 @@
 				6B37A9C6246490AF00E4038C /* VideoEditViewController.swift */,
 				6BFAA747248DB6B40054B3C9 /* RecordButton.swift */,
 				6B6E2434249174F600BFC8CD /* ViewGestures.swift */,
+				6BC4F89F24958E370027D3D4 /* UploadVideoViewController.swift */,
 			);
 			path = Record;
 			sourceTree = "<group>";
@@ -343,10 +349,10 @@
 		6BFEA9772450F25300181287 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6BC4F8A32495DCAA0027D3D4 /* WindmillMain.storyboard */,
 				6B881A5D2450C59F001466CB /* Main.storyboard */,
 				6B881A622450C5A0001466CB /* LaunchScreen.storyboard */,
 				6B3008CC2457771F00960071 /* UserCreation.storyboard */,
-				6B99B4BA24777F2C009011EA /* WindmillMain.storyboard */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -467,8 +473,8 @@
 			files = (
 				6BD91BED2480C4C900F98C6B /* Ubuntu-Bold.ttf in Resources */,
 				6BD91BEB2480C4C400F98C6B /* Ubuntu-Regular.ttf in Resources */,
-				6B99B4BB24777F2C009011EA /* WindmillMain.storyboard in Resources */,
 				6B881A642450C5A0001466CB /* LaunchScreen.storyboard in Resources */,
+				6BC4F8A42495DCAA0027D3D4 /* WindmillMain.storyboard in Resources */,
 				6BD91BEA2480C4BA00F98C6B /* Ubuntu-Medium.ttf in Resources */,
 				6B881A6E2450D5F8001466CB /* Pacifico-Regular.ttf in Resources */,
 				6B881A612450C5A0001466CB /* Assets.xcassets in Resources */,
@@ -529,6 +535,7 @@
 			files = (
 				6B37A9C7246490AF00E4038C /* VideoEditViewController.swift in Sources */,
 				6B9D2D41246CA07B00C6E416 /* SearchManager.swift in Sources */,
+				6BC4F8A22495AC620027D3D4 /* View.swift in Sources */,
 				6B1FE28E247C8196008618E7 /* Color.swift in Sources */,
 				6B99B4BD24779600009011EA /* ChildViewController.swift in Sources */,
 				6B881A5C2450C59F001466CB /* LoginViewController.swift in Sources */,
@@ -548,6 +555,7 @@
 				6B5F538C245A9DB400A2610E /* UserCreationViewController.swift in Sources */,
 				6B84234D245A9AA40027EA1A /* UploadManager.swift in Sources */,
 				6B642A83248705F400F760D8 /* Image.swift in Sources */,
+				6BC4F8A024958E370027D3D4 /* UploadVideoViewController.swift in Sources */,
 				6BF4EE0E248AB85E004BFAFD /* CollectionViewCell.swift in Sources */,
 				6BFEA989245133E100181287 /* AuthManager.swift in Sources */,
 				6BD91BD6247DB8D600F98C6B /* Notifications.swift in Sources */,

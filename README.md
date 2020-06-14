@@ -9,7 +9,7 @@
 | :bust_in_silhouette: | Create an account and customize your profile |
 | :green_heart: | Follow friends and like their videos | 
 | :newspaper: | Browse newsfeed of videos from users you follow |  
-| :bird: | [Swift](https://developer.apple.com/swift/) |  
+| :bird: | [Swift 5](https://developer.apple.com/swift/) |  
 | :arrow_right: | [Go](https://golang.org/) |  
 
 ## Quick Start
@@ -65,9 +65,6 @@ func GetConfig() *Config {
 * [aws-sdk-go](https://github.com/aws/aws-sdk-go) - AWS SDK for the Go programming language
 * [govalidator](https://github.com/thedevsaddam/govalidator) - Request data validation
 * [gorilla/mux](https://github.com/gorilla/mux) - A powerful HTTP router and URL matcher for building Go web servers
-
-
-
 
 ## License
 

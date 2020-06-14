@@ -86,17 +86,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UITabBarControllerDelegat
         UserDefaults.standard.removeObject(forKey: "numFollowing")
     }
     
-//    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-//        if viewController.title == "recordController" {
-//            if let newVC = tabBarController.storyboard?.instantiateViewController(withIdentifier: "recordController") {
-//                newVC.modalPresentationStyle = .fullScreen
-//                tabBarController.present(newVC, animated: true)
-//                return false
-//            }
-//        }
-//
-//        return true
-//    }
 }
 
 //MARK: - UIApplication Extension
@@ -118,5 +107,6 @@ extension UIApplication {
         return viewController
     }
 }
+
 
 

@@ -114,6 +114,9 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         
     }
     
+    @objc internal func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
 
     
     // MARK: Current User Setup
@@ -229,6 +232,15 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         displayPicture.layer.borderColor = UIColor.black.cgColor
         displayPicture.layer.cornerRadius = displayPicture.frame.height / 2
         displayPicture.clipsToBounds = true
+        
+        let icon3 = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let button3 = UIButton()
+        button3.frame = CGRect(x:0, y:0, width: 51, height: 31)
+        button3.setImage(icon3, for: .normal)
+        button3.addTarget(self, action: #selector(self.backButtonTapped), for: .touchUpInside)
+        let barButton3 = UIBarButtonItem()
+        barButton3.customView = button3
+        self.navigationItem.leftBarButtonItem = barButton3
     }
 
     

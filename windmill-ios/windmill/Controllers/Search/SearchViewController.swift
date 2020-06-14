@@ -41,6 +41,15 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
+        navigationController?.navigationItem.backBarButtonItem = nil
+        
+        let icon3 = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let button3 = UIButton()
+        button3.frame = CGRect(x:0, y:0, width: 51, height: 31)
+        button3.setImage(icon3, for: .normal)
+        let barButton3 = UIBarButtonItem()
+        barButton3.customView = button3
+        self.navigationController?.navigationItem.leftBarButtonItem = barButton3
     }
     
     // MARK: User Interface
@@ -55,6 +64,8 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         searchTableView.rowHeight = 100.0
         
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem?.tintColor = .white
+    
     }
     
     // MARK: API Functions

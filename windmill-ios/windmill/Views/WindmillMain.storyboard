@@ -127,24 +127,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.down" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="iFl-Dj-DqY">
-                                <rect key="frame" x="192" y="25" width="30" height="20.5"/>
-                                <color key="tintColor" red="0.0" green="0.72156862749999995" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="L7C-9r-0lv">
-                                <rect key="frame" x="110" y="89" width="194" height="270"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="270" id="bmX-Xz-3oj"/>
-                                </constraints>
-                            </imageView>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="talk about your video" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="j6S-un-cRq">
-                                <rect key="frame" x="49" y="384" width="317" height="34"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L7C-9r-0lv">
+                                <rect key="frame" x="118" y="75" width="179" height="270"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
+                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xlr-1q-9or">
-                                <rect key="frame" x="79" y="739" width="256" height="45"/>
+                                <rect key="frame" x="79" y="665" width="256" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.72156862749999995" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="Ubuntu-Regular" family="Ubuntu" pointSize="22"/>
@@ -155,30 +143,46 @@
                                     <action selector="postButtonTapped:" destination="U43-xR-ztG" eventType="touchUpInside" id="M6V-aL-mie"/>
                                 </connections>
                             </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qkL-oh-dDk">
+                                <rect key="frame" x="20" y="390" width="374" height="72"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <fontDescription key="fontDescription" name="Ubuntu-Regular" family="Ubuntu" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Description" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nAO-Jq-0vB">
+                                <rect key="frame" x="20" y="367" width="101" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Ubuntu-Bold" family="Ubuntu" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="603-hw-Bbs">
+                                <rect key="frame" x="20" y="482" width="374" height="1"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="chevron.down" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="iFl-Dj-DqY">
+                                <rect key="frame" x="192" y="25" width="30" height="20.5"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="tintColor" red="0.0" green="0.72156862749999995" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
+                            </imageView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <constraints>
-                            <constraint firstItem="0Ug-Px-HKs" firstAttribute="bottom" secondItem="L7C-9r-0lv" secondAttribute="bottom" constant="449" id="2P1-zG-8gd"/>
-                            <constraint firstItem="0Ug-Px-HKs" firstAttribute="trailing" secondItem="iFl-Dj-DqY" secondAttribute="trailing" constant="192" id="61V-3r-G2I"/>
-                            <constraint firstItem="L7C-9r-0lv" firstAttribute="top" secondItem="iFl-Dj-DqY" secondAttribute="bottom" constant="39" id="aD0-tC-Qbb"/>
-                            <constraint firstItem="L7C-9r-0lv" firstAttribute="leading" secondItem="0Ug-Px-HKs" secondAttribute="leading" constant="110" id="frc-a8-XGU"/>
-                            <constraint firstItem="L7C-9r-0lv" firstAttribute="centerX" secondItem="iFl-Dj-DqY" secondAttribute="centerX" id="nHU-XM-HKp"/>
-                            <constraint firstItem="iFl-Dj-DqY" firstAttribute="leading" secondItem="0Ug-Px-HKs" secondAttribute="leading" constant="192" id="v06-mk-ToE"/>
-                            <constraint firstItem="iFl-Dj-DqY" firstAttribute="top" secondItem="0Ug-Px-HKs" secondAttribute="top" constant="20" id="vpe-7c-e1W"/>
-                        </constraints>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="0Ug-Px-HKs"/>
                     </view>
                     <navigationItem key="navigationItem" id="ubq-u7-Ag3"/>
                     <connections>
                         <outlet property="postButton" destination="Xlr-1q-9or" id="d8N-0m-abe"/>
+                        <outlet property="textView" destination="qkL-oh-dDk" id="LUp-29-Z8S"/>
                         <outlet property="thumbnailView" destination="L7C-9r-0lv" id="Nc6-an-E8J"/>
-                        <outlet property="videoDescription" destination="j6S-un-cRq" id="78a-uz-yq3"/>
                         <segue destination="swj-9Y-wBB" kind="show" identifier="postToHome" id="g3N-8J-DCw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kH6-EW-M0C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4865" y="129"/>
+            <point key="canvasLocation" x="4862.3188405797109" y="128.57142857142856"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="VGC-jh-1M0">

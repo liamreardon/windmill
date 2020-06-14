@@ -57,6 +57,7 @@ func UpdateDisplayPicture(client *mongo.Client, w http.ResponseWriter, r *http.R
 func UploadVideo(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId := vars["userId"]
+	caption := vars["caption"]
 	file, _, err := r.FormFile("file")
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, map[string]interface{}{
@@ -78,7 +79,7 @@ func UploadVideo(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 
 	collection := client.Database("windmill-master").Collection("Users")
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	res, err := upload.AddVideoToUserPosts(collection, ctx, userId, videoId, url)
+	res, err := upload.AddVideoToUserPosts(collection, ctx, userId, videoId, url, caption)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, map[string]interface{}{
 			"message":err,

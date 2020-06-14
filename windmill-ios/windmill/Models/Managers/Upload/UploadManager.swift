@@ -59,9 +59,9 @@ struct UploadManager {
         }
     }
     
-    func uploadVideo(videoURL: URL) {
+    func uploadVideo(videoURL: URL, caption: String) {
         if let userId = KeychainWrapper.standard.string(forKey: "userId") {
-            if let url = URL(string: API_URL+userId+"/posts") {
+            if let url = URL(string: API_URL+userId+"/posts/"+caption) {
                 
                 let session = URLSession.shared
 

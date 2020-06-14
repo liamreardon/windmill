@@ -1,4 +1,4 @@
-# :cyclone: windmill
+<p><img src="" alt="windmill" style="max-width: 100%;"></p>
 
 `windmill` is a simplified video-sharing social network built using [Swift](https://developer.apple.com/swift/) and [Go](https://golang.org/), where users can record, edit and post looping short-form videos.
 

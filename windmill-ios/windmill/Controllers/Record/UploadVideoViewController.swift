@@ -9,15 +9,15 @@ import Foundation
 import UIKit
 import AVFoundation
 
-class UploadVideoViewController: UIViewController, UITabBarControllerDelegate {
+class UploadVideoViewController: UIViewController, UITabBarControllerDelegate, UITextViewDelegate {
     
     // MARK: IVARS
     internal var videoURL: URL!
     internal var prevVC: VideoEditViewController!
     
-    @IBOutlet weak var videoDescription: UITextField!
     @IBOutlet weak var postButton: UIButton!
     @IBOutlet weak var thumbnailView: UIImageView!
+    @IBOutlet weak var textView: UITextView!
     
     let uploadManager = UploadManager()
     
@@ -27,18 +27,27 @@ class UploadVideoViewController: UIViewController, UITabBarControllerDelegate {
         super.viewDidLoad()
         
         self.tabBarController?.delegate = self
+        textView.delegate = self
         
         if let thumbnailImage = getThumbnailImage(forUrl: videoURL) {
             thumbnailView.image = thumbnailImage
         }
+        
+        setupUI()
+        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
+        view.addGestureRecognizer(tap)
     }
     
     // MARK: User Interface
     
     internal func setupUI() {
+        textView.text = "talk about your video (optional)"
+        textView.textColor = UIColor.lightGray
         
+        postButton.layer.cornerRadius = 20.0
     }
-    
+
     // MARK: Segue
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -52,6 +61,10 @@ class UploadVideoViewController: UIViewController, UITabBarControllerDelegate {
     @IBAction func postButtonTapped(_ sender: Any) {
         uploadVideo()
         performSegue(withIdentifier: "postToHome", sender: self)
+    }
+    
+    @objc internal func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     // MARK: Services
@@ -72,7 +85,35 @@ class UploadVideoViewController: UIViewController, UITabBarControllerDelegate {
     // MARK: API Functions
     
     internal func uploadVideo() {
-        uploadManager.uploadVideo(videoURL: videoURL as URL)
+        if textView.text == "talk about your video (optional)" {
+            uploadManager.uploadVideo(videoURL: videoURL as URL, caption: "nil")
+        }
+        else {
+            uploadManager.uploadVideo(videoURL: videoURL as URL, caption: textView.text!)
+        }
+        
     }
     
-}
+    // MARK: Text View Delegate
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor == UIColor.lightGray {
+            textView.text = nil
+            textView.textColor = UIColor.white
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = "talk about your video (optional)"
+            textView.textColor = UIColor.lightGray
+        }
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if(text == "\n") {
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
+    }}

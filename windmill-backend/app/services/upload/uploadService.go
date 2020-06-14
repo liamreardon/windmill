@@ -23,7 +23,7 @@ func AssignUserDisplayPicturePath(collection *mongo.Collection, ctx context.Cont
 	return fmt.Sprintf("successfully uploaded display picture, upserted %d", res.UpsertedCount), nil
 }
 
-func AddVideoToUserPosts(collection *mongo.Collection, ctx context.Context, userId string, videoId string, url string) (string, error) {
+func AddVideoToUserPosts(collection *mongo.Collection, ctx context.Context, userId string, videoId string, url string, caption string) (string, error) {
 	user := models.User{}
 
 	collection.FindOne(ctx, bson.M{"userid":userId}).Decode(&user)
@@ -32,12 +32,16 @@ func AddVideoToUserPosts(collection *mongo.Collection, ctx context.Context, user
 		return "", errors.New("Couldn't retrieve user from database")
 	}
 
+	if caption == "nil" {
+		caption = ""
+	}
+
 	post := models.Post{
 		PostId:	videoId,
 		UserId: user.UserId,
 		Verified: user.Verified,
 		Username: user.Username,
-		Caption: "",
+		Caption: caption,
 		Comments: []models.Comment{},
 		NumLikes: 0,
 		Likers: []string{},

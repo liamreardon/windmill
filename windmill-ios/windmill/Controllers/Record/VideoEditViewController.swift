@@ -114,7 +114,7 @@ class VideoEditViewController: UIViewController, UITabBarControllerDelegate {
         button2.setTitle("Next", for: .normal)
         button2.titleLabel?.font =  UIFont(name: "Ubuntu", size: 18)
         button2.layer.backgroundColor = UIColor(rgb: 0x00B894).cgColor
-        button2.layer.cornerRadius = 5.0
+        button2.layer.cornerRadius = 17.0
         button2.addTarget(self, action: #selector(self.nextButtonTapped), for: .touchUpInside)
         let barButton2 = UIBarButtonItem()
         barButton2.customView = button2

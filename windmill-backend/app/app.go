@@ -56,7 +56,7 @@ func (app *App) setupRoutes() {
 
 	// User Routes
 	app.Put("/api/user/{userId}/dp", app.handleRequest(handlers.UpdateDisplayPicture))
-	app.Post("/api/user/{userId}/posts", app.handleRequest(handlers.UploadVideo))
+	app.Post("/api/user/{userId}/posts/{caption}", app.handleRequest(handlers.UploadVideo))
 	app.Get("/api/user/{userId}/dp", app.handleRequest(handlers.GetDisplayPicture))
 	app.Post("/api/user/{username}/following/{followingUsername}/{followingStatus}", app.handleRequest(handlers.UserFollowingHandler))
 	app.Get("/api/user/{username}", app.handleRequest(handlers.GetUser))

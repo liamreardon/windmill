@@ -106,7 +106,6 @@ class ChildViewController: UIViewController {
             likeBtn.image = imageIcon
         }
         
-
         if !post!.verified! {
             usernameLabel.text = "@\(post!.username!)"
         }

@@ -19,6 +19,7 @@ PODS:
   - lottie-ios (3.1.8)
   - NextLevel (0.16.3)
   - Pageboy (3.6.0)
+  - Pastel (0.6.0)
   - RPCircularProgress (0.5.0)
   - SwiftKeychainWrapper (3.4.0)
 
@@ -27,6 +28,7 @@ DEPENDENCIES:
   - lottie-ios
   - NextLevel (~> 0.16.3)
   - Pageboy (~> 3.6)
+  - Pastel
   - RPCircularProgress (= 0.5.0)
   - SwiftKeychainWrapper
 
@@ -39,6 +41,7 @@ SPEC REPOS:
     - lottie-ios
     - NextLevel
     - Pageboy
+    - Pastel
     - RPCircularProgress
     - SwiftKeychainWrapper
 
@@ -50,9 +53,10 @@ SPEC CHECKSUMS:
   lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
   NextLevel: 76dab336f758e6a98ef6b4917de1481324cffe04
   Pageboy: 490c26be405987158660bb45ee2f404567395007
+  Pastel: 814f081efbe2859c37e65ee44f396e6e5be88619
   RPCircularProgress: 4499d4a1453dfbd3fe5bd8c6f344fd51cff3ad00
   SwiftKeychainWrapper: 6fc49fbf7d4a6b0772917acb0e53a1639f6078d6
 
-PODFILE CHECKSUM: 0e6e8962671d0c7723485ba9aa03a1655d050ccf
+PODFILE CHECKSUM: bca8ab7a49c4d374f03bcc17fd80c2a7f74cf588
 
 COCOAPODS: 1.8.4

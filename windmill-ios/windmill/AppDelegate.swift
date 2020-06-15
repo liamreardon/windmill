@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UITabBarControllerDelegat
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
+        
         // Initialize sign-in
         GIDSignIn.sharedInstance().clientID = Environment.googleClientId
         GIDSignIn.sharedInstance().delegate = self
@@ -62,15 +63,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UITabBarControllerDelegat
             }
             return
       }
-        
-        let idToken = user.authentication.idToken
-
-        let dict = ["tokenId":idToken]
-        KeychainWrapper.standard.set(idToken!, forKey: "token")
-
-        let authManager = AuthManager()
-        authManager.login(params: dict)
-        
     }
     
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!,

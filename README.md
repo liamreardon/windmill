@@ -1,4 +1,4 @@
-<p><img src="https://github.com/liamreardon/windmill/blob/master/windmill_banner.png" alt="windmill" style="max-width: 100%;"></p>
+<p><img src="https://github.com/liamreardon/windmill/blob/master/windmill_banner.png" alt="windmill"></p>
 
 `windmill` is a simplified video-sharing social network built using [Swift](https://developer.apple.com/swift/) and [Go](https://golang.org/), where users can record, edit and post looping short-form videos.
 
@@ -56,6 +56,7 @@ func GetConfig() *Config {
 * [SwiftKeychainWrapper](https://github.com/jrendel/SwiftKeychainWrapper) - A simple wrapper for the iOS Keychain to allow you to use it in a similar fashion to User Defaults
 * [lottie-ios](https://github.com/airbnb/lottie-ios) - An iOS library to natively render After Effects vector animations
 * [GoogleSignIn](https://developers.google.com/identity/sign-in/ios#swift) - Add Google Sign-In to Your iOS App
+* [Pastel](https://github.com/cruisediary/Pastel) - Gradient animation effects
 
 ### Go
 

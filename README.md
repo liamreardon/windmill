@@ -1,6 +1,6 @@
 <p><img src="https://github.com/liamreardon/windmill/blob/master/windmill_banner.png" alt="windmill"></p>
 
-`windmill` is a simplified video-sharing social network built using [Swift](https://developer.apple.com/swift/) and [Go](https://golang.org/), where users can record, edit and post looping short-form videos.
+`windmill` is a simplified video-sharing social network built using [Swift 5](https://developer.apple.com/swift/) and [Go](https://golang.org/), where users can record, edit and post looping short-form videos.
 
 |  | Features |
 |:---------:|:---------------------------------------------------------------|
@@ -8,7 +8,8 @@
 | :pencil2: | Add custom text and captions to your videos |
 | :bust_in_silhouette: | Create an account and customize your profile |
 | :green_heart: | Follow friends and like their videos | 
-| :newspaper: | Browse newsfeed of videos from users you follow |  
+| :newspaper: | Browse newsfeed of videos from users you follow | 
+| :handshaking: | View activity feed to see who is interacting with your profile|   
 | :bird: | [Swift 5](https://developer.apple.com/swift/) |  
 | :arrow_right: | [Go](https://golang.org/) |  
 

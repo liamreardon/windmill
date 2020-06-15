@@ -70,6 +70,7 @@ func (app *App) setupRoutes() {
 
 	// Post Routes
 	app.Post("/api/user/{postUserId}/post/{postId}/likers/{userId}/{likedStatus}", app.handleRequest(handlers.PostLikedHandler))
+	app.Delete("/api/user/{userId}/post/{postId}", app.handleRequest(handlers.DeletePost))
 }
 
 // Run app on router

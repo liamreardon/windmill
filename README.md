@@ -9,7 +9,7 @@
 | :bust_in_silhouette: | Create an account and customize your profile |
 | :green_heart: | Follow friends and like their videos | 
 | :newspaper: | Browse newsfeed of videos from users you follow | 
-| :handshaking: | View activity feed to see who is interacting with your profile|   
+| :wave: | View activity feed to see who is interacting with your profile |   
 | :bird: | [Swift 5](https://developer.apple.com/swift/) |  
 | :arrow_right: | [Go](https://golang.org/) |  
 

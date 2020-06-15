@@ -33,3 +33,25 @@ func PostLikedHandler(client *mongo.Client, w http.ResponseWriter, r *http.Reque
 		"message":"successfully updated users liked status on post",
 	})
 }
+
+func DeletePost(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId := vars["userId"]
+	postId := vars["postId"]
+
+	collection := client.Database("windmill-master").Collection("Users")
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
+	err := post.DeletePost(collection, ctx, userId, postId)
+
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, map[string]interface{}{
+			"error":err,
+		})
+		return
+	}
+
+	respondJSON(w, http.StatusOK, map[string]interface{}{
+		"message":"successfully updated users liked status on post",
+	})
+}

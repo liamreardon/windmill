@@ -40,3 +40,11 @@ func PostLikedService(collection *mongo.Collection, ctx context.Context, postUse
 		return nil
 	}
 }
+
+func DeletePost(collection *mongo.Collection, ctx context.Context, userId string, postId string) error {
+	_, err := collection.DeleteOne(ctx, bson.M{"userid":userId, "posts.postid":postId})
+	if err != nil {
+		return err
+	}
+	return nil
+}

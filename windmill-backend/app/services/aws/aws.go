@@ -86,3 +86,20 @@ func GetUserDisplayPicture(dpPath string) (*os.File, error){
 	fmt.Println("Downloaded", file.Name(), numBytes, "bytes")
 	return file, nil
 }
+
+func UploadVideoThumbnail(file multipart.File, userId string, videoId string) (string, error) {
+	uploader := s3manager.NewUploader(sess)
+	_, err := uploader.Upload(&s3manager.UploadInput{
+		Bucket: aws.String(AWS_S3_BUCKET),
+		ContentType: aws.String("image/jpeg"),
+		Key:    aws.String(path.Join("/users/" + userId + "/videoThumbnails", videoId + ".jpg")),
+		Body:   file,
+	})
+
+	if err != nil {
+		return "", errors.New("error uploading to server")
+	}
+
+	fmt.Println("success")
+	return "https://windmill-warehouse.s3.us-east-2.amazonaws.com/users/"+userId+"/videoThumbnails/"+videoId+".jpg", nil
+}

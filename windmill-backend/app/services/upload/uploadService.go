@@ -23,7 +23,7 @@ func AssignUserDisplayPicturePath(collection *mongo.Collection, ctx context.Cont
 	return fmt.Sprintf("successfully uploaded display picture, upserted %d", res.UpsertedCount), nil
 }
 
-func AddVideoToUserPosts(collection *mongo.Collection, ctx context.Context, userId string, videoId string, url string, caption string) (string, error) {
+func AddVideoToUserPosts(collection *mongo.Collection, ctx context.Context, userId string, videoId string, url string, caption string, thumbnail string) (string, error) {
 	user := models.User{}
 
 	collection.FindOne(ctx, bson.M{"userid":userId}).Decode(&user)
@@ -46,6 +46,7 @@ func AddVideoToUserPosts(collection *mongo.Collection, ctx context.Context, user
 		NumLikes: 0,
 		Likers: []string{},
 		Url: url,
+		Thumbnail: thumbnail,
 	}
 
 	res, err := collection.UpdateOne(ctx, bson.M{"userid":userId}, bson.D{
@@ -60,3 +61,5 @@ func AddVideoToUserPosts(collection *mongo.Collection, ctx context.Context, user
 
 	return fmt.Sprintf("successfully uploaded video, upserted %d", res.UpsertedCount), nil
 }
+
+

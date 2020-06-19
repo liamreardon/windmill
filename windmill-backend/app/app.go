@@ -55,11 +55,12 @@ func (app *App) setupRoutes() {
 	app.Post("/api/auth/signup", app.handleRequest(handlers.SignUp))
 
 	// User Routes
+	app.Get("/api/user/{userId}/dp", app.handleRequest(handlers.GetDisplayPicture))
+	app.Get("/api/user/{username}", app.handleRequest(handlers.GetUser))
 	app.Put("/api/user/{userId}/dp", app.handleRequest(handlers.UpdateDisplayPicture))
 	app.Post("/api/user/{userId}/posts/{caption}", app.handleRequest(handlers.UploadVideo))
-	app.Get("/api/user/{userId}/dp", app.handleRequest(handlers.GetDisplayPicture))
 	app.Post("/api/user/{username}/following/{followingUsername}/{followingStatus}", app.handleRequest(handlers.UserFollowingHandler))
-	app.Get("/api/user/{username}", app.handleRequest(handlers.GetUser))
+
 
 	// Search Routes
 	app.Get("/api/search/{substring}", app.handleRequest(handlers.SearchForUser))

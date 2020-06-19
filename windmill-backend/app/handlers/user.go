@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"bytes"
 	"context"
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/liamreardon/windmill/windmill-backend/app/services/aws"
@@ -10,8 +12,13 @@ import (
 	"github.com/liamreardon/windmill/windmill-backend/app/services/user"
 	"go.mongodb.org/mongo-driver/mongo"
 	"io"
+	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
+	"os/exec"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -58,6 +65,8 @@ func UploadVideo(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId := vars["userId"]
 	caption := vars["caption"]
+	cap := strings.Join(strings.SplitN(caption, "-", -1), " ")
+
 	file, _, err := r.FormFile("file")
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, map[string]interface{}{
@@ -72,17 +81,66 @@ func UploadVideo(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	url, err := aws.UploadVideoToS3(file, videoId, userId)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, map[string]interface{}{
-			"message":"error uploading file",
+			"message": "error uploading file",
+		})
+		return
+	}
+
+	data, err := ioutil.ReadAll(file)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	tmpFile, err := ioutil.TempFile(os.TempDir(), videoId + "*.jpg")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer os.Remove(tmpFile.Name())
+
+	fmt.Println("Created a Temp File: " + tmpFile.Name())
+
+	tmpFile.Write(data)
+
+	filename := tmpFile.Name()
+	width := 360
+	height := 640
+	cmd := exec.Command("ffmpeg", "-i", filename, "-vframes", "1", "-s", fmt.Sprintf("%dx%d", width, height), "-f", "singlejpeg", "-")
+	var buffer bytes.Buffer
+	cmd.Stdout = &buffer
+	if cmd.Run() != nil {
+		panic("could not generate frame")
+	}
+
+	if err := tmpFile.Close(); err != nil {
+		fmt.Println(err)
+	}
+
+	thumbnailFile, err := os.Create(videoId + ".jpg")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer os.Remove(thumbnailFile.Name())
+
+	thumbnailFile.Write(buffer.Bytes())
+
+	result, err := aws.UploadVideoThumbnail(thumbnailFile, userId, videoId)
+
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, map[string]interface{}{
+			"message":err,
 		})
 		return
 	}
 
 	collection := client.Database("windmill-master").Collection("Users")
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	res, err := upload.AddVideoToUserPosts(collection, ctx, userId, videoId, url, caption)
-	if err != nil {
+	res, er := upload.AddVideoToUserPosts(collection, ctx, userId, videoId, url, cap, result)
+	if er != nil {
 		respondError(w, http.StatusInternalServerError, map[string]interface{}{
-			"message":err,
+			"message":er,
 		})
 		return
 	}
@@ -167,6 +225,20 @@ func GetUser(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		"user":usr,
 	})
 }
+
+func GenerateThumbnail(header string) {
+	filename := header
+	width := 640
+	height := 360
+	cmd := exec.Command("ffmpeg", "-i", filename, "-vframes", "1", "-s", fmt.Sprintf("%dx%d", width, height), "-f", "singlejpeg", "-")
+	var buffer bytes.Buffer
+	cmd.Stdout = &buffer
+	if cmd.Run() != nil {
+		panic("could not generate frame")
+	}
+	fmt.Println(buffer)
+}
+
 
 
 

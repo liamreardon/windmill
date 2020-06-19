@@ -10,6 +10,7 @@ type Post struct {
 	NumLikes int `json:"numlikes"`
 	Likers []string `json:"likers"`
 	Url string `json:"url"`
+	Thumbnail string `json:"thumbnail"`
 }
 
 type Comment struct {

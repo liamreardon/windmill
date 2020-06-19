@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -74,7 +74,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                             </imageView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NNM-Ov-p42" userLabel="Delete View">
-                                <rect key="frame" x="182" y="656" width="50" height="50"/>
+                                <rect key="frame" x="182" y="712" width="50" height="50"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="3Pl-rU-dcF"/>
@@ -82,7 +82,7 @@
                                 </constraints>
                             </view>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lZb-ZO-kUt">
-                                <rect key="frame" x="0.0" y="662" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="713" width="414" height="49"/>
                                 <items/>
                             </toolbar>
                         </subviews>
@@ -164,7 +164,7 @@
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="chevron.down" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="iFl-Dj-DqY">
-                                <rect key="frame" x="192" y="25" width="30" height="20.5"/>
+                                <rect key="frame" x="192" y="25.333333333333258" width="30" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="tintColor" red="0.0" green="0.72156862749999995" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
                             </imageView>
@@ -268,10 +268,10 @@
                                 <color key="sectionIndexBackgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="userCell" id="XlX-mi-0SH">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="28" width="414" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XlX-mi-0SH" id="nts-08-5oZ">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -336,70 +336,102 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="cEq-fc-EMb">
                                 <rect key="frame" x="20" y="145" width="111" height="20"/>
                                 <fontDescription key="fontDescription" name="Ubuntu-Bold" family="Ubuntu" pointSize="18"/>
-                                <nil key="textColor"/>
+                                <color key="textColor" red="0.0" green="0.72156862749999995" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mcP-tb-ntr">
-                                <rect key="frame" x="341" y="26" width="52" height="32"/>
-                                <fontDescription key="fontDescription" name="Ubuntu-Regular" family="Ubuntu" pointSize="17"/>
-                                <state key="normal" title="Follow"/>
-                                <connections>
-                                    <action selector="followButtonTapped:" destination="nAN-RM-oxA" eventType="touchUpInside" id="0y0-k9-hEc"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="followers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bfD-hR-3cn">
                                 <rect key="frame" x="139" y="85" width="73" height="20"/>
                                 <fontDescription key="fontDescription" name="Ubuntu-Regular" family="Ubuntu" pointSize="17"/>
-                                <nil key="textColor"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="following" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yNh-6U-r2t">
                                 <rect key="frame" x="139" y="57" width="73" height="20"/>
                                 <fontDescription key="fontDescription" name="Ubuntu-Regular" family="Ubuntu" pointSize="17"/>
-                                <nil key="textColor"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="9Yc-gp-LXG">
-                                <rect key="frame" x="0.0" y="192" width="414" height="567"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <rect key="frame" x="0.0" y="205" width="414" height="554"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="8N5-rd-uoV">
-                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="itemSize" width="149" height="220"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="cU0-BV-UI9" customClass="CollectionViewCell" customModule="windmill" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="149" height="220"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="4Q5-lf-T5L">
-                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="149" height="220"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9V1-ul-xdN">
+                                                    <rect key="frame" x="0.0" y="0.0" width="149" height="220"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                            </subviews>
                                         </collectionViewCellContentView>
+                                        <size key="customSize" width="149" height="220"/>
                                         <connections>
+                                            <outlet property="cellImage" destination="9V1-ul-xdN" id="GnF-so-dQt"/>
                                             <outlet property="cellPreviewView" destination="4Q5-lf-T5L" id="oGK-CE-oy6"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i98-9N-FYq">
+                                <rect key="frame" x="358" y="20" width="36" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="36" id="403-Jf-Jcs"/>
+                                    <constraint firstAttribute="width" constant="36" id="NxI-jO-FMx"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" image="ellipsis" catalog="system">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="optionsButtonTapped:" destination="nAN-RM-oxA" eventType="touchUpInside" id="Wfk-YU-VZs"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mcP-tb-ntr">
+                                <rect key="frame" x="309" y="67" width="85" height="29"/>
+                                <color key="backgroundColor" red="0.3411764705882353" green="0.396078431372549" blue="0.45490196078431372" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="29" id="2QO-Nb-3AO"/>
+                                    <constraint firstAttribute="width" constant="85" id="SHB-DE-7cb"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Ubuntu-Bold" family="Ubuntu" pointSize="15"/>
+                                <state key="normal" title="Follow +">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="followButtonTapped:" destination="nAN-RM-oxA" eventType="touchUpInside" id="0y0-k9-hEc"/>
+                                </connections>
+                            </button>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="yNh-6U-r2t" firstAttribute="top" secondItem="uPA-aX-MBy" secondAttribute="top" constant="57" id="1MC-R3-2Wn"/>
                             <constraint firstItem="9Yc-gp-LXG" firstAttribute="trailing" secondItem="uPA-aX-MBy" secondAttribute="trailing" id="2eh-56-BWx"/>
-                            <constraint firstItem="9Yc-gp-LXG" firstAttribute="top" secondItem="cEq-fc-EMb" secondAttribute="bottom" constant="27" id="6gr-kJ-dMQ"/>
+                            <constraint firstItem="9Yc-gp-LXG" firstAttribute="top" secondItem="cEq-fc-EMb" secondAttribute="bottom" constant="40" id="6gr-kJ-dMQ"/>
                             <constraint firstItem="Mdk-ev-K1z" firstAttribute="leading" secondItem="uPA-aX-MBy" secondAttribute="leading" constant="20" id="Cge-6d-h80"/>
-                            <constraint firstItem="mcP-tb-ntr" firstAttribute="top" secondItem="uPA-aX-MBy" secondAttribute="top" constant="26" id="HS3-To-Cvw"/>
                             <constraint firstItem="yNh-6U-r2t" firstAttribute="leading" secondItem="bfD-hR-3cn" secondAttribute="leading" id="KCs-rr-GKl"/>
                             <constraint firstItem="Mdk-ev-K1z" firstAttribute="top" secondItem="uPA-aX-MBy" secondAttribute="top" constant="26" id="UbM-in-5sY"/>
+                            <constraint firstItem="uPA-aX-MBy" firstAttribute="trailing" secondItem="i98-9N-FYq" secondAttribute="trailing" constant="20" id="g8F-Tw-ODB"/>
+                            <constraint firstItem="mcP-tb-ntr" firstAttribute="top" secondItem="i98-9N-FYq" secondAttribute="bottom" constant="11" id="gzZ-PK-OiV"/>
                             <constraint firstItem="cEq-fc-EMb" firstAttribute="leading" secondItem="Mdk-ev-K1z" secondAttribute="leading" id="iSS-N6-0xd"/>
                             <constraint firstItem="9Yc-gp-LXG" firstAttribute="bottom" secondItem="uPA-aX-MBy" secondAttribute="bottom" id="ksA-sq-Q27"/>
                             <constraint firstItem="9Yc-gp-LXG" firstAttribute="leading" secondItem="uPA-aX-MBy" secondAttribute="leading" id="lMX-vg-cXF"/>
                             <constraint firstItem="cEq-fc-EMb" firstAttribute="top" secondItem="Mdk-ev-K1z" secondAttribute="bottom" constant="8" id="mR9-zR-JqU"/>
-                            <constraint firstItem="uPA-aX-MBy" firstAttribute="trailing" secondItem="mcP-tb-ntr" secondAttribute="trailing" constant="21" id="mfB-ID-wmO"/>
+                            <constraint firstItem="i98-9N-FYq" firstAttribute="top" secondItem="uPA-aX-MBy" secondAttribute="top" constant="20" id="pY7-kh-Ub9"/>
                             <constraint firstItem="bfD-hR-3cn" firstAttribute="top" secondItem="yNh-6U-r2t" secondAttribute="bottom" constant="8" id="pv3-W9-Eu2"/>
                             <constraint firstItem="yNh-6U-r2t" firstAttribute="leading" secondItem="Mdk-ev-K1z" secondAttribute="trailing" constant="8" id="sOj-VP-JEz"/>
                             <constraint firstItem="cEq-fc-EMb" firstAttribute="trailing" secondItem="Mdk-ev-K1z" secondAttribute="trailing" id="sVJ-YH-inr"/>
+                            <constraint firstItem="uPA-aX-MBy" firstAttribute="trailing" secondItem="mcP-tb-ntr" secondAttribute="trailing" constant="20" id="yu2-jH-e4k"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="uPA-aX-MBy"/>
                     </view>
@@ -411,6 +443,7 @@
                         <outlet property="followButton" destination="mcP-tb-ntr" id="OFS-zJ-24P"/>
                         <outlet property="followersLabel" destination="bfD-hR-3cn" id="dV6-YS-dzU"/>
                         <outlet property="followingLabel" destination="yNh-6U-r2t" id="jgY-cB-mmJ"/>
+                        <outlet property="optionsButton" destination="i98-9N-FYq" id="6p6-dY-CcL"/>
                         <outlet property="usernameLabel" destination="cEq-fc-EMb" id="1gu-q3-cba"/>
                     </connections>
                 </viewController>
@@ -421,7 +454,7 @@
         <!--Record-->
         <scene sceneID="Jkm-3U-cX7">
             <objects>
-                <navigationController storyboardIdentifier="recordNav" title="recordController" automaticallyAdjustsScrollViewInsets="NO" id="mhF-n5-jl2" userLabel="Record" sceneMemberID="viewController">
+                <navigationController restorationIdentifier="recordNav" storyboardIdentifier="recordNav" title="recordController" automaticallyAdjustsScrollViewInsets="NO" id="mhF-n5-jl2" userLabel="Record" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Record" image="circle" catalog="system" id="b5H-MC-eV2"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="KIn-cJ-Otp">
@@ -446,13 +479,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="atc-K9-HBn">
-                                <rect key="frame" x="20" y="771" width="84.5" height="21"/>
+                                <rect key="frame" x="20" y="771" width="84.666666666666671" height="21"/>
                                 <fontDescription key="fontDescription" name="Ubuntu-Bold" family="Ubuntu" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="251" horizontalCompressionResistancePriority="748" text="caption" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ly0-58-IRp">
-                                <rect key="frame" x="20" y="796" width="47" height="16"/>
+                                <rect key="frame" x="19.999999999999996" y="796" width="46.666666666666657" height="16"/>
                                 <viewLayoutGuide key="safeArea" id="RKy-a0-ynT"/>
                                 <fontDescription key="fontDescription" name="Ubuntu-Light" family="Ubuntu" pointSize="14"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -553,7 +586,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="jJn-Ay-ugb"/>
+        <segue reference="g3N-8J-DCw"/>
         <segue reference="SaP-cn-72r"/>
     </inferredMetricsTieBreakers>
     <resources>
@@ -561,6 +594,7 @@
         <image name="bolt" catalog="system" width="101" height="128"/>
         <image name="chevron.down" catalog="system" width="128" height="72"/>
         <image name="circle" catalog="system" width="128" height="121"/>
+        <image name="ellipsis" catalog="system" width="128" height="37"/>
         <image name="heart" catalog="system" width="128" height="109"/>
         <image name="house" catalog="system" width="128" height="110"/>
         <image name="magnifyingglass" catalog="system" width="128" height="115"/>

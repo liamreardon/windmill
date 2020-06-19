@@ -1,4 +1,4 @@
-module Pods_windmill {
+framework module Pods_windmill {
   umbrella header "Pods-windmill-umbrella.h"
 
   export *

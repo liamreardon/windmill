@@ -43,7 +43,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         navigationController?.setNavigationBarHidden(false, animated: animated)
         navigationController?.navigationItem.backBarButtonItem = nil
         
-        let icon3 = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let icon3 = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
         let button3 = UIButton()
         button3.frame = CGRect(x:0, y:0, width: 51, height: 31)
         button3.setImage(icon3, for: .normal)

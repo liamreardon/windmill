@@ -33,10 +33,10 @@ func CheckUserExists(collection *mongo.Collection, ctx context.Context, username
 	}
 }
 
-func SignUpUser(collection *mongo.Collection, ctx context.Context, data *models.User) (bool, *mongo.InsertOneResult, string) {
+func SignUpUser(collection *mongo.Collection, ctx context.Context, data *models.User) (bool, *mongo.InsertOneResult, models.ProtectedUser, string) {
 	info, err := token.VerifyGoogleToken(data.UserToken.TokenId)
 	if err != nil {
-		return false, nil, ""
+		return false, nil, models.ProtectedUser{}, ""
 	}
 
 	user := models.User{
@@ -57,7 +57,14 @@ func SignUpUser(collection *mongo.Collection, ctx context.Context, data *models.
 		Posts: []models.Post{},
 	}
 	res, _ := collection.InsertOne(ctx, user)
-	return true, res, user.UserId
+	return true, res, models.ProtectedUser{
+		Username:       user.Username,
+		DisplayName:    user.DisplayName,
+		DisplayPicture: user.DisplayPicture,
+		Verified:       false,
+		Relations:      user.Relations,
+		Posts:          user.Posts,
+	}, user.UserId
 }
 
 

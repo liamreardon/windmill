@@ -62,6 +62,10 @@ class VideoEditViewController: UIViewController, UITabBarControllerDelegate {
         view.addGestureRecognizer(tap)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+
+    }
+    
     
     override func viewWillDisappear(_ animated: Bool) {
         removeLoopObserver()
@@ -94,12 +98,12 @@ class VideoEditViewController: UIViewController, UITabBarControllerDelegate {
     
     internal func setupUI() {
         // Trash Icon
-        let icon = UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let icon = UIImage(systemName: "trash", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
         let imageView = UIImageView(image: icon)
         deleteView.addSubview(imageView)
         
         // Back Button Icon
-        let icon2 = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let icon2 = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
         let button = UIButton()
         button.frame = CGRect(x:0, y:0, width: 51, height: 31)
         button.setImage(icon2, for: .normal)
@@ -121,7 +125,7 @@ class VideoEditViewController: UIViewController, UITabBarControllerDelegate {
         
         // Text Button Icon
         let button3 = UIButton()
-        let icon3 = UIImage(systemName: "textbox", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let icon3 = UIImage(systemName: "textbox", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
         button3.frame = CGRect(x:0, y:0, width: 51, height: 31)
         button3.setImage(icon3, for: .normal)
         button3.addTarget(self, action: #selector(self.addTextButtonTapped), for: .touchUpInside)
@@ -155,7 +159,7 @@ class VideoEditViewController: UIViewController, UITabBarControllerDelegate {
         textView.layer.shadowOpacity = 0.2
         textView.layer.shadowRadius = 1.0
         textView.layer.backgroundColor = UIColor.clear.cgColor
-        //
+
         textView.autocorrectionType = .no
         textView.isScrollEnabled = false
         textView.delegate = self

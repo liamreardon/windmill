@@ -21,6 +21,9 @@ PODS:
   - Pageboy (3.6.0)
   - Pastel (0.6.0)
   - RPCircularProgress (0.5.0)
+  - SDWebImage (5.8.1):
+    - SDWebImage/Core (= 5.8.1)
+  - SDWebImage/Core (5.8.1)
   - SwiftKeychainWrapper (3.4.0)
 
 DEPENDENCIES:
@@ -30,6 +33,7 @@ DEPENDENCIES:
   - Pageboy (~> 3.6)
   - Pastel
   - RPCircularProgress (= 0.5.0)
+  - SDWebImage (~> 5.0)
   - SwiftKeychainWrapper
 
 SPEC REPOS:
@@ -43,6 +47,7 @@ SPEC REPOS:
     - Pageboy
     - Pastel
     - RPCircularProgress
+    - SDWebImage
     - SwiftKeychainWrapper
 
 SPEC CHECKSUMS:
@@ -55,8 +60,9 @@ SPEC CHECKSUMS:
   Pageboy: 490c26be405987158660bb45ee2f404567395007
   Pastel: 814f081efbe2859c37e65ee44f396e6e5be88619
   RPCircularProgress: 4499d4a1453dfbd3fe5bd8c6f344fd51cff3ad00
+  SDWebImage: e3eae2eda88578db0685a0c88597fdadd9433f05
   SwiftKeychainWrapper: 6fc49fbf7d4a6b0772917acb0e53a1639f6078d6
 
-PODFILE CHECKSUM: bca8ab7a49c4d374f03bcc17fd80c2a7f74cf588
+PODFILE CHECKSUM: 62b45508be7e52faf49fe28c6eb0840bc1af7832
 
 COCOAPODS: 1.8.4

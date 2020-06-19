@@ -11,6 +11,7 @@ import GoogleSignIn
 import Pageboy
 import SwiftKeychainWrapper
 import AVFoundation
+import SDWebImage
 
 class HomeViewController: PageboyViewController {
     
@@ -64,6 +65,11 @@ class HomeViewController: PageboyViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
 
+    }
+    
+    @objc func refresh() {
+        self.refreshControl.beginRefreshing()
+        self.reloadData()
     }
     
     // MARK: Pageboy Data Source
@@ -193,8 +199,11 @@ extension HomeViewController: PageboyViewControllerDelegate {
                                didScrollTo position: CGPoint,
                                direction: PageboyViewController.NavigationDirection,
                                animated: Bool) {
+        print(position.y)
 
-//        updateStatusLabels()
+        if position.y < -0.10 {
+            self.refresh()
+        }
         
    
     }

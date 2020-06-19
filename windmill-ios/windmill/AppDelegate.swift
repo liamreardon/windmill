@@ -17,7 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UITabBarControllerDelegat
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        
         // Initialize sign-in
         GIDSignIn.sharedInstance().clientID = Environment.googleClientId
         GIDSignIn.sharedInstance().delegate = self
@@ -53,6 +52,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UITabBarControllerDelegat
       return GIDSignIn.sharedInstance().handle(url)
     }
     
+    // MARK: Google Sign In
+    
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
               withError error: Error!) {
           if let error = error {
@@ -78,9 +79,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UITabBarControllerDelegat
         UserDefaults.standard.removeObject(forKey: "numFollowing")
     }
     
+    // MARK: Tab Bar Delegate Functions
+    
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        if viewController.restorationIdentifier == "recordNav" {
+            if let newVC = tabBarController.storyboard?.instantiateViewController(withIdentifier: "recordNav") {
+                newVC.modalPresentationStyle = .fullScreen
+                tabBarController.present(newVC, animated: true)
+                return false
+            }
+        }
+
+        return true
+    }
 }
 
-//MARK: - UIApplication Extension
+// MARK: - UIApplication Extension
 
 extension UIApplication {
     

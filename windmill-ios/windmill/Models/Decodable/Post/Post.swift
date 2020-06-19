@@ -17,6 +17,7 @@ struct Post: Decodable {
     var numlikes: Int?
     var likers: [String]?
     var url: String?
+    var thumbnail: String?
     
     init?(dictionary: [String: Any]) {
         let id = dictionary["postid"] as? String
@@ -27,6 +28,7 @@ struct Post: Decodable {
         let numlikes = dictionary["numlikes"] as? Int
         let likers = dictionary["likers"] as? [String]
         let url = dictionary["url"] as? String
+        let thumbnail = dictionary["thumbnail"] as? String
       
         self.id = id
         self.userId = userId
@@ -36,6 +38,7 @@ struct Post: Decodable {
         self.numlikes = numlikes
         self.likers = likers
         self.url = url
+        self.thumbnail = thumbnail
     }
 }
 

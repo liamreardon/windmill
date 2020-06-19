@@ -24,7 +24,7 @@ class UserCreationViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.imagePicker = ImagePicker(presentationController: self, delegate: self)
+        self.imagePicker = ImagePicker(presentationController: self, delegate: self, mediaType: "public.image")
     }
     
     // MARK: User Interaction
@@ -41,6 +41,7 @@ class UserCreationViewController: UIViewController {
             
             if result["available"] as? Int == 1 {
                 // Username available
+                print(result)
                 let username = usernameTextField.text!
                 let userId = result["userId"] as! String
                 let followers = result["followers"] as! [String]
@@ -94,7 +95,12 @@ class UserCreationViewController: UIViewController {
 
 extension UserCreationViewController: ImagePickerDelegate {
     func didSelect(image: UIImage?) {
+        if image == nil { return }
         self.displayPictureImageView.image = image
+    }
+    
+    func didSelectVideo(url: URL?) {
+        
     }
 }
 

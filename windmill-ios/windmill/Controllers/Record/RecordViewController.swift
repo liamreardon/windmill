@@ -24,14 +24,16 @@ class RecordViewController: UIViewController {
     internal var vSpinner: UIView?
     @IBOutlet weak var exitButton: UIBarButtonItem!
     @IBOutlet weak var nextButton: UIBarButtonItem!
+    internal var resetButton: UIBarButtonItem!
+    internal var selectPhotoButton: UIBarButtonItem!
+    internal var flashButton: UIButton!
+    
+    internal var flashOn: Bool = false
+    internal var toolbar: UIToolbar!
+    internal var imagePicker: ImagePicker!
     
     internal var recordButton: RecordButton = {
         let button = RecordButton(frame: CGRect(origin: .zero, size: CGSize(width: 100, height: 100)))
-        return button
-    }()
-    
-    internal var resetButton: UIButton = {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 80, height: 50))
         return button
     }()
     
@@ -53,21 +55,23 @@ class RecordViewController: UIViewController {
     override func viewDidLoad() {
         self.setupCamera()
         self.setupRecordButton()
-        self.setupResetButton()
+        self.setupToolbar()
         self.setupFlipCameraButton()
         self.setupBarButtonItems()
+        self.imagePicker = ImagePicker(presentationController: self, delegate: self, mediaType: "public.movie")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.startCamera()
+        self.resetButton.isEnabled = false
+        self.navigationController?.isToolbarHidden = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.resetCapture()
         self.stopCamera()
-        self.resetButton.isHidden = true
         self.removeSpinner()
     }
     
@@ -96,6 +100,7 @@ extension RecordViewController {
                 
                 nextLevel.delegate = self
                 nextLevel.videoDelegate = self
+                nextLevel.flashDelegate = self
 
                 nextLevel.isVideoCustomContextRenderingEnabled = true
                 nextLevel.videoStabilizationMode = .off
@@ -113,6 +118,7 @@ extension RecordViewController {
                 nextLevel.previewLayer.frame = previewView.bounds
                 previewView.layer.addSublayer(nextLevel.previewLayer)
                 self.view.addSubview(previewView)
+    
             }
         }
     }
@@ -161,7 +167,8 @@ extension RecordViewController {
     internal func resetCapture() {
         self.recordButton.reset()
         self.nextLevel?.session?.removeAllClips()
-        self.resetButton.isHidden = true
+        self.resetButton.isEnabled = false
+        self.nextButton.isEnabled = false
     }
     
     internal func endCapture() {
@@ -183,23 +190,41 @@ extension RecordViewController {
         self.view.addSubview(self.recordButton)
     }
     
-    internal func setupResetButton() {
-        var safeAreaBottom: CGFloat = 0.0
-        let height = self.recordButton.frame.size.height * 0.5
-        safeAreaBottom = self.view.safeAreaInsets.bottom + 50.0
-        let icon = UIImage(systemName: "delete.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 33, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
-        self.resetButton.setImage(icon, for: .normal)
-        self.resetButton.center = CGPoint(x: (self.view.bounds.minX + self.view.bounds.midX) / 2, y: self.view.bounds.size.height - safeAreaBottom - (height) - 50.0)
-        self.resetButton.addTarget(self, action: #selector(self.resetButtonTapped), for: .touchUpInside)
-        self.resetButton.isHidden = true
-        self.view.addSubview(self.resetButton)
+    internal func setupToolbar() {
+        
+        let icon = UIImage(systemName: "delete.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let button = UIButton()
+        button.frame = CGRect(x: 0, y: 0, width: 80, height: 50)
+        button.setImage(icon, for: .normal)
+        button.addTarget(self, action: #selector(self.resetButtonTapped), for: .touchUpInside)
+        let barButton = UIBarButtonItem()
+        barButton.customView = button
+        resetButton = barButton
+        resetButton.isEnabled = false
+        
+        let icon2 = UIImage(systemName: "photo.on.rectangle", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let button2 = UIButton()
+        button2.frame = CGRect(x: 0, y: 0, width: 80, height: 50)
+        button2.setImage(icon2, for: .normal)
+        button2.addTarget(self, action: #selector(self.selectPhotoButtonTapped), for: .touchUpInside)
+        let barButton2 = UIBarButtonItem()
+        barButton2.customView = button2
+        selectPhotoButton = barButton2
+        
+        var items = [UIBarButtonItem]()
+        items.append(resetButton)
+        items.append(
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        )
+        items.append(selectPhotoButton)
+        toolbarItems = items
     }
     
     internal func setupFlipCameraButton() {
         var safeAreaBottom: CGFloat = 0.0
         let height = self.recordButton.frame.size.height * 0.5
         safeAreaBottom = self.view.safeAreaInsets.bottom + 50.0
-        let icon = UIImage(systemName: "camera.rotate", withConfiguration: UIImage.SymbolConfiguration(pointSize: 33, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let icon = UIImage(systemName: "camera.rotate", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
         self.flipCameraButton.setImage(icon, for: .normal)
         self.flipCameraButton.center = CGPoint(x: (self.view.bounds.midX + self.view.bounds.maxX) / 2, y: self.view.bounds.size.height - safeAreaBottom - (height) - 50.0)
         self.flipCameraButton.addTarget(self, action: #selector(self.flipCameraButtonTapped), for: .touchUpInside)
@@ -207,7 +232,7 @@ extension RecordViewController {
     }
     
     internal func setupBarButtonItems() {
-        let icon = UIImage(systemName: "arrow.right", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let icon = UIImage(systemName: "arrow.right", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
         let button = UIButton()
         button.frame = CGRect(x:0, y:0, width: 51, height: 31)
         button.setImage(icon, for: .normal)
@@ -218,7 +243,7 @@ extension RecordViewController {
         self.nextButton = self.navigationItem.rightBarButtonItem
         self.nextButton.isEnabled = false
         
-        let icon2 = UIImage(systemName: "xmark", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let icon2 = UIImage(systemName: "xmark", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
         let button2 = UIButton()
         button2.frame = CGRect(x:0, y:0, width: 51, height: 31)
         button2.setImage(icon2, for: .normal)
@@ -227,6 +252,15 @@ extension RecordViewController {
         barButton2.customView = button2
         self.navigationItem.leftBarButtonItem = barButton2
         self.exitButton = self.navigationItem.leftBarButtonItem
+        
+        let icon3 = UIImage(systemName: "bolt.slash", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let button3 = UIButton()
+        button3.frame = CGRect(x:0, y:0, width: 51, height: 31)
+        button3.setImage(icon3, for: .normal)
+        button3.addTarget(self, action: #selector(self.flashButtonTapped), for: .touchUpInside)
+        self.navigationItem.titleView = button3
+        self.flashButton = button3
+        
     }
     
     internal func showSpinner(onView: UIView) {
@@ -257,7 +291,7 @@ extension RecordViewController {
     internal func enableUI() {
         self.exitButton.isEnabled = true
         self.nextButton.isEnabled = false
-        self.resetButton.isEnabled = true
+        self.resetButton.isEnabled = false
         self.flipCameraButton.isEnabled = true
     }}
 
@@ -267,6 +301,12 @@ extension RecordViewController {
     @objc internal func handleVideoLongPressGestureRecognizer(_ gestureRecognizer: UIGestureRecognizer) {
         switch gestureRecognizer.state {
         case .began:
+            if flashOn {
+                self.nextLevel?.torchMode = .on
+            }
+            else {
+                self.nextLevel?.torchMode = .off
+            }
             self.isRecording = true
             self.recordButton.startRecordingAnimation()
             self.startCapture()
@@ -278,6 +318,9 @@ extension RecordViewController {
         case .cancelled:
             fallthrough
         case .ended:
+            if flashOn {
+                self.nextLevel?.torchMode = .off
+            }
             self.isRecording = false
             self.recordButton.stopRecordingAnimation()
             self.endCapture()
@@ -310,6 +353,10 @@ extension RecordViewController {
         }
     }
     
+    @objc internal func selectPhotoButtonTapped() {
+        self.imagePicker.present(from: view)
+    }
+    
     @objc internal func exitButtonTapped() {
         if let session = self.nextLevel?.session {
             if session.totalDuration.seconds > 0 {
@@ -320,7 +367,7 @@ extension RecordViewController {
                 }
 
                 let blockAction = UIAlertAction(title: "Exit", style: .destructive) { (action) in
-                    self.tabBarController?.selectedIndex = 0
+                    self.dismiss(animated: true, completion: nil)
                 }
 
                 let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
@@ -334,10 +381,9 @@ extension RecordViewController {
                 self.present(actionSheet, animated: true, completion: nil)
             }
             else {
-                self.tabBarController?.selectedIndex = 0
+                self.dismiss(animated: true, completion: nil)
             }
         }
-        
     }
     
     @objc internal func resetButtonTapped() {
@@ -345,10 +391,30 @@ extension RecordViewController {
         let currentProgress = (self.nextLevel!.session!.totalDuration.seconds / 12.0).clamped(to: 0...1)
         self.recordButton.updateProgress(progress: Float(currentProgress), animated: true)
         if currentProgress == 0 {
-            self.resetButton.isHidden = true
+            self.resetButton.isEnabled = false
         }
         if currentProgress < 3 {
             self.nextButton.isEnabled = false
+        }
+    }
+    
+    @objc internal func flashButtonTapped() {
+        flashOn = !flashOn
+        if flashOn {
+            let icon = UIImage(systemName: "bolt.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            let button = UIButton()
+            button.frame = CGRect(x:0, y:0, width: 51, height: 31)
+            button.setImage(icon, for: .normal)
+            button.addTarget(self, action: #selector(self.flashButtonTapped), for: .touchUpInside)
+            self.navigationItem.titleView = button
+        }
+        else {
+            let icon = UIImage(systemName: "bolt.slash", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            let button = UIButton()
+            button.frame = CGRect(x:0, y:0, width: 51, height: 31)
+            button.setImage(icon, for: .normal)
+            button.addTarget(self, action: #selector(self.flashButtonTapped), for: .touchUpInside)
+            self.navigationItem.titleView = button
         }
     }
     
@@ -425,7 +491,6 @@ extension RecordViewController: NextLevelVideoDelegate {
     
     // enabled by isCustomContextVideoRenderingEnabled
     public func nextLevel(_ nextLevel: NextLevel, renderToCustomContextWithImageBuffer imageBuffer: CVPixelBuffer, onQueue queue: DispatchQueue) {
-
     }
     
     // video recording session
@@ -451,7 +516,7 @@ extension RecordViewController: NextLevelVideoDelegate {
                 self.nextButton.isEnabled = true
             }
             if session.totalDuration.seconds > 0 {
-                self.resetButton.isHidden = false
+                self.resetButton.isEnabled = true
             }
 
         }
@@ -461,11 +526,9 @@ extension RecordViewController: NextLevelVideoDelegate {
     }
     
     public func nextLevel(_ nextLevel: NextLevel, didAppendVideoPixelBuffer pixelBuffer: CVPixelBuffer, timestamp: TimeInterval, inSession session: NextLevelSession) {
-
     }
     
     public func nextLevel(_ nextLevel: NextLevel, didSkipVideoPixelBuffer pixelBuffer: CVPixelBuffer, timestamp: TimeInterval, inSession session: NextLevelSession) {
-
     }
     
     public func nextLevel(_ nextLevel: NextLevel, didSkipVideoSampleBuffer sampleBuffer: CMSampleBuffer, inSession session: NextLevelSession) {
@@ -483,6 +546,52 @@ extension RecordViewController: NextLevelVideoDelegate {
     public func nextLevel(_ nextLevel: NextLevel, didCompletePhotoCaptureFromVideoFrame photoDict: [String : Any]?) {
     }
     
+}
+
+extension RecordViewController: NextLevelFlashAndTorchDelegate {
+    func nextLevelDidChangeFlashMode(_ nextLevel: NextLevel) {
+    }
+    
+    func nextLevelDidChangeTorchMode(_ nextLevel: NextLevel) {
+    }
+    
+    func nextLevelFlashActiveChanged(_ nextLevel: NextLevel) {
+    }
+    
+    func nextLevelTorchActiveChanged(_ nextLevel: NextLevel) {
+    }
+    
+    func nextLevelFlashAndTorchAvailabilityChanged(_ nextLevel: NextLevel) {
+    }
+}
+
+// MARK: Image Picker Delegate
+
+extension RecordViewController: ImagePickerDelegate {
+    func didSelect(image: UIImage?) {
+        
+    }
+    
+    func didSelectVideo(url: URL?) {
+        if url == nil { return }
+        let asset = AVURLAsset(url: url!)
+        let durationInSeconds = asset.duration.seconds
+        self.disableUI()
+        self.showSpinner(onView: self.previewView)
+        if durationInSeconds < 2.6 {
+            self.removeSpinner()
+            self.enableUI()
+            let alertController = UIAlertController(title: "Oops", message: "Video must be 3 seconds or longer!", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        else {
+            self.performSegue(withIdentifier: "editVideo", sender: url!)
+        }
+        
+    }
+
 }
 
 

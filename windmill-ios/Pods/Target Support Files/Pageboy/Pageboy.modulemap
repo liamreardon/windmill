@@ -1,4 +1,4 @@
-module Pageboy {
+framework module Pageboy {
   umbrella header "Pageboy-umbrella.h"
 
   export *

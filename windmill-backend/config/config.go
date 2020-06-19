@@ -9,6 +9,12 @@ type Config struct {
 	Port string
 }
 
+type AWS struct {
+	Base string
+	Region string
+	Bucket string
+}
+
 // Returns config environment variables
 func GetConfig() *Config {
 	uri, exists := os.LookupEnv("DB_URI")
@@ -20,3 +26,6 @@ func GetConfig() *Config {
 	}
 	return &Config{}
 }
+
+
+

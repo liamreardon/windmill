@@ -9,16 +9,17 @@
 import UIKit
 
 protocol DataCollectionProtocol {
-    func passData(index : Int)
-    func deleteData(index : Int)
+    func passData(index: Int)
+    func deleteData(index: Int)
 }
 
 class CollectionViewCell: UICollectionViewCell {
     
     // MARK: IVARS
     
-    var index : IndexPath?
-    var delegate : DataCollectionProtocol?
+    var index: IndexPath?
+    var delegate: DataCollectionProtocol?
     @IBOutlet weak var cellPreviewView: UIView!
+    @IBOutlet weak var cellImage: UIImageView!
     
 }

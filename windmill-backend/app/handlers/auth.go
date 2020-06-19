@@ -76,7 +76,7 @@ func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, _, userId := auth.SignUpUser(collection, ctx, res)
+	result, _, user, userId := auth.SignUpUser(collection, ctx, res)
 	if !result {
 		respondError(w, http.StatusInternalServerError, map[string]interface{}{
 			"message":"error connecting to database",
@@ -89,6 +89,11 @@ func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		"message":"username available",
 		"available":true,
 		"userId":userId,
+		"username": user.Username,
+		"followers": user.Relations.Followers,
+		"following": user.Relations.Following,
+		"numFollowers": user.Relations.NumFollowers,
+		"numFollowing": user.Relations.NumFollowing,
 	})
 }
 

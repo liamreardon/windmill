@@ -26,12 +26,18 @@ pod install
 ### Go
 
 ```go
-# Install dependencies
+# Build go.mod
 
-go get ./...
+go build
 ```
 
-```golang
+```go
+# Install dependencies
+
+go install
+```
+
+```go
 # Add MongoDB URL to config.go
 
 func GetConfig() *Config {
@@ -47,6 +53,12 @@ func GetConfig() *Config {
 
 ```
 
+```go
+# Run
+
+go run main.go
+```
+
 ## Libraries Used
 
 ### Swift
@@ -58,6 +70,7 @@ func GetConfig() *Config {
 * [lottie-ios](https://github.com/airbnb/lottie-ios) - An iOS library to natively render After Effects vector animations
 * [GoogleSignIn](https://developers.google.com/identity/sign-in/ios#swift) - Add Google Sign-In to Your iOS App
 * [Pastel](https://github.com/cruisediary/Pastel) - Gradient animation effects
+* [SDWebImage](https://github.com/SDWebImage/SDWebImage) - Asynchronous image downloader with cache support as a UIImageView category
 
 ### Go
 

@@ -1,4 +1,4 @@
-module Pastel {
+framework module Pastel {
   umbrella header "Pastel-umbrella.h"
 
   export *

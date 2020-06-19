@@ -9,6 +9,8 @@
 import UIKit
 import GoogleSignIn
 import SwiftKeychainWrapper
+import AVFoundation
+import SDWebImage
 
 class ProfileViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
@@ -19,6 +21,7 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     @IBOutlet weak var followButton: UIButton!
     @IBOutlet weak var followingLabel: UILabel!
     @IBOutlet weak var followersLabel: UILabel!
+    @IBOutlet weak var optionsButton: UIButton!
     
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -26,6 +29,7 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     var followingUser: User?
     var userProfileThatIsOpen: User?
     var isFollowing: Bool? = false
+    var userPosts: [Post] = []
     
     var numberOfFollowers: Int = 0
     var numberOfFollowing: Int = 0
@@ -33,6 +37,11 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     let userManager = UserManager()
     let storageManager = StorageManager()
     let feedManager = FeedManager()
+    let uploadManager = UploadManager()
+    
+    let refreshControl = UIRefreshControl()
+    
+    var imagePicker: ImagePicker!
     
     // MARK: Lifecycle
     
@@ -41,13 +50,26 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         
         collectionView.delegate = self
         collectionView.dataSource = self
+        GIDSignIn.sharedInstance()?.presentingViewController = self
+        
+        self.imagePicker = ImagePicker(presentationController: self, delegate: self, mediaType: "public.image")
+        
+        if #available(iOS 10.0, *) {
+            collectionView.refreshControl = refreshControl
+        } else {
+            collectionView.addSubview(refreshControl)
+        }
+        
+        refreshControl.addTarget(self, action: #selector(refreshCollection), for: .valueChanged)
         
         if currentUserProfile {
             let username = KeychainWrapper.standard.string(forKey: "username")
             getUser(username: username!)
             getUserDetails()
-            initSignOutButton()
             initGraphics()
+            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dpTapped))
+            displayPicture.isUserInteractionEnabled = true
+            displayPicture.addGestureRecognizer(tapGestureRecognizer)
         }
         else {
             getUser(username: followingUser!.username!)
@@ -63,7 +85,6 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
             getUser(username: username!)
             getUserDetails()
             getDisplayPicture()
-            getUserFeed()
             initGraphics()
         }
         else {
@@ -71,12 +92,75 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
             initGraphics()
             loadUserData()
         }
+        
+        userPosts = userProfileThatIsOpen!.posts!
+    }
+    
+    @objc internal func refreshCollection() {
+        if currentUserProfile {
+            let username = KeychainWrapper.standard.string(forKey: "username")
+            getUser(username: username!)
+            getUserDetails()
+            initGraphics()
+        }
+        else {
+            getUser(username: followingUser!.username!)
+            loadUserData()
+            initGraphics()
+        }
+        
+        userPosts = userProfileThatIsOpen!.posts!
+        
+        self.collectionView.reloadData()
+        self.refreshControl.endRefreshing()
     }
     
     // MARK: User Interaction
     
     @IBAction func followButtonTapped(_ sender: Any) {
-        isFollowing! = !isFollowing!
+        
+        if isFollowing! {
+            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+            let unfollowAction = UIAlertAction(title: "Unfollow", style: .destructive) { (action) in
+                self.isFollowing = false
+                self.followTappedHandler()
+            }
+
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+                return
+            }
+
+            actionSheet.addAction(unfollowAction)
+            actionSheet.addAction(cancelAction)
+            
+            self.present(actionSheet, animated: true, completion: nil)
+        }
+        else {
+            isFollowing! = !isFollowing!
+            followTappedHandler()
+        }
+
+    }
+    
+    @IBAction func optionsButtonTapped(_ sender: Any) {
+        let actionSheet = UIAlertController(title: "Options", message: nil, preferredStyle: .actionSheet)
+
+        let signOutAction = UIAlertAction(title: "Sign Out", style: .destructive) { (action) in
+            self.signOut()
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+            return
+        }
+
+        actionSheet.addAction(signOutAction)
+        actionSheet.addAction(cancelAction)
+
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+    
+    internal func followTappedHandler() {
         let username = KeychainWrapper.standard.string(forKey: "username")
         var following = UserDefaults.standard.stringArray(forKey: "following") ?? [String]()
         if isFollowing! {
@@ -86,7 +170,9 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                     UserDefaults.standard.set(following, forKey: "following")
             }
             
-            followButton.setTitle("Unfollow", for: .normal)
+            followButton.backgroundColor = UIColor(rgb: 0xc8d6e5)
+            followButton.setTitle("Unfollow -", for: .normal)
+            followButton.setTitleColor(UIColor(rgb: 0x576574), for: .normal)
             
         }
         else {
@@ -96,13 +182,15 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                     UserDefaults.standard.set(newFollowing, forKey: "following")
             }
             
-            followButton.setTitle("Follow", for: .normal)
+            followButton.backgroundColor = UIColor(rgb: 0x576574)
+            followButton.setTitle("Follow +", for: .normal)
+            followButton.setTitleColor(UIColor(rgb: 0xc8d6e5), for: .normal)
         }
         
         followersLabel.text = "followers: " + String(numberOfFollowers)
     }
     
-    @objc func signOut(_ sender: UIButton) {
+    internal func signOut() {
         print("signing out...")
         GIDSignIn.sharedInstance()?.signOut()
         DispatchQueue.main.async {
@@ -116,6 +204,10 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     @objc internal func backButtonTapped() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc internal func dpTapped() {
+        self.imagePicker.present(from: view)
     }
 
     
@@ -166,19 +258,6 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         followButton.isHidden = true
     }
     
-    func getUserFeed() {
-        let userId = KeychainWrapper.standard.string(forKey: "userId")
-        feedManager.getUserFeed(userId: userId!) { (data) in
-            do {
-                if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
-                    // user feed
-                }
-            } catch let error {
-                print("failed to load posts", error.localizedDescription)
-            }
-        }
-    }
-    
     func getUser(username: String) {
         
         let dGroup = DispatchGroup()
@@ -215,25 +294,14 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         return true
     }
     
-    func initSignOutButton() {
-        GIDSignIn.sharedInstance()?.presentingViewController = self
-        let googleSignOut = UIButton(frame: CGRect(x: 50, y: 50, width: 100, height: 30))
-        googleSignOut.backgroundColor = UIColor.red
-        googleSignOut.setTitle("Sign Out", for: .normal)
-        googleSignOut.center = view.center
-        googleSignOut.center.y = view.center.y + 100
-        googleSignOut.addTarget(self, action: #selector(self.signOut(_:)), for: .touchUpInside)
-        self.view.addSubview(googleSignOut)
-    }
-    
     func initGraphics() {
-        displayPicture.layer.borderWidth = 1
+        displayPicture.layer.borderWidth = 1.6
         displayPicture.layer.masksToBounds = false
-        displayPicture.layer.borderColor = UIColor.black.cgColor
+        displayPicture.layer.borderColor = UIColor.white.cgColor
         displayPicture.layer.cornerRadius = displayPicture.frame.height / 2
         displayPicture.clipsToBounds = true
         
-        let icon3 = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 30, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let icon3 = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
         let button3 = UIButton()
         button3.frame = CGRect(x:0, y:0, width: 51, height: 31)
         button3.setImage(icon3, for: .normal)
@@ -241,6 +309,26 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         let barButton3 = UIBarButtonItem()
         barButton3.customView = button3
         self.navigationItem.leftBarButtonItem = barButton3
+        
+        followButton.layer.cornerRadius = 10.0
+        
+        if isFollowing! {
+            followButton.backgroundColor = UIColor(rgb: 0xc8d6e5)
+            followButton.setTitle("Unfollow -", for: .normal)
+            followButton.setTitleColor(UIColor(rgb: 0x576574), for: .normal)
+        }
+        else {
+            followButton.backgroundColor = UIColor(rgb: 0x576574)
+            followButton.setTitle("Follow +", for: .normal)
+            followButton.setTitleColor(UIColor(rgb: 0xc8d6e5), for: .normal)
+        }
+        
+        let icon = UIImage(systemName: "ellipsis", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        optionsButton.setImage(icon, for: .normal)
+        
+        if !currentUserProfile {
+            optionsButton.isHidden = true
+        }
     }
 
     
@@ -248,24 +336,38 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     func loadUserData() {
        
-        let BUCKET_URL = Environment.bucketURL
         if followingUser?.displaypicture != nil {
-            let url = URL(string: BUCKET_URL+followingUser!.displaypicture!)
-            displayPicture.load(url: url!)
+            let url = URL(string: followingUser!.displaypicture!)
+            displayPicture.sd_imageIndicator = SDWebImageActivityIndicator.white
+            displayPicture.sd_setImage(with: url!, placeholderImage: UIImage(named: ""))
         }
         
         usernameLabel.text = followingUser?.username
         isFollowing = isUserFollowing()
         if isFollowing! {
-            followButton.setTitle("Unfollow", for: .normal)
+            followButton.setTitle("Unfollow -", for: .normal)
         }
         else {
-            followButton.setTitle("Follow", for: .normal)
+            followButton.setTitle("Follow +", for: .normal)
         }
         
         numberOfFollowers = userProfileThatIsOpen!.relations!.followers!.count
         followersLabel.text = "followers: " + String(userProfileThatIsOpen!.relations!.followers!.count)
         followingLabel.text = "following: " + String(userProfileThatIsOpen!.relations!.following!.count)
+        
+        if userProfileThatIsOpen!.verified! {
+            
+            let fullString = NSMutableAttributedString(string: "@\(followingUser!.username!)")
+            let image1Attachment = NSTextAttachment()
+            image1Attachment.image = UIImage(named: "check.png")
+            let image1String = NSAttributedString(attachment: image1Attachment)
+            fullString.append(image1String)
+            usernameLabel.attributedText = fullString
+        }
+        
+        else {
+            usernameLabel.text = "@\(followingUser!.username!)"
+        }
 
     }
     
@@ -277,6 +379,21 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
             }
         }
         return false
+    }
+    
+    // MARK: Services
+    
+    func getThumbnailImage(forUrl url: URL) -> UIImage? {
+        let asset: AVAsset = AVAsset(url: url)
+        let imageGenerator = AVAssetImageGenerator(asset: asset)
+        do {
+            let thumbnailImage = try imageGenerator.copyCGImage(at: CMTimeMake(value: 1, timescale: 60) , actualTime: nil)
+            return UIImage(cgImage: thumbnailImage)
+        } catch let error {
+            print(error)
+        }
+
+        return nil
     }
     
     // MARK: Collection View Delegate Functions
@@ -293,23 +410,27 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CollectionViewCell
     
-        // let thisElement = colectionArr[indexPath.item]
+        let currentElement = userPosts[indexPath.item]
         
-        let cellIndex = indexPath.item
-        let closeFrameSize = bestFrameSize()
+        cell.cellImage.sd_imageIndicator = SDWebImageActivityIndicator.white
+        cell.cellImage.sd_setImage(with: URL(string: currentElement.thumbnail!), placeholderImage: UIImage(named: ""))
+     
+        let bounds = collectionView.bounds
+        cell.cellImage.frame.size.height = 210
+        cell.cellImage.frame.size.width = (bounds.width / 3) - 10
         
         cell.contentView.layer.masksToBounds = true
-        cell.backgroundColor = UIColor.white
 
-        cell.layer.shadowColor = UIColor.gray.cgColor
-        cell.layer.shadowOffset = CGSize(width: 0, height: 2.0)
-        cell.layer.shadowRadius = 2.0
-        cell.layer.shadowOpacity = 1.0
+        cell.layer.backgroundColor = UIColor(rgb: 0x2d3436).cgColor
         cell.layer.masksToBounds = false
-        cell.layer.shadowPath = UIBezierPath(roundedRect:cell.bounds, cornerRadius:cell.contentView.layer.cornerRadius).cgPath
         
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+         // handle tap events
+         print("You selected cell #\(indexPath.item)!")
+     }
     
     func bestFrameSize() -> CGFloat {
         let frameHeight = self.view.frame.height
@@ -329,11 +450,7 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let bounds = collectionView.bounds
-        let heightVal = self.view.frame.height
-        let widthVal = self.view.frame.width
-        let cellsize = (heightVal < widthVal) ?  bounds.height/2 : bounds.width/2
-        
-        return CGSize(width: cellsize - 10   , height:  cellsize - 10  )
+        return CGSize(width: (bounds.width / 3) - 10, height: 210)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -342,5 +459,19 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 10
+    }
+}
+
+extension ProfileViewController: ImagePickerDelegate {
+    func didSelect(image: UIImage?) {
+        if image == nil { return }
+        self.displayPicture.image = image
+        let userId = KeychainWrapper.standard.string(forKey: "userId")
+        storageManager.store(image: image!, forKey: userId!+"displayPicture", withStorageType: .fileSystem)
+        uploadManager.uploadProfilePicture(image: image!)
+    }
+    
+    func didSelectVideo(url: URL?) {
+        
     }
 }

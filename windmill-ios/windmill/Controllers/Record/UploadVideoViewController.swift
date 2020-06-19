@@ -14,6 +14,7 @@ class UploadVideoViewController: UIViewController, UITabBarControllerDelegate, U
     // MARK: IVARS
     internal var videoURL: URL!
     internal var prevVC: VideoEditViewController!
+    var thumbnail: UIImage!
     
     @IBOutlet weak var postButton: UIButton!
     @IBOutlet weak var thumbnailView: UIImageView!
@@ -31,6 +32,7 @@ class UploadVideoViewController: UIViewController, UITabBarControllerDelegate, U
         
         if let thumbnailImage = getThumbnailImage(forUrl: videoURL) {
             thumbnailView.image = thumbnailImage
+            thumbnail = thumbnailImage
         }
         
         setupUI()
@@ -44,7 +46,6 @@ class UploadVideoViewController: UIViewController, UITabBarControllerDelegate, U
     internal func setupUI() {
         textView.text = "talk about your video (optional)"
         textView.textColor = UIColor.lightGray
-        
         postButton.layer.cornerRadius = 20.0
     }
 
@@ -65,6 +66,7 @@ class UploadVideoViewController: UIViewController, UITabBarControllerDelegate, U
     
     @objc internal func dismissKeyboard() {
         view.endEditing(true)
+        captionSeparator()
     }
     
     // MARK: Services
@@ -89,9 +91,16 @@ class UploadVideoViewController: UIViewController, UITabBarControllerDelegate, U
             uploadManager.uploadVideo(videoURL: videoURL as URL, caption: "nil")
         }
         else {
-            uploadManager.uploadVideo(videoURL: videoURL as URL, caption: textView.text!)
+            let caption = captionSeparator()
+            uploadManager.uploadVideo(videoURL: videoURL as URL, caption: caption)
         }
-        
+    }
+    
+    internal func captionSeparator() -> String {
+        let trimmedStr = textView.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        let captionArr = trimmedStr.components(separatedBy: " ")
+        let string = captionArr.joined(separator: "-")
+        return string
     }
     
     // MARK: Text View Delegate

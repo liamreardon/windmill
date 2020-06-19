@@ -1,4 +1,4 @@
-module RPCircularProgress {
+framework module RPCircularProgress {
   umbrella header "RPCircularProgress-umbrella.h"
 
   export *

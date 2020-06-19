@@ -33,6 +33,7 @@ func UpdateDisplayPicture(client *mongo.Client, w http.ResponseWriter, r *http.R
 		})
 		return
 	}
+
 	defer file.Close()
 
 	filename := header.Filename
@@ -92,7 +93,7 @@ func UploadVideo(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	tmpFile, err := ioutil.TempFile(os.TempDir(), videoId + "*.jpg")
+	tmpFile, err := ioutil.TempFile(os.TempDir(), videoId + "*.mp4")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -63,6 +63,8 @@ struct UploadManager {
         if let userId = KeychainWrapper.standard.string(forKey: "userId") {
             if let url = URL(string: API_URL+userId+"/posts/"+caption) {
                 
+                print(url)
+                
                 let session = URLSession.shared
 
                 var request = URLRequest(url: url)
@@ -95,7 +97,8 @@ struct UploadManager {
                 let task = session.dataTask(with: request as URLRequest, completionHandler: {
                     (data, response, error) -> Void in
                     if let _ = data {
-                        // call reload data 
+                        // call reload data
+                        
                     } else if let error = error {
                         print(error.localizedDescription)
                     }

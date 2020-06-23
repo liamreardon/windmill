@@ -107,7 +107,13 @@ class ChildViewController: UIViewController {
         }
         
         if !post!.verified! {
-            usernameLabel.text = "@\(post!.username!)"
+            let fullString = NSMutableAttributedString(string: "@\(post!.username!)")
+            let image1Attachment = NSTextAttachment()
+            let icon = UIImage(systemName: "checkmark.seal.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .bold))?.withTintColor(UIColor(rgb: 0x1da1f2), renderingMode: .alwaysOriginal)
+            image1Attachment.image = icon
+            let image1String = NSAttributedString(attachment: image1Attachment)
+            fullString.append(image1String)
+            usernameLabel.attributedText = fullString
         }
             
         else {

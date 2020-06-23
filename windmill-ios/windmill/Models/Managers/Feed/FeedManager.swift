@@ -13,24 +13,21 @@ struct FeedManager {
     
     let API_URL = Environment.rootURL+"/api/feed/"
     
-    func getUserFeed(userId: String, completionHandler: @escaping (_ data: Data?) -> Void) {
-        if let userId = KeychainWrapper.standard.string(forKey: "userId") {
-            if let url = URL(string: API_URL+userId) {
-                let session = URLSession.shared
-                var request = URLRequest(url: url)
-                request.httpMethod = "GET"
-                
-                let task = session.dataTask(with: request as URLRequest, completionHandler: {
-                    (data, response, error) -> Void in
-                    if let data = data {
-                        completionHandler(data)
-                    } else if let error = error {
-                        print(error.localizedDescription)
-                    }
-                })
-                task.resume()
-                
-            }
+    func getUserFeed(username: String, completionHandler: @escaping (_ data: Data?) -> Void) {
+        if let url = URL(string: API_URL+username) {
+            let session = URLSession.shared
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            
+            let task = session.dataTask(with: request as URLRequest, completionHandler: {
+                (data, response, error) -> Void in
+                if let data = data {
+                    completionHandler(data)
+                } else if let error = error {
+                    print(error.localizedDescription)
+                }
+            })
+            task.resume()
         }
     }
     

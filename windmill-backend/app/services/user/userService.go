@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/liamreardon/windmill/windmill-backend/app/models"
 	"github.com/liamreardon/windmill/windmill-backend/app/services/aws"
+	"github.com/liamreardon/windmill/windmill-backend/app/services/sorting"
 	"go.mongodb.org/mongo-driver/bson"
 	"os"
 
@@ -37,13 +38,16 @@ func GetUser(collection *mongo.Collection, ctx context.Context, username string)
 		return models.ProtectedUser{}, errors.New("couldn't get user")
 	}
 
+	p := user.Posts
+	sorting.SortPosts(p)
+
 	usr := models.ProtectedUser {
 		Username:       user.Username,
 		DisplayName:    user.DisplayName,
 		DisplayPicture: user.DisplayPicture,
 		Verified:        user.Verified,
 		Relations:      user.Relations,
-		Posts:          user.Posts,
+		Posts:          p,
 	}
 	return usr, nil
 }

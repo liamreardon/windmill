@@ -11,10 +11,10 @@ import (
 
 func GetUserFeed(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	userId := vars["userId"]
+	username := vars["username"]
 	collection := client.Database("windmill-master").Collection("Users")
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	posts, err := feed.GetUserFeed(collection, ctx, userId)
+	posts, err := feed.GetUserFeed(collection, ctx, username)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, map[string]interface{}{
 			"message":err,
@@ -26,7 +26,6 @@ func GetUserFeed(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		"message":"successfully fetched posts",
 		"posts": posts,
 	})
-
 }
 
 func GetUserFollowingFeed(client *mongo.Client, w http.ResponseWriter, r *http.Request) {

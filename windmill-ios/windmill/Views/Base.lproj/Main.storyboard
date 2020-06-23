@@ -21,15 +21,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="windmill_header" translatesAutoresizingMaskIntoConstraints="NO" id="CCu-KO-o13">
-                                <rect key="frame" x="43" y="222" width="302" height="128"/>
+                                <rect key="frame" x="56" y="199" width="302" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bn4-WR-2pt">
-                                <rect key="frame" x="99" y="561" width="216" height="41"/>
+                                <rect key="frame" x="99" y="550" width="216" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name="Ubuntu-Regular" family="Ubuntu" pointSize="15"/>
-                                <state key="normal" title=" Sign In with Google" image="google.png">
+                                <state key="normal" title=" Sign In with Google" image="google">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -37,11 +37,11 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A3D-Yj-382">
-                                <rect key="frame" x="99" y="623" width="216" height="41"/>
+                                <rect key="frame" x="99" y="610" width="216" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name="Ubuntu-Regular" family="Ubuntu" pointSize="15"/>
-                                <state key="normal" title=" Sign In with Apple">
+                                <state key="normal" title=" Sign In with Apple" image="apple">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -63,7 +63,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="google.png" width="18" height="18"/>
+        <image name="apple" width="20" height="20"/>
+        <image name="google" width="20" height="20"/>
         <image name="windmill_header" width="3053" height="507"/>
     </resources>
 </document>

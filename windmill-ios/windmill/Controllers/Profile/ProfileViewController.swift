@@ -30,6 +30,9 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     var userProfileThatIsOpen: User?
     var isFollowing: Bool? = false
     var userPosts: [Post] = []
+    var fromSearch: Bool = false
+    
+    var indexTapped: Int = 0
     
     var numberOfFollowers: Int = 0
     var numberOfFollowing: Int = 0
@@ -76,6 +79,7 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
             loadUserData()
             initGraphics()
         }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -94,6 +98,10 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         }
         
         userPosts = userProfileThatIsOpen!.posts!
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print("appeared")
     }
     
     @objc internal func refreshCollection() {
@@ -241,7 +249,8 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
             
             let fullString = NSMutableAttributedString(string: "@\(username!)")
             let image1Attachment = NSTextAttachment()
-            image1Attachment.image = UIImage(named: "check.png")
+            let icon = UIImage(systemName: "checkmark.seal.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .bold))?.withTintColor(UIColor(rgb: 0x1da1f2), renderingMode: .alwaysOriginal)
+            image1Attachment.image = icon
             let image1String = NSAttributedString(attachment: image1Attachment)
             fullString.append(image1String)
             usernameLabel.attributedText = fullString
@@ -290,10 +299,6 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     // MARK: User Interface
     
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
-    
     func initGraphics() {
         displayPicture.layer.borderWidth = 1.6
         displayPicture.layer.masksToBounds = false
@@ -301,14 +306,14 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         displayPicture.layer.cornerRadius = displayPicture.frame.height / 2
         displayPicture.clipsToBounds = true
         
-        let icon3 = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
-        let button3 = UIButton()
-        button3.frame = CGRect(x:0, y:0, width: 51, height: 31)
-        button3.setImage(icon3, for: .normal)
-        button3.addTarget(self, action: #selector(self.backButtonTapped), for: .touchUpInside)
-        let barButton3 = UIBarButtonItem()
-        barButton3.customView = button3
-        self.navigationItem.leftBarButtonItem = barButton3
+        let icon = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let button = UIButton()
+        button.frame = CGRect(x:0, y:0, width: 51, height: 31)
+        button.setImage(icon, for: .normal)
+        button.addTarget(self, action: #selector(self.backButtonTapped), for: .touchUpInside)
+        let barButton = UIBarButtonItem()
+        barButton.customView = button
+        self.navigationItem.leftBarButtonItem = barButton
         
         followButton.layer.cornerRadius = 10.0
         
@@ -323,23 +328,30 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
             followButton.setTitleColor(UIColor(rgb: 0xc8d6e5), for: .normal)
         }
         
-        let icon = UIImage(systemName: "ellipsis", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
-        optionsButton.setImage(icon, for: .normal)
+        let icon2 = UIImage(systemName: "ellipsis", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        optionsButton.setImage(icon2, for: .normal)
         
         if !currentUserProfile {
             optionsButton.isHidden = true
         }
+        
+        if fromSearch {
+            navigationController?.setNavigationBarHidden(false, animated: true)
+        }
+        else {
+            navigationController?.setNavigationBarHidden(true, animated: true)
+        }
     }
 
-    
     // MARK: Following User Setup
     
     func loadUserData() {
        
         if followingUser?.displaypicture != nil {
-            let url = URL(string: followingUser!.displaypicture!)
-            displayPicture.sd_imageIndicator = SDWebImageActivityIndicator.white
-            displayPicture.sd_setImage(with: url!, placeholderImage: UIImage(named: ""))
+            if let url = URL(string: followingUser!.displaypicture!) {
+                displayPicture.sd_imageIndicator = SDWebImageActivityIndicator.white
+                displayPicture.sd_setImage(with: url, placeholderImage: UIImage(named: ""))
+            }
         }
         
         usernameLabel.text = followingUser?.username
@@ -359,10 +371,12 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
             
             let fullString = NSMutableAttributedString(string: "@\(followingUser!.username!)")
             let image1Attachment = NSTextAttachment()
-            image1Attachment.image = UIImage(named: "check.png")
+            let icon = UIImage(systemName: "checkmark.seal.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .bold))?.withTintColor(UIColor(rgb: 0x1da1f2), renderingMode: .alwaysOriginal)
+            image1Attachment.image = icon
             let image1String = NSAttributedString(attachment: image1Attachment)
             fullString.append(image1String)
             usernameLabel.attributedText = fullString
+            
         }
         
         else {
@@ -396,6 +410,16 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         return nil
     }
     
+    // MARK: Segues
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc = segue.destination as! TimelineViewController
+        vc.modalPresentationStyle = .fullScreen
+        vc.profileTapIndex = indexTapped
+        vc.currentUserProfile = currentUserProfile
+        vc.currentUser = userProfileThatIsOpen
+    }
+    
     // MARK: Collection View Delegate Functions
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -417,7 +441,7 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
      
         let bounds = collectionView.bounds
         cell.cellImage.frame.size.height = 210
-        cell.cellImage.frame.size.width = (bounds.width / 3) - 10
+        cell.cellImage.frame.size.width = (bounds.width / 3) - 5
         
         cell.contentView.layer.masksToBounds = true
 
@@ -428,8 +452,8 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-         // handle tap events
-         print("You selected cell #\(indexPath.item)!")
+        indexTapped = indexPath.item
+        performSegue(withIdentifier: "profileToTimeline", sender: self)
      }
     
     func bestFrameSize() -> CGFloat {
@@ -450,7 +474,7 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let bounds = collectionView.bounds
-        return CGSize(width: (bounds.width / 3) - 10, height: 210)
+        return CGSize(width: (bounds.width / 3) - 5, height: 210)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {

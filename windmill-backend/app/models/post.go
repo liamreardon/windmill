@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type Post struct {
 	PostId string `json:"postid"`
 	UserId string `json:"userid"`
@@ -11,6 +13,7 @@ type Post struct {
 	Likers []string `json:"likers"`
 	Url string `json:"url"`
 	Thumbnail string `json:"thumbnail"`
+	DateAdded time.Time `json:"dateAdded"`
 }
 
 type Comment struct {

@@ -64,6 +64,26 @@ struct UserManager {
         }
     }
     
+    func getActivity(completionHandler: @escaping (_ data: Data?) -> Void) {
+        if let userId = KeychainWrapper.standard.string(forKey: "userId") {
+            if let url = URL(string: API_URL+userId+"/activity") {
+                let session = URLSession.shared
+                var request = URLRequest(url: url)
+                request.httpMethod = "GET"
+                let task = session.dataTask(with: request as URLRequest, completionHandler: {
+                    (data, response, error) -> Void in
+                    if let data = data {
+                        completionHandler(data)
+                    } else if let error = error {
+                        print(error.localizedDescription)
+                    }
+                })
+                task.resume()
+            }
+        }
+        
+    }
+    
     
     
 }

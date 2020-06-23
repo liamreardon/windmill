@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import SwiftKeychainWrapper
+import SDWebImage
 
 class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate {
     
@@ -18,10 +19,10 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     @IBOutlet weak var searchBar: UISearchBar!
     
     var timer: Timer!
+    var usersData: [User] = []
     
     let searchManager = SearchManager()
-    
-    var usersData: [User] = []
+    let refreshControl = UIRefreshControl()
     
     // MARK: Lifecycle
      
@@ -31,6 +32,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         searchTableView.delegate = self
         searchTableView.dataSource = self
         initGraphics()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,12 +63,13 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         searchBar.layer.borderWidth = 1.0
         searchBar.layer.cornerRadius = 10.0
         
-        searchTableView.rowHeight = 100.0
+        searchTableView.rowHeight = 80.0
         
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem?.tintColor = .white
     
     }
+    
     
     // MARK: API Functions
     
@@ -83,7 +86,11 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
 
                     let r = Relations(dictionary: relations)
                     
+                    let numPosts = users[i]["numPosts"] as! Int
+                    
                     user.relations = r!
+                    
+                    user.numPosts = numPosts
                     
                     self.usersData.append(user)
                 }
@@ -113,10 +120,12 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
                 if cell.textLabel?.text == username! {
                     vc.currentUserProfile = true
                     vc.followingUser = self.usersData[i]
+                    vc.fromSearch = true
                 }
                 else {
                     vc.currentUserProfile = false
                     vc.followingUser = self.usersData[i]
+                    vc.fromSearch = true
                 }
             }
         }
@@ -154,8 +163,50 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath)
-        cell.textLabel?.text = usersData[indexPath.item].username
+        let cell = tableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! SearchCell
+        cell.displayPicture.layer.borderWidth = 1.6
+        cell.displayPicture.layer.masksToBounds = false
+        cell.displayPicture.layer.borderColor = UIColor.white.cgColor
+        cell.displayPicture.layer.cornerRadius = cell.displayPicture.frame.height / 2
+        cell.displayPicture.clipsToBounds = true
+        cell.displayPicture.sd_imageIndicator = SDWebImageActivityIndicator.white
+        cell.displayPicture.sd_setImage(with: URL(string: usersData[indexPath.item].displaypicture!), placeholderImage: UIImage(named: ""))
+        
+        let numFollowers = usersData[indexPath.item].relations?.followers?.count
+        var followersLabel = ""
+        if numFollowers == 1 {
+            followersLabel = "1 follower"
+        }
+        else {
+            followersLabel = "\(numFollowers!) followers"
+        }
+        
+        cell.followersLabel.text = followersLabel
+        
+        let numVideos = usersData[indexPath.item].numPosts
+        var videosLabel = ""
+        if numVideos == 1 {
+            videosLabel = "1 video"
+        }
+        else {
+            videosLabel = "\(numVideos!) videos"
+        }
+        
+        cell.videosLabel.text = videosLabel
+        
+        if usersData[indexPath.item].verified! {
+            let fullString = NSMutableAttributedString(string: "@\(usersData[indexPath.item].username!)")
+            let image1Attachment = NSTextAttachment()
+            let icon = UIImage(systemName: "checkmark.seal.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .bold))?.withTintColor(UIColor(rgb: 0x1da1f2), renderingMode: .alwaysOriginal)
+            image1Attachment.image = icon
+            let image1String = NSAttributedString(attachment: image1Attachment)
+            fullString.append(image1String)
+            cell.usernameLabel.attributedText = fullString
+        }
+        else {
+            cell.usernameLabel.text = usersData[indexPath.item].username
+        }
+        
         return cell
     }
     
@@ -164,4 +215,5 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         searchTableView.deselectRow(at: indexPath, animated: true)
         performSegue(withIdentifier: "searchToProfileSegue", sender: cell)
     }
+    
 }

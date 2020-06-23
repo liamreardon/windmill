@@ -16,6 +16,7 @@ struct User: Decodable {
     var verified: Bool?
     var relations: Relations?
     var posts: [Post]?
+    var numPosts: Int?
     
     init?(dictionary: [String: Any]) {
         
@@ -29,6 +30,6 @@ struct User: Decodable {
         self.displaypicture = displaypicture
         self.verified = verified
         self.posts = []
-        
+        self.numPosts = 0
     }
 }

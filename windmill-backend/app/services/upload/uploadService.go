@@ -7,6 +7,7 @@ import (
 	"github.com/liamreardon/windmill/windmill-backend/app/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"time"
 )
 
 func AssignUserDisplayPicturePath(collection *mongo.Collection, ctx context.Context, userId string, path string) (string, error) {
@@ -47,6 +48,7 @@ func AddVideoToUserPosts(collection *mongo.Collection, ctx context.Context, user
 		Likers: []string{},
 		Url: url,
 		Thumbnail: thumbnail,
+		DateAdded: time.Now(),
 	}
 
 	res, err := collection.UpdateOne(ctx, bson.M{"userid":userId}, bson.D{

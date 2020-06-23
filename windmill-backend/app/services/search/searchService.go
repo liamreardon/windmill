@@ -30,6 +30,7 @@ func GetUsersStartingWithSubstring(collection *mongo.Collection, ctx context.Con
 			Verified:       	user.Verified,
 			Relations:      user.Relations,
 			Posts:          []models.Post{},
+			NumPosts: len(user.Posts),
 		}
 
 		protectedUsers = append(protectedUsers, usr)

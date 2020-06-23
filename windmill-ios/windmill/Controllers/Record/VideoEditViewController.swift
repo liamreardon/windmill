@@ -201,11 +201,13 @@ class VideoEditViewController: UIViewController, UITabBarControllerDelegate {
     // MARK: Video Functions
     internal func convertVideo(videoURL: URL) {
         self.showSpinner(onView: self.videoView)
+        let temp = randomString(length: 10)
+        let filePathName = randomString(length: 10)
         let documentsDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-        let myDocumentPath = URL(fileURLWithPath: documentsDirectory).appendingPathComponent("temp.mp4").absoluteString
+        let myDocumentPath = URL(fileURLWithPath: documentsDirectory).appendingPathComponent(temp+".mp4").absoluteString
         _ = NSURL(fileURLWithPath: myDocumentPath)
         let documentsDirectory2 = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0] as URL
-        let filePath = documentsDirectory2.appendingPathComponent("video.mp4")
+        let filePath = documentsDirectory2.appendingPathComponent(filePathName+".mp4")
         deleteFile(filePath: filePath as NSURL)
 
         if FileManager.default.fileExists(atPath: myDocumentPath) {
@@ -297,11 +299,11 @@ class VideoEditViewController: UIViewController, UITabBarControllerDelegate {
                 }) { saved, error in
                     if saved {
                         let fetchOptions = PHFetchOptions()
-                        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
                         let fetchResult = PHAsset.fetchAssets(with: .video, options: fetchOptions).lastObject
                         PHImageManager().requestAVAsset(forVideo: fetchResult!, options: nil, resultHandler: { (avurlAsset, audioMix, dict) in
                             let newObj = avurlAsset as! AVURLAsset
                             DispatchQueue.main.async(execute: {
+                                print(newObj.url)
                                 self.performSegue(withIdentifier: "postVideo", sender: newObj.url)
                                 self.removeSpinner()
                             })
@@ -310,6 +312,11 @@ class VideoEditViewController: UIViewController, UITabBarControllerDelegate {
                 }
             }
         })
+    }
+    
+    func randomString(length: Int) -> String {
+        let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        return String((0..<length).map{ _ in letters.randomElement()! })
     }
     
     func deleteFile(filePath:NSURL) {

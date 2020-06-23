@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 // User struct
 type User struct {
 	UserId string `json:"userId"`
@@ -11,6 +13,8 @@ type User struct {
 	Verified bool `json:"verified"`
 	Relations Relationships `json:"relations"`
 	Posts []Post `json:"posts"`
+	Activity []Activity `json:"activity"`
+	DateJoined time.Time `json:"dateJoined"`
 }
 
 type ProtectedUser struct {
@@ -20,6 +24,8 @@ type ProtectedUser struct {
 	Verified bool `json:"verified"`
 	Relations Relationships `json:"relations"`
 	Posts []Post `json:"posts"`
+	NumPosts int `json:"numPosts"`
+	Activity []Activity `json:"activity"`
 }
 
 // Credentials struct

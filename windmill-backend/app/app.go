@@ -66,12 +66,15 @@ func (app *App) setupRoutes() {
 	app.Get("/api/search/{substring}", app.handleRequest(handlers.SearchForUser))
 
 	// Feed Routes
-	app.Get("/api/feed/{userId}", app.handleRequest(handlers.GetUserFeed))
+	app.Get("/api/feed/{username}", app.handleRequest(handlers.GetUserFeed))
 	app.Get("/api/feed/all", app.handleRequest(handlers.GetUserFollowingFeed))
 
 	// Post Routes
 	app.Post("/api/user/{postUserId}/post/{postId}/likers/{userId}/{likedStatus}", app.handleRequest(handlers.PostLikedHandler))
 	app.Delete("/api/user/{userId}/post/{postId}", app.handleRequest(handlers.DeletePost))
+
+	// Activity Routes
+	app.Get("/api/user/{userId}/activity", app.handleRequest(handlers.GetActivity))
 }
 
 // Run app on router

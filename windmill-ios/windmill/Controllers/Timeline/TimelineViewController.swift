@@ -1,8 +1,8 @@
 //
-//  HomeViewController.swift
+//  TImelineViewController.swift
 //  windmill
 //
-//  Created by Liam  on 2020-04-28.
+//  Created by Liam  on 2020-06-20.
 //  Copyright © 2020 Liam Reardon. All rights reserved.
 //
 
@@ -13,7 +13,7 @@ import SwiftKeychainWrapper
 import AVFoundation
 import SDWebImage
 
-class HomeViewController: PageboyViewController {
+class TimelineViewController: PageboyViewController {
     
     // MARK: IVARS
 
@@ -22,14 +22,17 @@ class HomeViewController: PageboyViewController {
     let feedManager = FeedManager()
     var postsData: [Post] = []
     var pageControllers: [ChildViewController] = []
-    var index: Int = 0
+    var profileTapIndex: Int!
     var refreshControl = UIRefreshControl()
     var feedLoaded: Bool = false
     var vSpinner: UIView?
+    
+    var currentUserProfile: Bool = true
+    var currentUser: User?
 
     @IBOutlet var homeView: UIView!
-    
-    // MARK: Lifecycle
+
+    // Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +48,7 @@ class HomeViewController: PageboyViewController {
             showSpinner(onView: homeView)
         }
         
+        initGraphics()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -59,7 +63,7 @@ class HomeViewController: PageboyViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         if pageControllers.count == 0 { return }
-        let vc = pageControllers[index]
+        let vc = pageControllers[profileTapIndex]
         vc.stop()
     }
     
@@ -104,7 +108,7 @@ class HomeViewController: PageboyViewController {
             let prevVC = pageControllers[index+1]
             prevVC.stop()
         default:
-            print("default")
+            print("")
         }
         
         vc.play()
@@ -116,10 +120,8 @@ class HomeViewController: PageboyViewController {
         if postsData.count > 0 {
             postsData = []
         }
-        
-        let username = KeychainWrapper.standard.string(forKey: "username")
-        
-        feedManager.getUserFeed(username: username!) { (data) in
+    
+        feedManager.getUserFeed(username: currentUser!.username!) { (data) in
             
             do {
                 let jsonResponse = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:Any]
@@ -134,6 +136,8 @@ class HomeViewController: PageboyViewController {
                     self.reloadData()
                     self.removeSpinner()
                     self.feedLoaded = true
+                    self.scrollToPage(.at(index: self.profileTapIndex), animated: false)
+                    self.reloadData()
                 }
                 
             } catch let parsingError {
@@ -150,6 +154,7 @@ class HomeViewController: PageboyViewController {
         ai.color = .white
         ai.startAnimating()
         ai.center = spinnerView.center
+        
        
         spinnerView.addSubview(ai)
         onView.addSubview(spinnerView)
@@ -162,11 +167,30 @@ class HomeViewController: PageboyViewController {
         vSpinner = nil
     }
     
+    func initGraphics() {
+        
+        let icon3 = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let button3 = UIButton()
+        button3.frame = CGRect(x:0, y:0, width: 51, height: 31)
+        button3.setImage(icon3, for: .normal)
+        button3.addTarget(self, action: #selector(self.backButtonTapped), for: .touchUpInside)
+        let barButton3 = UIBarButtonItem()
+        barButton3.customView = button3
+        self.navigationItem.leftBarButtonItem = barButton3
+        navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    // MARK: User Interaction
+    
+    @objc internal func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    
 }
 
 // MARK: Pageboy Data Source
 
-extension HomeViewController: PageboyViewControllerDataSource {
+extension TimelineViewController: PageboyViewControllerDataSource {
     
     func numberOfViewControllers(in pageboyViewController: PageboyViewController) -> Int {
         return pageControllers.count
@@ -184,7 +208,7 @@ extension HomeViewController: PageboyViewControllerDataSource {
 
 // MARK: Pageboy Delegates
 
-extension HomeViewController: PageboyViewControllerDelegate {
+extension TimelineViewController: PageboyViewControllerDelegate {
     
     func pageboyViewController(_ pageboyViewController: PageboyViewController,
                                willScrollToPageAt index: Int,
@@ -198,11 +222,6 @@ extension HomeViewController: PageboyViewControllerDelegate {
                                didScrollTo position: CGPoint,
                                direction: PageboyViewController.NavigationDirection,
                                animated: Bool) {
-        print(position.y)
-
-        if position.y < -0.10 {
-            self.refresh()
-        }
         
    
     }
@@ -211,9 +230,10 @@ extension HomeViewController: PageboyViewControllerDelegate {
                                didScrollToPageAt index: Int,
                                direction: PageboyViewController.NavigationDirection,
                                animated: Bool) {
-        
-        self.index = index
-        updateVideoLoop(index: index, direction: direction)
+        if feedLoaded {
+            self.profileTapIndex = index
+            updateVideoLoop(index: index, direction: direction)
+        }
     }
     
     func pageboyViewController(_ pageboyViewController: PageboyViewController,

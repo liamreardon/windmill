@@ -227,18 +227,6 @@ func GetUser(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func GenerateThumbnail(header string) {
-	filename := header
-	width := 640
-	height := 360
-	cmd := exec.Command("ffmpeg", "-i", filename, "-vframes", "1", "-s", fmt.Sprintf("%dx%d", width, height), "-f", "singlejpeg", "-")
-	var buffer bytes.Buffer
-	cmd.Stdout = &buffer
-	if cmd.Run() != nil {
-		panic("could not generate frame")
-	}
-	fmt.Println(buffer)
-}
 
 
 

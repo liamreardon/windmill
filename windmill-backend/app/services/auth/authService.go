@@ -9,9 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/api/oauth2/v2"
-
-	//"github.com/google/uuid"
-	//"net/http"
+	"time"
 )
 
 func CheckHashedPassword(password string, hash string) bool {
@@ -55,6 +53,8 @@ func SignUpUser(collection *mongo.Collection, ctx context.Context, data *models.
 			LikedPosts: []string{},
 		},
 		Posts: []models.Post{},
+		Activity: []models.Activity{},
+		DateJoined: time.Now(),
 	}
 	res, _ := collection.InsertOne(ctx, user)
 	return true, res, models.ProtectedUser{
@@ -64,6 +64,7 @@ func SignUpUser(collection *mongo.Collection, ctx context.Context, data *models.
 		Verified:       false,
 		Relations:      user.Relations,
 		Posts:          user.Posts,
+		Activity: []models.Activity{},
 	}, user.UserId
 }
 
@@ -71,6 +72,7 @@ func SignUpUser(collection *mongo.Collection, ctx context.Context, data *models.
 func GetUser(collection *mongo.Collection, ctx context.Context, token models.GoogleToken, info *oauth2.Tokeninfo) (models.User, string){
 	var user models.User
 	collection.FindOne(ctx, bson.M{"email":info.Email}).Decode(&user)
+
 	if len(user.Username) == 0 {
 		return models.User{
 			UserId:    uuid.New().String(),
@@ -88,6 +90,8 @@ func GetUser(collection *mongo.Collection, ctx context.Context, token models.Goo
 				LikedPosts: []string{},
 			},
 			Posts: []models.Post{},
+			Activity: []models.Activity{},
+			DateJoined: time.Now(),
 		}, "redirecting to username creation..."
 	}
 	return user, ""

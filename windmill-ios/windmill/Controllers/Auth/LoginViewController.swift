@@ -51,6 +51,7 @@ class LoginViewController: UIViewController, GIDSignInDelegate {
                               UIColor(red: 123/255, green: 31/255, blue: 162/255, alpha: 1.0),
                               UIColor(red: 32/255, green: 76/255, blue: 255/255, alpha: 1.0),
                               UIColor(red: 32/255, green: 158/255, blue: 255/255, alpha: 1.0)])
+        pastelView.animationDuration = 2.0
         pastelView.startAnimation()
         view.insertSubview(pastelView, at: 0)
         

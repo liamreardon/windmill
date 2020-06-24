@@ -48,6 +48,17 @@ func PostLikedService(collection *mongo.Collection, ctx context.Context, postUse
 			{"$inc", bson.D{
 				{"posts.$.numlikes", 1},
 			}},
+		})
+
+		if err != nil {
+			return err
+		}
+
+		if userId == postUserId {
+			return nil
+		}
+
+		_, err = collection.UpdateOne(ctx, bson.M{"userid":postUserId, "posts.postid":postId}, bson.D{
 			{"$push", bson.D{
 				{"activity", activity},
 			}},
@@ -77,7 +88,7 @@ func PostLikedService(collection *mongo.Collection, ctx context.Context, postUse
 		_, err = collection.UpdateOne(ctx, bson.M{"userid": postUserId, "activity.postid": postId}, bson.D{
 			{"$pull", bson.D{
 				{"activity", bson.D{
-					{"username", user2.Username},
+					{"postid", postId},
 				}},
 			}},
 		})

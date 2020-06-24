@@ -32,7 +32,6 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         searchTableView.delegate = self
         searchTableView.dataSource = self
         initGraphics()
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -25,7 +25,7 @@ func UserFollowingService(collection *mongo.Collection, ctx context.Context, use
 			Id:       uuid.New().String(),
 			Type:     "FOLLOWED",
 			Username: username,
-			PostId:   "",
+			UsernameF: username,
 			Body:     username + " followed you.",
 			Image:    user.DisplayPicture,
 			Date:     time.Now(),
@@ -106,7 +106,7 @@ func UserFollowingService(collection *mongo.Collection, ctx context.Context, use
 		_, err = collection.UpdateOne(ctx, bson.M{"username":followingUsername}, bson.D{
 			{"$pull", bson.D{
 				{"activity", bson.D{
-					{"username", usernameActivity},
+					{"usernamef", usernameActivity},
 				}},
 			}},
 		})

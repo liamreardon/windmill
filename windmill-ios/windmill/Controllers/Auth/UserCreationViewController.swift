@@ -97,6 +97,7 @@ class UserCreationViewController: UIViewController {
                               UIColor(red: 32/255, green: 76/255, blue: 255/255, alpha: 1.0),
                               UIColor(red: 32/255, green: 158/255, blue: 255/255, alpha: 1.0)])
         pastelView.startAnimation()
+        pastelView.animationDuration = 2.0
         view.insertSubview(pastelView, at: 0)
     }
     

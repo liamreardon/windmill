@@ -14,16 +14,17 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: IVARS
     
     @IBOutlet weak var tableView: UITableView!
-    let userManager = UserManager()
+
     internal var activityData: [Activity] = []
+    internal var itemsToInsert: [Activity] = []
     let refreshControl = UIRefreshControl()
+    let userManager = UserManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
         setupUI()
-        
         
         if #available(iOS 10.0, *) {
             tableView.refreshControl = refreshControl
@@ -39,7 +40,6 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     @objc internal func refreshActivity() {
-        activityData = []
         getActivity()
     }
     
@@ -52,21 +52,73 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: API Functions
     
     internal func getActivity() {
-        activityData = []
         userManager.getActivity { (data) in
             do {
                 let jsonResponse = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:Any]
                 let activity = jsonResponse["activity"] as! [[String:Any]]
+                var activities: [Activity] = []
                 for i in 0..<activity.count {
-                    print(activity[i])
                     let a = Activity(dictionary: activity[i])
-                    self.activityData.append(a!)
+                    activities.insert(a!, at: 0)
                 }
+            
+                
+                
                 DispatchQueue.main.async {
+                    if self.activityData.count > 0 {
+                        var idxToRemove: [Int] = []
+                        self.itemsToInsert = []
+                        
+                        for i in 0..<self.activityData.count {
+                            var found = false
+                            for j in 0..<activities.count {
+                                if self.activityData[i].id == activities[j].id {
+                                    found = true
+                                }
+                            }
+                            if !found {
+                                idxToRemove.append(i)
+                            }
+                        }
+                        
+                        for i in 0..<idxToRemove.count {
+                            let idx = idxToRemove[i]
+                            self.activityData.remove(at: idx)
+                            let indexPath = IndexPath(item: idx, section: 0)
+                            self.tableView.deleteRows(at: [indexPath], with: .fade)
+                        }
+                        
+                        for i in 0..<activities.count {
+                            var newItem = true
+                            for j in 0..<self.activityData.count {
+                                if activities[i].id == self.activityData[j].id {
+                                    newItem = false
+                                    break
+                                }
+                            }
+                            if newItem {
+                                self.itemsToInsert.append(activities[i])
+                            }
+                        }
+                    }
+                    
+                    if self.activityData.count == 0 {
+                        self.activityData = activities
+                    }
+                    else {
+                        
+                        for i in 0..<self.itemsToInsert.count {
+                            let item = self.itemsToInsert[i]
+                            self.activityData.insert(item, at: 0)
+                            self.tableView.beginUpdates()
+                            self.tableView.insertRows(at: [
+                                (NSIndexPath(row: 0, section: 0) as IndexPath)], with: .automatic)
+                            self.tableView.endUpdates()
+                        }
+                    }
                     self.tableView.reloadData()
                     self.refreshControl.endRefreshing()
                 }
-                
                 
             } catch let error {
                 print(error.localizedDescription)
@@ -77,23 +129,18 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: TableView Delegate Functions
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.activityData.count
+        return activityData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "activityCell", for: indexPath) as! ActivityCell
-        cell.activityImage.layer.borderWidth = 1.6
-        cell.activityImage.layer.masksToBounds = false
-        cell.activityImage.layer.borderColor = UIColor.white.cgColor
-        cell.activityImage.layer.cornerRadius = cell.activityImage.frame.height / 2
-        cell.activityImage.clipsToBounds = true
-        cell.activityLabel.text = activityData[indexPath.item].body
-        cell.activityImage.sd_setImage(with: URL(string: activityData[indexPath.item].image!), placeholderImage: UIImage(named: ""))
+        cell.update(for: activityData[indexPath.row])
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
     }
+
     
 }

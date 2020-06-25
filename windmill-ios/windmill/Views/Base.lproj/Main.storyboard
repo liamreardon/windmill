@@ -7,8 +7,8 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
-        <array key="Ubuntu-Regular.ttf">
-            <string>Ubuntu-Regular</string>
+        <array key="SofiaPro-Medium.ttf">
+            <string>SofiaProMedium</string>
         </array>
     </customFonts>
     <scenes>
@@ -24,7 +24,7 @@
                                 <rect key="frame" x="99" y="550" width="216" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" name="Ubuntu-Regular" family="Ubuntu" pointSize="15"/>
+                                <fontDescription key="fontDescription" name="SofiaProMedium" family="Sofia Pro" pointSize="15"/>
                                 <state key="normal" title=" Sign In with Google" image="google">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -36,7 +36,7 @@
                                 <rect key="frame" x="99" y="610" width="216" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" name="Ubuntu-Regular" family="Ubuntu" pointSize="15"/>
+                                <fontDescription key="fontDescription" name="SofiaProMedium" family="Sofia Pro" pointSize="15"/>
                                 <state key="normal" title=" Sign In with Apple" image="apple">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>

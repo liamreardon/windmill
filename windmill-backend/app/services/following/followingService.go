@@ -11,14 +11,18 @@ import (
 
 func UserFollowingService(collection *mongo.Collection, ctx context.Context, username string, followingUsername string, followingStatus bool) error {
 	var user models.User
-
 	res := collection.FindOne(ctx, bson.M{"username":followingUsername})
-
 	if res.Err() != nil {
 		return res.Err()
 	}
-
 	res.Decode(&user)
+
+	var user2 models.User
+	res = collection.FindOne(ctx, bson.M{"username":username})
+	if res.Err() != nil {
+		return res.Err()
+	}
+	res.Decode(&user2)
 
 	if followingStatus {
 		activity := models.Activity{
@@ -27,7 +31,7 @@ func UserFollowingService(collection *mongo.Collection, ctx context.Context, use
 			Username: username,
 			UsernameF: username,
 			Body:     username + " followed you.",
-			Image:    user.DisplayPicture,
+			Image:    user2.DisplayPicture,
 			Date:     time.Now(),
 		}
 		_, err := collection.UpdateOne(ctx, bson.M{"username":username}, bson.D{

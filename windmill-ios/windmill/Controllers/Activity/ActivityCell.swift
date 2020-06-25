@@ -15,8 +15,10 @@ class ActivityCell: UITableViewCell {
     
     @IBOutlet weak var activityLabel: UILabel!
     @IBOutlet weak var activityImage: UIImageView!
+    internal var activity: Activity!
     
     func update(for activity: Activity) {
+        self.activity = activity
         activityLabel.text = activity.body
         activityImage.layer.borderWidth = 1.6
         activityImage.layer.borderColor = UIColor.white.cgColor

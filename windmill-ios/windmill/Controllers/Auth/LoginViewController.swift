@@ -54,7 +54,6 @@ class LoginViewController: UIViewController, GIDSignInDelegate {
         pastelView.animationDuration = 2.0
         pastelView.startAnimation()
         view.insertSubview(pastelView, at: 0)
-        
         setupSignInButtons()
         
     }

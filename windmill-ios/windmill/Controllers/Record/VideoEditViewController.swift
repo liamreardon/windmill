@@ -34,7 +34,7 @@ class VideoEditViewController: UIViewController, UITabBarControllerDelegate {
     internal var textColor: UIColor = UIColor.white
     internal var lastTextViewTransform: CGAffineTransform?
     internal var lastTextViewTransCenter: CGPoint?
-    internal var lastTextViewFont:UIFont?
+    internal var lastTextViewFont: UIFont?
     internal var activeTextView: UITextView?
 
     internal var lastPanPoint: CGPoint?

@@ -12,6 +12,7 @@
 		6B37A9C324632AA700E4038C /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B37A9C224632AA700E4038C /* RecordViewController.swift */; };
 		6B37A9C7246490AF00E4038C /* VideoEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B37A9C6246490AF00E4038C /* VideoEditViewController.swift */; };
 		6B43145D2470636F0055482D /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B43145C2470636F0055482D /* Post.swift */; };
+		6B437C4224A44D1000243BE6 /* DisplayPictureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B437C4124A44D1000243BE6 /* DisplayPictureViewController.swift */; };
 		6B496AC6249E678E00348CA9 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B496AC5249E678E00348CA9 /* TimelineViewController.swift */; };
 		6B496ACA249E6BD600348CA9 /* Timeline in Resources */ = {isa = PBXBuildFile; fileRef = 6B496AC9249E6BD600348CA9 /* Timeline */; };
 		6B496ACF24A16AD000348CA9 /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B496ACE24A16AD000348CA9 /* ActivityViewController.swift */; };
@@ -50,6 +51,11 @@
 		6BD91BEB2480C4C400F98C6B /* Ubuntu-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6BD91BE32480C27000F98C6B /* Ubuntu-Regular.ttf */; };
 		6BD91BEC2480C4C600F98C6B /* Ubuntu-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6BD91BE72480C27000F98C6B /* Ubuntu-Light.ttf */; };
 		6BD91BED2480C4C900F98C6B /* Ubuntu-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6BD91BE52480C27000F98C6B /* Ubuntu-Bold.ttf */; };
+		6BDEFC5924A460CB007C01C4 /* SofiaPro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6BDEFC5824A460CB007C01C4 /* SofiaPro-Bold.ttf */; };
+		6BDEFC5B24A46111007C01C4 /* SofiaPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6BDEFC5A24A46111007C01C4 /* SofiaPro-Regular.ttf */; };
+		6BDEFC5D24A461A2007C01C4 /* SofiaPro-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6BDEFC5C24A461A2007C01C4 /* SofiaPro-Medium.ttf */; };
+		6BDEFC5F24A46267007C01C4 /* SofiaPro-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6BDEFC5E24A46267007C01C4 /* SofiaPro-Light.ttf */; };
+		6BDEFC6124A46284007C01C4 /* SofiaPro-UltraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6BDEFC6024A46284007C01C4 /* SofiaPro-UltraLight.ttf */; };
 		6BF4EE0E248AB85E004BFAFD /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF4EE0D248AB85E004BFAFD /* CollectionViewCell.swift */; };
 		6BFAA748248DB6B40054B3C9 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFAA747248DB6B40054B3C9 /* RecordButton.swift */; };
 		6BFEA989245133E100181287 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BFEA988245133E100181287 /* AuthManager.swift */; };
@@ -66,6 +72,7 @@
 		6B37A9C224632AA700E4038C /* RecordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
 		6B37A9C6246490AF00E4038C /* VideoEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditViewController.swift; sourceTree = "<group>"; };
 		6B43145C2470636F0055482D /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		6B437C4124A44D1000243BE6 /* DisplayPictureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayPictureViewController.swift; sourceTree = "<group>"; };
 		6B496AC5249E678E00348CA9 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		6B496AC9249E6BD600348CA9 /* Timeline */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Timeline; sourceTree = "<group>"; };
 		6B496ACE24A16AD000348CA9 /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
@@ -109,6 +116,11 @@
 		6BD91BE52480C27000F98C6B /* Ubuntu-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ubuntu-Bold.ttf"; sourceTree = "<group>"; };
 		6BD91BE72480C27000F98C6B /* Ubuntu-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ubuntu-Light.ttf"; sourceTree = "<group>"; };
 		6BD91BE92480C27000F98C6B /* Ubuntu-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Ubuntu-Medium.ttf"; sourceTree = "<group>"; };
+		6BDEFC5824A460CB007C01C4 /* SofiaPro-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SofiaPro-Bold.ttf"; sourceTree = "<group>"; };
+		6BDEFC5A24A46111007C01C4 /* SofiaPro-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SofiaPro-Regular.ttf"; sourceTree = "<group>"; };
+		6BDEFC5C24A461A2007C01C4 /* SofiaPro-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SofiaPro-Medium.ttf"; sourceTree = "<group>"; };
+		6BDEFC5E24A46267007C01C4 /* SofiaPro-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SofiaPro-Light.ttf"; sourceTree = "<group>"; };
+		6BDEFC6024A46284007C01C4 /* SofiaPro-UltraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SofiaPro-UltraLight.ttf"; sourceTree = "<group>"; };
 		6BF4EE0D248AB85E004BFAFD /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		6BFAA747248DB6B40054B3C9 /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
 		6BFEA988245133E100181287 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
@@ -289,6 +301,11 @@
 		6B881A6C2450D5EB001466CB /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				6BDEFC6024A46284007C01C4 /* SofiaPro-UltraLight.ttf */,
+				6BDEFC5E24A46267007C01C4 /* SofiaPro-Light.ttf */,
+				6BDEFC5C24A461A2007C01C4 /* SofiaPro-Medium.ttf */,
+				6BDEFC5A24A46111007C01C4 /* SofiaPro-Regular.ttf */,
+				6BDEFC5824A460CB007C01C4 /* SofiaPro-Bold.ttf */,
 				6B881A6D2450D5F8001466CB /* Pacifico-Regular.ttf */,
 				6BD91BE52480C27000F98C6B /* Ubuntu-Bold.ttf */,
 				6BD91BE72480C27000F98C6B /* Ubuntu-Light.ttf */,
@@ -416,6 +433,7 @@
 			children = (
 				6B881A5B2450C59F001466CB /* LoginViewController.swift */,
 				6B5F538B245A9DB400A2610E /* UserCreationViewController.swift */,
+				6B437C4124A44D1000243BE6 /* DisplayPictureViewController.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -513,10 +531,15 @@
 				6BD91BED2480C4C900F98C6B /* Ubuntu-Bold.ttf in Resources */,
 				6BD91BEB2480C4C400F98C6B /* Ubuntu-Regular.ttf in Resources */,
 				6B881A642450C5A0001466CB /* LaunchScreen.storyboard in Resources */,
+				6BDEFC6124A46284007C01C4 /* SofiaPro-UltraLight.ttf in Resources */,
+				6BDEFC5B24A46111007C01C4 /* SofiaPro-Regular.ttf in Resources */,
+				6BDEFC5D24A461A2007C01C4 /* SofiaPro-Medium.ttf in Resources */,
 				6BC4F8A42495DCAA0027D3D4 /* WindmillMain.storyboard in Resources */,
 				6BD91BEA2480C4BA00F98C6B /* Ubuntu-Medium.ttf in Resources */,
 				6B496ACA249E6BD600348CA9 /* Timeline in Resources */,
+				6BDEFC5924A460CB007C01C4 /* SofiaPro-Bold.ttf in Resources */,
 				6B881A6E2450D5F8001466CB /* Pacifico-Regular.ttf in Resources */,
+				6BDEFC5F24A46267007C01C4 /* SofiaPro-Light.ttf in Resources */,
 				6B881A612450C5A0001466CB /* Assets.xcassets in Resources */,
 				6B881A5F2450C59F001466CB /* Main.storyboard in Resources */,
 				6BD91BEC2480C4C600F98C6B /* Ubuntu-Light.ttf in Resources */,
@@ -608,6 +631,7 @@
 				6B37A9C324632AA700E4038C /* RecordViewController.swift in Sources */,
 				6BFAA748248DB6B40054B3C9 /* RecordButton.swift in Sources */,
 				6B642A81248698E400F760D8 /* Relations.swift in Sources */,
+				6B437C4224A44D1000243BE6 /* DisplayPictureViewController.swift in Sources */,
 				6BAD80AB246E09F500C6D046 /* FeedManager.swift in Sources */,
 				6B496AC6249E678E00348CA9 /* TimelineViewController.swift in Sources */,
 				6B8FBC112458ABE900C1CF26 /* ImagePicker.swift in Sources */,

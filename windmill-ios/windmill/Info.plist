@@ -53,6 +53,11 @@
 	</dict>
 	<key>UIAppFonts</key>
 	<array>
+		<string>SofiaPro-UltraLight.ttf</string>
+		<string>SofiaPro-Light.ttf</string>
+		<string>SofiaPro-Medium.ttf</string>
+		<string>SofiaPro-Regular.ttf</string>
+		<string>SofiaPro-Bold.ttf</string>
 		<string>Ubuntu-Light.ttf</string>
 		<string>Ubuntu-Bold.ttf</string>
 		<string>Ubuntu-Regular.ttf</string>

@@ -62,8 +62,6 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
                     activities.insert(a!, at: 0)
                 }
             
-                
-                
                 DispatchQueue.main.async {
                     if self.activityData.count > 0 {
                         var idxToRemove: [Int] = []
@@ -126,7 +124,13 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    // MARK: TableView Delegate Functions
+    // MARK: Segues
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+    }
+    
+    // MARK: Table View Delegate Functions
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return activityData.count
@@ -139,7 +143,8 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: "activityCell", for: indexPath) as! ActivityCell
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
     

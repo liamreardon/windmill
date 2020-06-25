@@ -13,19 +13,20 @@ import Pastel
 
 class UserCreationViewController: UIViewController {
     
+    // MARK: IVARS
+    
     let authManager = AuthManager()
     let uploadManager = UploadManager()
     let storageManager = StorageManager()
     var imagePicker: ImagePicker!
     
+    @IBOutlet weak var saveUsernameButton: UIButton!
     @IBOutlet weak var usernameTextField: UITextField!
-    @IBOutlet weak var displayPictureImageView: UIImageView!
     
     // MARK: Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.imagePicker = ImagePicker(presentationController: self, delegate: self, mediaType: "public.image")
         setupUI()
     }
     
@@ -43,7 +44,6 @@ class UserCreationViewController: UIViewController {
             
             if result["available"] as? Int == 1 {
                 // Username available
-                print(result)
                 let username = usernameTextField.text!
                 let userId = result["userId"] as! String
                 let followers = result["followers"] as! [String]
@@ -68,22 +68,6 @@ class UserCreationViewController: UIViewController {
         }
     }
     
-    @IBAction func uploadImageTapped(_ sender: UIButton) {
-        self.imagePicker.present(from: sender)
-    }
-    
-    @IBAction func dismissUploadTapped(_ sender: Any) {
-        self.goToHome()
-    }
-    
-    @IBAction func saveDisplayPicture(_ sender: Any) {
-        let userId = KeychainWrapper.standard.string(forKey: "userId") 
-        self.storageManager.store(image: displayPictureImageView.image!, forKey: userId!+"displayPicture", withStorageType: .fileSystem)
-        uploadManager.uploadProfilePicture(image: displayPictureImageView.image!)
-        self.goToHome()
-        
-    }
-    
     // MARK: User Interface
     func setupUI() {
         let pastelView = PastelView(frame: view.bounds)
@@ -99,30 +83,15 @@ class UserCreationViewController: UIViewController {
         pastelView.startAnimation()
         pastelView.animationDuration = 2.0
         view.insertSubview(pastelView, at: 0)
-    }
-    
-    
-    // MARK: Segue
-    
-    func goToHome() {
-        let storyboard = UIStoryboard(name: "WindmillMain", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "tabBarController") as UIViewController
-        vc.modalPresentationStyle = .fullScreen
-        UIApplication.topViewController()?.present(vc, animated: true, completion: nil)
+        
+        saveUsernameButton.layer.cornerRadius = 20.0
+        usernameTextField.layer.cornerRadius = 20.0
+        usernameTextField.clipsToBounds = true
+
     }
     
 }
 
-extension UserCreationViewController: ImagePickerDelegate {
-    func didSelect(image: UIImage?) {
-        if image == nil { return }
-        self.displayPictureImageView.image = image
-    }
-    
-    func didSelectVideo(url: URL?) {
-        
-    }
-}
 
 
 

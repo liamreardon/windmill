@@ -125,4 +125,5 @@ class UploadVideoViewController: UIViewController, UITabBarControllerDelegate, U
             return false
         }
         return true
-    }}
+    }
+}

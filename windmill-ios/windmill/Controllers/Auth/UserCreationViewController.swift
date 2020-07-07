@@ -22,6 +22,7 @@ class UserCreationViewController: UIViewController {
     
     @IBOutlet weak var saveUsernameButton: UIButton!
     @IBOutlet weak var usernameTextField: UITextField!
+    @IBOutlet weak var headerLabel: UILabel!
     
     // MARK: Lifecycle
     
@@ -30,13 +31,44 @@ class UserCreationViewController: UIViewController {
         setupUI()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        headerLabel.setTextWithTypeAnimation(typedText: "Create your account.", characterDelay: 10)
+    }
+    
     // MARK: User Interaction
     
     @IBAction func setUsername(_ sender: Any) {
         
+        let trimmed = usernameTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        for char in trimmed {
+            if char == " " {
+                let alert = UIAlertController(title: "Oops!", message: "Username can contain only letters, numbers, and underscores and no spaces.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                self.present(alert, animated: true)
+                return
+            }
+        }
+        
+        if trimmed.count < 4 {
+            let alert = UIAlertController(title: "Oops!", message: "Username must be 4 characters more characters.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true)
+            return
+        }
+        
+        let characterset = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.")
+        if trimmed.rangeOfCharacter(from: characterset.inverted) != nil {
+            let alert = UIAlertController(title: "Oops!", message: "Username can contain only letters, numbers, and underscores and no spaces.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true)
+            return
+        }
+    
+        
         if let tokenId = KeychainWrapper.standard.string(forKey: "token") {
             let data: [String:Any] = [
-                "username":usernameTextField.text!,
+                "username":trimmed,
                 "userToken": ["tokenId": tokenId]
             ]
             
@@ -44,7 +76,7 @@ class UserCreationViewController: UIViewController {
             
             if result["available"] as? Int == 1 {
                 // Username available
-                let username = usernameTextField.text!
+                let username = trimmed
                 let userId = result["userId"] as! String
                 let followers = result["followers"] as! [String]
                 let following = result["following"] as! [String]
@@ -61,7 +93,7 @@ class UserCreationViewController: UIViewController {
             }
             else {
                 // Username taken
-                let alert = UIAlertController(title: "Oops", message: "Username is taken, try again!", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Oops!", message: "Username is taken, try again!", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
                 self.present(alert, animated: true)
             }
@@ -69,7 +101,12 @@ class UserCreationViewController: UIViewController {
     }
     
     // MARK: User Interface
+    
     func setupUI() {
+        saveUsernameButton.layer.cornerRadius = 20.0
+        usernameTextField.layer.cornerRadius = 20.0
+        usernameTextField.clipsToBounds = true
+        
         let pastelView = PastelView(frame: view.bounds)
         pastelView.startPastelPoint = .bottomLeft
         pastelView.endPastelPoint = .topRight
@@ -80,14 +117,9 @@ class UserCreationViewController: UIViewController {
                               UIColor(red: 123/255, green: 31/255, blue: 162/255, alpha: 1.0),
                               UIColor(red: 32/255, green: 76/255, blue: 255/255, alpha: 1.0),
                               UIColor(red: 32/255, green: 158/255, blue: 255/255, alpha: 1.0)])
-        pastelView.startAnimation()
         pastelView.animationDuration = 2.0
+        pastelView.startAnimation()
         view.insertSubview(pastelView, at: 0)
-        
-        saveUsernameButton.layer.cornerRadius = 20.0
-        usernameTextField.layer.cornerRadius = 20.0
-        usernameTextField.clipsToBounds = true
-
     }
     
 }

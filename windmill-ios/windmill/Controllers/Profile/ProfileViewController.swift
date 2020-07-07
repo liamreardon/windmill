@@ -178,9 +178,14 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                     UserDefaults.standard.set(following, forKey: "following")
             }
             
-            followButton.backgroundColor = UIColor(rgb: 0xc8d6e5)
-            followButton.setTitle("Unfollow -", for: .normal)
-            followButton.setTitleColor(UIColor(rgb: 0x576574), for: .normal)
+            let fullString = NSMutableAttributedString(string: "Following ", attributes: [NSAttributedString.Key.foregroundColor : UIColor.black])
+            let image1Attachment = NSTextAttachment()
+            let icon = UIImage(systemName: "checkmark", withConfiguration: UIImage.SymbolConfiguration(pointSize: 11, weight: .bold))?.withTintColor(.black, renderingMode: .alwaysOriginal)
+            image1Attachment.image = icon
+            let image1String = NSAttributedString(attachment: image1Attachment)
+            fullString.append(image1String)
+            followButton.backgroundColor = .white
+            followButton.setAttributedTitle(fullString, for: .normal)
             
         }
         else {
@@ -190,9 +195,15 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                     UserDefaults.standard.set(newFollowing, forKey: "following")
             }
             
-            followButton.backgroundColor = UIColor(rgb: 0x576574)
-            followButton.setTitle("Follow +", for: .normal)
-            followButton.setTitleColor(UIColor(rgb: 0xc8d6e5), for: .normal)
+            let fullString = NSMutableAttributedString(string: "Follow ", attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
+            let image1Attachment = NSTextAttachment()
+            let icon = UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(pointSize: 11, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            image1Attachment.image = icon
+            let image1String = NSAttributedString(attachment: image1Attachment)
+            fullString.append(image1String)
+            let color = UIColor(rgb: 0x576574).withAlphaComponent(0.5)
+            followButton.backgroundColor = color
+            followButton.setAttributedTitle(fullString, for: .normal)
         }
         
         followersLabel.text = "followers: " + String(numberOfFollowers)
@@ -201,6 +212,15 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     internal func signOut() {
         print("signing out...")
         GIDSignIn.sharedInstance()?.signOut()
+        let userId = KeychainWrapper.standard.string(forKey: "userId")
+        storageManager.removeImage(forKey: userId!+"displayPicture", inStorageType: .fileSystem)
+        KeychainWrapper.standard.removeObject(forKey: "token")
+        KeychainWrapper.standard.removeObject(forKey: "username")
+        KeychainWrapper.standard.removeObject(forKey: "userId")
+        UserDefaults.standard.removeObject(forKey: "followers")
+        UserDefaults.standard.removeObject(forKey: "following")
+        UserDefaults.standard.removeObject(forKey: "numFollowers")
+        UserDefaults.standard.removeObject(forKey: "numFollowing")
         DispatchQueue.main.async {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let vc = storyboard.instantiateViewController(withIdentifier: "loginMain") as UIViewController
@@ -249,7 +269,7 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
             
             let fullString = NSMutableAttributedString(string: "@\(username!)")
             let image1Attachment = NSTextAttachment()
-            let icon = UIImage(systemName: "checkmark.seal.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .bold))?.withTintColor(UIColor(rgb: 0x1da1f2), renderingMode: .alwaysOriginal)
+            let icon = UIImage(systemName: "checkmark.seal.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 11, weight: .bold))?.withTintColor(UIColor(rgb: 0x1bc9fc), renderingMode: .alwaysOriginal)
             image1Attachment.image = icon
             let image1String = NSAttributedString(attachment: image1Attachment)
             fullString.append(image1String)
@@ -318,14 +338,25 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         followButton.layer.cornerRadius = 10.0
         
         if isFollowing! {
-            followButton.backgroundColor = UIColor(rgb: 0xc8d6e5)
-            followButton.setTitle("Unfollow -", for: .normal)
-            followButton.setTitleColor(UIColor(rgb: 0x576574), for: .normal)
+            let fullString = NSMutableAttributedString(string: "Following ", attributes: [NSAttributedString.Key.foregroundColor : UIColor.black])
+            let image1Attachment = NSTextAttachment()
+            let icon = UIImage(systemName: "checkmark", withConfiguration: UIImage.SymbolConfiguration(pointSize: 11, weight: .bold))?.withTintColor(.black, renderingMode: .alwaysOriginal)
+            image1Attachment.image = icon
+            let image1String = NSAttributedString(attachment: image1Attachment)
+            fullString.append(image1String)
+            followButton.backgroundColor = .white
+            followButton.setAttributedTitle(fullString, for: .normal)
         }
         else {
-            followButton.backgroundColor = UIColor(rgb: 0x576574)
-            followButton.setTitle("Follow +", for: .normal)
-            followButton.setTitleColor(UIColor(rgb: 0xc8d6e5), for: .normal)
+            let fullString = NSMutableAttributedString(string: "Follow ", attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
+            let image1Attachment = NSTextAttachment()
+            let icon = UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(pointSize: 11, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            image1Attachment.image = icon
+            let image1String = NSAttributedString(attachment: image1Attachment)
+            fullString.append(image1String)
+            let color = UIColor(rgb: 0x576574).withAlphaComponent(0.5)
+            followButton.backgroundColor = color
+            followButton.setAttributedTitle(fullString, for: .normal)
         }
         
         let icon2 = UIImage(systemName: "ellipsis", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)

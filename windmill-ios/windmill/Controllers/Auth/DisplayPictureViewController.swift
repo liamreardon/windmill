@@ -25,6 +25,7 @@ class DisplayPictureViewController: UIViewController {
     @IBOutlet weak var selectImageButton: UIButton!
     @IBOutlet weak var saveImageButton: UIButton!
     @IBOutlet weak var displayPictureImageView: UIImageView!
+    @IBOutlet weak var headerLabel: UILabel!
     
     // MARK: Lifecycle
     
@@ -32,6 +33,10 @@ class DisplayPictureViewController: UIViewController {
         super.viewDidLoad()
         self.imagePicker = ImagePicker(presentationController: self, delegate: self, mediaType: "public.image")
         setupUI()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        headerLabel.setTextWithTypeAnimation(typedText: "Upload a display picture.", characterDelay:  10)
     }
     
     // MARK: User Interaction
@@ -54,6 +59,17 @@ class DisplayPictureViewController: UIViewController {
     
     // MARK: User Interface
     func setupUI() {
+        selectImageButton.layer.cornerRadius = 20.0
+        saveImageButton.layer.cornerRadius = 20.0
+        
+        displayPictureImageView.layer.borderWidth = 5.0
+        displayPictureImageView.layer.masksToBounds = false
+        displayPictureImageView.layer.borderColor = UIColor.white.cgColor
+        displayPictureImageView.layer.cornerRadius = displayPictureImageView.frame.height / 2
+        displayPictureImageView.clipsToBounds = true
+        
+        saveImageButton.isEnabled = false
+        
         let pastelView = PastelView(frame: view.bounds)
         pastelView.startPastelPoint = .bottomLeft
         pastelView.endPastelPoint = .topRight
@@ -64,20 +80,9 @@ class DisplayPictureViewController: UIViewController {
                               UIColor(red: 123/255, green: 31/255, blue: 162/255, alpha: 1.0),
                               UIColor(red: 32/255, green: 76/255, blue: 255/255, alpha: 1.0),
                               UIColor(red: 32/255, green: 158/255, blue: 255/255, alpha: 1.0)])
-        pastelView.startAnimation()
         pastelView.animationDuration = 2.0
+        pastelView.startAnimation()
         view.insertSubview(pastelView, at: 0)
-        
-        selectImageButton.layer.cornerRadius = 20.0
-        saveImageButton.layer.cornerRadius = 20.0
-        
-        displayPictureImageView.layer.borderWidth = 3.0
-        displayPictureImageView.layer.masksToBounds = false
-        displayPictureImageView.layer.borderColor = UIColor.white.cgColor
-        displayPictureImageView.layer.cornerRadius = displayPictureImageView.frame.height / 2
-        displayPictureImageView.clipsToBounds = true
-        
-        saveImageButton.isEnabled = false
     }
     
     

@@ -81,7 +81,8 @@ class LoginViewController: UIViewController, GIDSignInDelegate {
         self.dismiss(animated: true, completion: nil)
     }
 
-    //completed sign In
+    // completed sign In
+    
     public func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
 
         if let error = error {
@@ -93,13 +94,14 @@ class LoginViewController: UIViewController, GIDSignInDelegate {
               return
         }
           
-          let idToken = user.authentication.idToken
+        let idToken = user.authentication.idToken
 
-          let dict = ["tokenId":idToken]
-          KeychainWrapper.standard.set(idToken!, forKey: "token")
+        let dict = ["tokenId":idToken]
+        KeychainWrapper.standard.set(idToken!, forKey: "token")
 
-          let authManager = AuthManager()
-          authManager.login(params: dict)
+        let authManager = AuthManager()
+        let userManager = UserManager()
+        authManager.login(params: dict)
     }
 }
 

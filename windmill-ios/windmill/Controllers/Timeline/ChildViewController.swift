@@ -16,10 +16,17 @@ class ChildViewController: UIViewController {
     // IVARS
 
     @IBOutlet weak var likeBtn: UIImageView!
+    @IBOutlet weak var numberOfLikesLabel: UILabel!
+    
+    @IBOutlet weak var commentButton: UIImageView!
+    @IBOutlet weak var numberOfCommentsButton: UILabel!
+    
+    @IBOutlet weak var shareButton: UIImageView!
+    
     @IBOutlet var childView: UIView!
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var captionLabel: UILabel!
-    @IBOutlet weak var numberOfLikesLabel: UILabel!
+
     let previewLayer = CALayer()
     
     fileprivate var videoURL: URL?
@@ -36,7 +43,10 @@ class ChildViewController: UIViewController {
     var post: Post?
     
     let userId = KeychainWrapper.standard.string(forKey: "userId")
-    let tapRec = UITapGestureRecognizer()
+    let likeTapRec = UITapGestureRecognizer()
+    let commentTapRec = UITapGestureRecognizer()
+    
+    let commentViewController = CommentViewController()
     
     var vSpinner: UIView?
 
@@ -73,13 +83,19 @@ class ChildViewController: UIViewController {
                 // res
             }
         } else {
-            let imageIcon = UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            let imageIcon = UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
             likeBtn.image = imageIcon
             numberOfLikesLabel.text = String(Int(numberOfLikesLabel.text!)! - 1)
             postManager.likeRequest(postUserId: post!.userId!, userId: userId!, postId: post!.id!, likedStatus: false) { (data) in
                 // res
             }
         }
+    }
+    
+    @objc func commentTapped() {
+        let vc = self.storyboard?.instantiateViewController(withIdentifier: "commentViewController") as! CommentViewController
+        vc.post = post
+        self.present(vc, animated: true, completion: nil)
     }
 
     // MARK: Post Data
@@ -102,14 +118,14 @@ class ChildViewController: UIViewController {
             likeBtn.image = imageIcon
         }
         else {
-            let imageIcon = UIImage(systemName: "heart", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            let imageIcon = UIImage(systemName: "heart.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
             likeBtn.image = imageIcon
         }
         
-        if !post!.verified! {
+        if post!.verified! {
             let fullString = NSMutableAttributedString(string: "@\(post!.username!)")
             let image1Attachment = NSTextAttachment()
-            let icon = UIImage(systemName: "checkmark.seal.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .bold))?.withTintColor(UIColor(rgb: 0x1da1f2), renderingMode: .alwaysOriginal)
+            let icon = UIImage(systemName: "checkmark.seal.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 11, weight: .bold))?.withTintColor(UIColor(rgb: 0x1bc9fc), renderingMode: .alwaysOriginal)
             image1Attachment.image = icon
             let image1String = NSAttributedString(attachment: image1Attachment)
             fullString.append(image1String)
@@ -117,19 +133,23 @@ class ChildViewController: UIViewController {
         }
             
         else {
-            let fullString = NSMutableAttributedString(string: "@\(post!.username!)")
-            let image1Attachment = NSTextAttachment()
-            image1Attachment.image = UIImage(named: "check.png")
-            let image1String = NSAttributedString(attachment: image1Attachment)
-            fullString.append(image1String)
-            usernameLabel.attributedText = fullString
+            usernameLabel.text = "@\(post!.username!)"
         }
         
         numberOfLikesLabel.text = String(post!.numlikes!)
         captionLabel.text = post?.caption
-        tapRec.addTarget(self, action: #selector(ChildViewController.likeTapped))
-        likeBtn.addGestureRecognizer(tapRec)
+        likeTapRec.addTarget(self, action: #selector(ChildViewController.likeTapped))
+        commentTapRec.addTarget(self, action: #selector(ChildViewController.commentTapped))
+        likeBtn.addGestureRecognizer(likeTapRec)
+        commentButton.addGestureRecognizer(commentTapRec)
         likeBtn.isUserInteractionEnabled = true
+        commentButton.isUserInteractionEnabled = true
+        
+        let commentIcon = UIImage(systemName: "bubble.left.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        commentButton.image = commentIcon
+        
+        let shareIcon = UIImage(systemName: "arrowshape.turn.up.right.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        shareButton.image = shareIcon
 
     }
     
@@ -139,12 +159,12 @@ class ChildViewController: UIViewController {
         ai.color = .white
         ai.startAnimating()
         ai.center = spinnerView.center
-        
        
         spinnerView.addSubview(ai)
         onView.addSubview(spinnerView)
         
         vSpinner = spinnerView
+        vSpinner?.isUserInteractionEnabled = false
     }
     
     func removeSpinner() {

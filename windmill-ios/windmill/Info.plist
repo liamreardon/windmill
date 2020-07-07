@@ -4,24 +4,12 @@
 <dict>
 	<key>BUCKET_URL</key>
 	<string>$(BUCKET_URL)</string>
-	<key>ROOT_URL</key>
-	<string>$(ROOT_URL)</string>
-	<key>GOOGLE_CLIENT_ID</key>
-	<string>$(GOOGLE_CLIENT_ID)</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>windmill wants to record sound.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>windmill wants to save pictures &amp; videos to your library.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>windmill wants to use your picture &amp; video library.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>windmill wants to take pictures &amp; videos.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>$(APP_BUNDLE_ID)</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -44,6 +32,10 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>GOOGLE_CLIENT_ID</key>
+	<string>$(GOOGLE_CLIENT_ID)</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -51,6 +43,16 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>windmill wants to take pictures &amp; videos.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>windmill wants to record sound.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>windmill wants to save pictures &amp; videos to your library.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>windmill wants to use your picture &amp; video library.</string>
+	<key>ROOT_URL</key>
+	<string>$(ROOT_URL)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>SofiaPro-UltraLight.ttf</string>
@@ -91,8 +93,6 @@
 	<array>
 		<string>armv7</string>
 	</array>
-	<key>LSApplicationCategoryType</key>
-	<string></string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

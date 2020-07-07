@@ -20,36 +20,65 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bn4-WR-2pt">
-                                <rect key="frame" x="99" y="550" width="216" height="41"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" name="SofiaProMedium" family="Sofia Pro" pointSize="15"/>
-                                <state key="normal" title=" Sign In with Google" image="google">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="googleSignInTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hdb-K2-gSg"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A3D-Yj-382">
-                                <rect key="frame" x="99" y="610" width="216" height="41"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" name="SofiaProMedium" family="Sofia Pro" pointSize="15"/>
-                                <state key="normal" title=" Sign In with Apple" image="apple">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="appleSignInTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="V8n-DQ-fnq"/>
-                                </connections>
-                            </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="windmill_above" translatesAutoresizingMaskIntoConstraints="NO" id="CCu-KO-o13">
-                                <rect key="frame" x="51" y="191" width="313" height="165"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="19" translatesAutoresizingMaskIntoConstraints="NO" id="1PA-6k-HTZ">
+                                <rect key="frame" x="99" y="554.5" width="216" height="101"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bn4-WR-2pt">
+                                        <rect key="frame" x="0.0" y="0.0" width="216" height="41"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="216" id="27T-XZ-uBB"/>
+                                            <constraint firstAttribute="height" constant="41" id="cuM-wZ-NDr"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="SofiaProMedium" family="Sofia Pro" pointSize="15"/>
+                                        <state key="normal" title=" Sign In with Google" image="google">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="googleSignInTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hdb-K2-gSg"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A3D-Yj-382">
+                                        <rect key="frame" x="0.0" y="60" width="216" height="41"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="41" id="H4D-L1-h7E"/>
+                                            <constraint firstAttribute="width" constant="216" id="XII-GT-lFh"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="SofiaProMedium" family="Sofia Pro" pointSize="15"/>
+                                        <state key="normal" title=" Sign In with Apple" image="apple">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="appleSignInTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="V8n-DQ-fnq"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="AhS-Uk-tgZ">
+                                <rect key="frame" x="47" y="206.5" width="320" height="169"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="windmill_above" translatesAutoresizingMaskIntoConstraints="NO" id="CCu-KO-o13">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="169"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="320" id="HuP-Mb-U0R"/>
+                                            <constraint firstAttribute="height" constant="169" id="o3N-EG-aZS"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="320" id="3gb-AH-4ip"/>
+                                    <constraint firstAttribute="height" constant="169" id="DiX-LU-ILY"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.72156862745098038" blue="0.58039215686274503" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="1PA-6k-HTZ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Myn-tN-sMG"/>
+                            <constraint firstItem="AhS-Uk-tgZ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="PZw-Nc-Gzd"/>
+                            <constraint firstItem="1PA-6k-HTZ" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" multiplier="1.35" id="hOq-iK-S8v"/>
+                            <constraint firstItem="AhS-Uk-tgZ" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" multiplier="0.65" id="oKQ-n6-5Xc"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>

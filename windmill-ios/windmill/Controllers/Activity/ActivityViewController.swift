@@ -45,6 +45,10 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
     
     // MARK: User Interface
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+          return .darkContent
+    }
+    
     internal func setupUI() {
         tableView.rowHeight = 80.0
     }

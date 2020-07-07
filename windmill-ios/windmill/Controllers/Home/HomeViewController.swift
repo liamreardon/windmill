@@ -155,6 +155,7 @@ class HomeViewController: PageboyViewController {
         onView.addSubview(spinnerView)
         
         vSpinner = spinnerView
+        vSpinner?.isUserInteractionEnabled = false
     }
     
     func removeSpinner() {

@@ -12,13 +12,12 @@ import SwiftKeychainWrapper
 
 struct AuthManager {
     
-    let API_URL = "http://liam.local:8080/api/auth"
     let LOGIN = "/login"
     let SIGNUP = "/signup"
     
     func login(params: [String:Any]) {
         
-        if let url = URL(string: API_URL+LOGIN) {
+        if let url = URL(string: Environment.rootURL+"/api/auth"+LOGIN) {
             
             let session = URLSession.shared
             
@@ -65,12 +64,14 @@ struct AuthManager {
                                 let following = json["following"] as! [String]
                                 let numFollowers = json["numFollowers"] as! Int
                                 let numFollowing = json["numFollowing"] as! Int
+                                let dp = json["displayPicture"] as! String
                                 KeychainWrapper.standard.set(username, forKey: "username")
                                 KeychainWrapper.standard.set(userId, forKey: "userId")
                                 UserDefaults.standard.set(followers, forKey: "followers")
                                 UserDefaults.standard.set(following, forKey: "following")
                                 UserDefaults.standard.set(numFollowers, forKey: "numFollowers")
                                 UserDefaults.standard.set(numFollowing, forKey: "numFollowing")
+                                UserDefaults.standard.set(dp, forKey: "dp")
                                 let storyboard = UIStoryboard(name: "WindmillMain", bundle: nil)
                                 let vc = storyboard.instantiateViewController(withIdentifier: "tabBarController") as UIViewController
                                 vc.modalPresentationStyle = .fullScreen
@@ -79,7 +80,7 @@ struct AuthManager {
                         }
                     }
                 } catch let error {
-                    print(error.localizedDescription)
+                    print("error",error.localizedDescription)
                 }
             }
             task.resume()
@@ -92,7 +93,7 @@ struct AuthManager {
         let semaphore = DispatchSemaphore(value: 0)
         var result: ([String:Any]) = (["":""])
         
-        if let url = URL(string: API_URL+SIGNUP) {
+        if let url = URL(string: Environment.rootURL+"/api/auth"+SIGNUP) {
             
             let session = URLSession.shared
             
@@ -139,5 +140,4 @@ struct AuthManager {
         _ = semaphore.wait(wallTimeout: .distantFuture)
         return result
     }
-    
 }

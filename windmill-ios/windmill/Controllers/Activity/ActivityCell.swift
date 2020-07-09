@@ -16,6 +16,7 @@ class ActivityCell: UITableViewCell {
     @IBOutlet weak var activityLabel: UILabel!
     @IBOutlet weak var activityImage: UIImageView!
     internal var activity: Activity!
+    let userManager = UserManager()
     
     func update(for activity: Activity) {
         self.activity = activity
@@ -26,9 +27,20 @@ class ActivityCell: UITableViewCell {
         
         if activity.type == "FOLLOWED" {
             activityImage.layer.cornerRadius = activityImage.frame.height / 2
-        }
+            userManager.getUser(username: activity.username!) { (data) in
+                do {
+                    let jsonResponse = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:Any]
+                    let user = jsonResponse["user"] as! [String:Any]
+                    let usr = User(dictionary: user)!
+                    self.activityImage.sd_setImage(with: URL(string: usr.displaypicture!), placeholderImage: UIImage(named: ""))
+                } catch let error {
+                    print(error.localizedDescription)
+                }
 
-        activityImage.sd_setImage(with: URL(string: activity.image!), placeholderImage: UIImage(named: ""))
+            }
+        }
+        else {
+            activityImage.sd_setImage(with: URL(string: activity.post!.thumbnail!), placeholderImage: UIImage(named: ""))
+        }
     }
-    
 }

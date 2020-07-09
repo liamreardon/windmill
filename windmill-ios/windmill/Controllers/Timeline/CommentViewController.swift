@@ -28,6 +28,8 @@ class CommentViewController: UIViewController, UITextViewDelegate, UITableViewDa
     let storageManager = StorageManager()
     let postManager = PostManager()
     
+    let sendBarButton = UIBarButtonItem()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -72,13 +74,8 @@ class CommentViewController: UIViewController, UITextViewDelegate, UITableViewDa
     internal func setupUI() {
         textView.text = "add a comment..."
         textView.textColor = UIColor.lightGray
-        numberToolbar.barStyle = .default
-        numberToolbar.items = [
-        UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelComment)),
-        UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-        UIBarButtonItem(title: "Send", style: .plain, target: self, action: #selector(sendComment))]
-        numberToolbar.sizeToFit()
-        textView.inputAccessoryView = numberToolbar
+        
+        setupToolbar()
         
         let dp = UserDefaults.standard.string(forKey: "dp")
         let userId = KeychainWrapper.standard.string(forKey: "userId")
@@ -96,6 +93,39 @@ class CommentViewController: UIViewController, UITextViewDelegate, UITableViewDa
         else {
             displayPicture.sd_setImage(with: URL(string: dp!), placeholderImage: UIImage(named: ""))
         }
+        
+        self.tableView.backgroundColor = UIColor.white
+    }
+    
+    internal func setupToolbar() {
+        let cancelIcon = UIImage(systemName: "xmark.circle.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let sendIcon = UIImage(systemName: "arrow.up.circle.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        
+        let cancelButton = UIButton()
+        cancelButton.frame = CGRect(x: 0, y: 0, width: 80, height: 50)
+        cancelButton.setImage(cancelIcon, for: .normal)
+        cancelButton.addTarget(self, action: #selector(cancelComment), for: .touchUpInside)
+        
+        let sendButton = UIButton()
+        sendButton.frame = CGRect(x: 0, y: 0, width: 80, height: 50)
+        sendButton.setImage(sendIcon, for: .normal)
+        sendButton.addTarget(self, action: #selector(sendComment), for: .touchUpInside)
+        
+        let cancelBarButton = UIBarButtonItem()
+        cancelBarButton.customView = cancelButton
+        
+        sendBarButton.customView = sendButton
+        sendBarButton.isEnabled = false
+        
+        numberToolbar.barStyle = .default
+        numberToolbar.items = [
+        cancelBarButton,
+        UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
+        sendBarButton
+        ]
+        numberToolbar.sizeToFit()
+        
+        textView.inputAccessoryView = numberToolbar
     }
     
     internal func setupTableView() {
@@ -146,15 +176,24 @@ class CommentViewController: UIViewController, UITextViewDelegate, UITableViewDa
     }
     
     @objc func cancelComment() {
-        
+        if textView.text.count > 0 {
+            textView.text = ""
+        }
+        view.endEditing(true)
     }
     
     @objc func sendComment() {
         let userId = KeychainWrapper.standard.string(forKey: "userId")
         let cmnt = textView.text
-        postManager.userCommentedOnPostRequest(postUserId: post!.userId!, userId: userId!, postId: post!.id!, comment: cmnt!) { (data) in
-            
+        if cmnt!.count == 0 {
+            view.endEditing(true)
+            return
         }
+        postManager.userCommentedOnPostRequest(postUserId: post!.userId!, userId: userId!, postId: post!.id!, comment: cmnt!) { (data) in
+            self.getPostComments()
+        }
+        textView.text = ""
+        view.endEditing(true)
     }
     
     // MARK: Text View Delegate
@@ -164,6 +203,7 @@ class CommentViewController: UIViewController, UITextViewDelegate, UITableViewDa
             textView.text = nil
             textView.textColor = UIColor.white
         }
+        sendBarButton.isEnabled = true
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -171,6 +211,7 @@ class CommentViewController: UIViewController, UITextViewDelegate, UITableViewDa
             textView.text = "add a comment..."
             textView.textColor = UIColor.lightGray
         }
+        sendBarButton.isEnabled = false
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
@@ -195,5 +236,9 @@ class CommentViewController: UIViewController, UITextViewDelegate, UITableViewDa
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.backgroundColor = UIColor.clear
     }
 }

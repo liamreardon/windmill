@@ -48,6 +48,7 @@ func Login(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 		"authFlag": "2",
 		"username": user.Username,
 		"userId": user.UserId,
+		"displayPicture": user.DisplayPicture,
 		"followers": user.Relations.Followers,
 		"following": user.Relations.Following,
 		"numFollowers": user.Relations.NumFollowers,
@@ -86,10 +87,11 @@ func SignUp(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondJSON(w, http.StatusCreated, map[string]interface{}{
-		"message":"username available",
-		"available":true,
-		"userId":userId,
+		"message": "username available",
+		"available": true,
+		"userId": userId,
 		"username": user.Username,
+		"displayPicture": user.DisplayPicture,
 		"followers": user.Relations.Followers,
 		"following": user.Relations.Following,
 		"numFollowers": user.Relations.NumFollowers,

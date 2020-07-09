@@ -41,6 +41,7 @@ class ChildViewController: UIViewController {
     
     let postManager = PostManager()
     var post: Post?
+    var fromActivity: Bool = true
     
     let userId = KeychainWrapper.standard.string(forKey: "userId")
     let likeTapRec = UITapGestureRecognizer()
@@ -68,6 +69,12 @@ class ChildViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        if fromActivity {
+            pause()
+        }
     }
     
     // MARK: User Interaction
@@ -243,12 +250,14 @@ class ChildViewController: UIViewController {
                 status = .unknown
             }
             
-            removeSpinner()
-            
             // Switch over status value
             switch status {
             case .readyToPlay:
                 // Player item is ready to play.
+                removeSpinner()
+                if fromActivity {
+                    play()
+                }
                 print("playing")
             case .failed:
                 // Player item failed. See error.

@@ -182,7 +182,7 @@ func GetDisplayPicture(client *mongo.Client, w http.ResponseWriter, r *http.Requ
 	 return
 }
 
-func UserFollowingHandler(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
+func UserFollowing(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	username := vars["username"]
 	followingUsername := vars["followingUsername"]

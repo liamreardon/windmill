@@ -26,11 +26,15 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     @IBOutlet weak var collectionView: UICollectionView!
     
     var currentUserProfile: Bool = true
-    var followingUser: User?
+    var otherUser: User?
     var userProfileThatIsOpen: User?
     var isFollowing: Bool? = false
     var userPosts: [Post] = []
+    
     var fromSearch: Bool = false
+    var fromActivity: Bool = false
+    
+    var passedUsername: String?
     
     var indexTapped: Int = 0
     
@@ -68,16 +72,18 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         if currentUserProfile {
             let username = KeychainWrapper.standard.string(forKey: "username")
             getUser(username: username!)
-            getUserDetails()
-            initGraphics()
             let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dpTapped))
             displayPicture.isUserInteractionEnabled = true
             displayPicture.addGestureRecognizer(tapGestureRecognizer)
         }
         else {
-            getUser(username: followingUser!.username!)
-            loadUserData()
-            initGraphics()
+            if fromSearch {
+                getUser(username: otherUser!.username!)
+            }
+            else if fromActivity {
+                getUser(username: passedUsername!)
+            }
+            
         }
         
     }
@@ -87,21 +93,30 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         if currentUserProfile {
             let username = KeychainWrapper.standard.string(forKey: "username")
             getUser(username: username!)
-            getUserDetails()
-            getDisplayPicture()
-            initGraphics()
         }
         else {
-            getUser(username: followingUser!.username!)
-            initGraphics()
-            loadUserData()
+            if fromSearch {
+                getUser(username: otherUser!.username!)
+            }
+            else if fromActivity {
+                getUser(username: passedUsername!)
+            }
         }
         
-        userPosts = userProfileThatIsOpen!.posts!
+        if fromSearch {
+            navigationController?.setNavigationBarHidden(false, animated: true)
+        }
+        else if fromActivity {
+            navigationController?.setNavigationBarHidden(false, animated: true)
+        }
+        else {
+            navigationController?.setNavigationBarHidden(true, animated: true)
+        }
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        print("appeared")
+
     }
     
     @objc internal func refreshCollection() {
@@ -112,7 +127,7 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
             initGraphics()
         }
         else {
-            getUser(username: followingUser!.username!)
+            getUser(username: otherUser!.username!)
             loadUserData()
             initGraphics()
         }
@@ -174,7 +189,7 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         if isFollowing! {
             following.append(userProfileThatIsOpen!.username!)
             numberOfFollowers += 1
-            userManager.updateUserFollowingStatus(username: username!, followingUsername: followingUser!.username!, followingStatus: true) { (data) in
+            userManager.updateUserFollowingStatus(username: username!, followingUsername: otherUser!.username!, followingStatus: true) { (data) in
                     UserDefaults.standard.set(following, forKey: "following")
             }
             
@@ -191,7 +206,7 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         else {
             numberOfFollowers -= 1
             let newFollowing = following.filter {$0 != userProfileThatIsOpen?.username}
-            userManager.updateUserFollowingStatus(username: username!, followingUsername: followingUser!.username!, followingStatus: false) { (data) in
+            userManager.updateUserFollowingStatus(username: username!, followingUsername: otherUser!.username!, followingStatus: false) { (data) in
                     UserDefaults.standard.set(newFollowing, forKey: "following")
             }
             
@@ -289,8 +304,6 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     
     func getUser(username: String) {
         
-        let dGroup = DispatchGroup()
-        dGroup.enter()
         userManager.getUser(username: username) { (data) in
             do {
                 let jsonResponse = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:Any]
@@ -308,13 +321,27 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
                 usr.relations = r!
                 
                 self.userProfileThatIsOpen = usr
-                dGroup.leave()
+                self.userPosts = self.userProfileThatIsOpen!.posts!
                 
+                DispatchQueue.main.async {
+                    if self.currentUserProfile {
+                        self.getUserDetails()
+                        self.initGraphics()
+                        self.getDisplayPicture()
+                    }
+                    else {
+                        self.loadUserData()
+                        self.initGraphics()
+                    }
+
+                    self.collectionView.reloadData()
+                }
+
+        
             } catch let error {
                 print("failed to load posts", error.localizedDescription)
             }
         }
-        dGroup.wait()
     }
     
     // MARK: User Interface
@@ -365,28 +392,22 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         if !currentUserProfile {
             optionsButton.isHidden = true
         }
-        
-        if fromSearch {
-            navigationController?.setNavigationBarHidden(false, animated: true)
-        }
-        else {
-            navigationController?.setNavigationBarHidden(true, animated: true)
-        }
     }
 
     // MARK: Following User Setup
     
     func loadUserData() {
        
-        if followingUser?.displaypicture != nil {
-            if let url = URL(string: followingUser!.displaypicture!) {
+        if userProfileThatIsOpen?.displaypicture != nil {
+            if let url = URL(string: userProfileThatIsOpen!.displaypicture!) {
                 displayPicture.sd_imageIndicator = SDWebImageActivityIndicator.white
                 displayPicture.sd_setImage(with: url, placeholderImage: UIImage(named: ""))
             }
         }
         
-        usernameLabel.text = followingUser?.username
+        usernameLabel.text = userProfileThatIsOpen?.username
         isFollowing = isUserFollowing()
+        
         if isFollowing! {
             followButton.setTitle("Unfollow -", for: .normal)
         }
@@ -400,7 +421,7 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         
         if userProfileThatIsOpen!.verified! {
             
-            let fullString = NSMutableAttributedString(string: "@\(followingUser!.username!)")
+            let fullString = NSMutableAttributedString(string: "@\(userProfileThatIsOpen!.username!)")
             let image1Attachment = NSTextAttachment()
             let icon = UIImage(systemName: "checkmark.seal.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .bold))?.withTintColor(UIColor(rgb: 0x1da1f2), renderingMode: .alwaysOriginal)
             image1Attachment.image = icon
@@ -411,7 +432,7 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         }
         
         else {
-            usernameLabel.text = "@\(followingUser!.username!)"
+            usernameLabel.text = "@\(userProfileThatIsOpen!.username!)"
         }
 
     }
@@ -458,6 +479,9 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if userProfileThatIsOpen == nil {
+            return 0
+        }
         return userProfileThatIsOpen!.posts!.count
     }
     

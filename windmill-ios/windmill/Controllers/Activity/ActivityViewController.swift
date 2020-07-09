@@ -36,7 +36,15 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
         getActivity()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+        navigationController?.navigationItem.backBarButtonItem = nil
     }
     
     @objc internal func refreshActivity() {
@@ -51,6 +59,9 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
     
     internal func setupUI() {
         tableView.rowHeight = 80.0
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem?.tintColor = .white
     }
     
     // MARK: API Functions
@@ -62,7 +73,11 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
                 let activity = jsonResponse["activity"] as! [[String:Any]]
                 var activities: [Activity] = []
                 for i in 0..<activity.count {
-                    let a = Activity(dictionary: activity[i])
+                    var a = Activity(dictionary: activity[i])
+                    let post = activity[i]["post"] as! [String:Any]
+                    let comment = activity[i]["comment"] as! [String:Any]
+                    a?.post = Post(dictionary: post)
+                    a?.comment = Comment(dictionary: comment)
                     activities.insert(a!, at: 0)
                 }
             
@@ -131,7 +146,21 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: Segues
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
+        if let cell = sender as? ActivityCell {
+            let i = tableView.indexPath(for: cell)!.row
+            let activity = activityData[i]
+            if segue.identifier == "activityToProfileSegue" {
+                let vc = segue.destination as! ProfileViewController
+                vc.currentUserProfile = false
+                vc.fromActivity = true
+                vc.passedUsername = activity.username
+            }
+            else if segue.identifier == "activityToVideoSegue" {
+                let vc = segue.destination as! ChildViewController
+                vc.post = activity.post
+                vc.fromActivity = true
+            }
+        }
     }
     
     // MARK: Table View Delegate Functions
@@ -147,8 +176,14 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "activityCell", for: indexPath) as! ActivityCell
+        let cell = tableView.cellForRow(at: indexPath) as! ActivityCell
         tableView.deselectRow(at: indexPath, animated: true)
+        if cell.activity.type == "FOLLOWED" {
+            performSegue(withIdentifier: "activityToProfileSegue", sender: cell)
+        }
+        else {
+            performSegue(withIdentifier: "activityToVideoSegue", sender: cell)
+        }
     }
 
     

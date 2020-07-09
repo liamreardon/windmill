@@ -18,4 +18,6 @@ class SearchCell: UITableViewCell {
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var displayPicture: UIImageView!
     
+    var user: User?
+    
 }

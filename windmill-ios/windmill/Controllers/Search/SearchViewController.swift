@@ -112,18 +112,18 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let username = KeychainWrapper.standard.string(forKey: "username")
-        if let cell = sender as? UITableViewCell {
+        if let cell = sender as? SearchCell {
             let i = searchTableView.indexPath(for: cell)!.row
             if segue.identifier == "searchToProfileSegue" {
                 let vc = segue.destination as! ProfileViewController
-                if cell.textLabel?.text == username! {
+                if cell.user?.username == username! {
                     vc.currentUserProfile = true
-                    vc.followingUser = self.usersData[i]
+                    vc.otherUser = self.usersData[i]
                     vc.fromSearch = true
                 }
                 else {
                     vc.currentUserProfile = false
-                    vc.followingUser = self.usersData[i]
+                    vc.otherUser = self.usersData[i]
                     vc.fromSearch = true
                 }
             }
@@ -163,15 +163,16 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! SearchCell
+        cell.user = usersData[indexPath.row]
         cell.displayPicture.layer.borderWidth = 1.6
         cell.displayPicture.layer.masksToBounds = false
         cell.displayPicture.layer.borderColor = UIColor.white.cgColor
         cell.displayPicture.layer.cornerRadius = cell.displayPicture.frame.height / 2
         cell.displayPicture.clipsToBounds = true
         cell.displayPicture.sd_imageIndicator = SDWebImageActivityIndicator.white
-        cell.displayPicture.sd_setImage(with: URL(string: usersData[indexPath.item].displaypicture!), placeholderImage: UIImage(named: ""))
+        cell.displayPicture.sd_setImage(with: URL(string: usersData[indexPath.row].displaypicture!), placeholderImage: UIImage(named: ""))
         
-        let numFollowers = usersData[indexPath.item].relations?.followers?.count
+        let numFollowers = usersData[indexPath.row].relations?.followers?.count
         var followersLabel = ""
         if numFollowers == 1 {
             followersLabel = "1 follower"
@@ -182,7 +183,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         
         cell.followersLabel.text = followersLabel
         
-        let numVideos = usersData[indexPath.item].numPosts
+        let numVideos = usersData[indexPath.row].numPosts
         var videosLabel = ""
         if numVideos == 1 {
             videosLabel = "1 video"
@@ -193,8 +194,8 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         
         cell.videosLabel.text = videosLabel
         
-        if usersData[indexPath.item].verified! {
-            let fullString = NSMutableAttributedString(string: "@\(usersData[indexPath.item].username!)")
+        if usersData[indexPath.row].verified! {
+            let fullString = NSMutableAttributedString(string: "@\(usersData[indexPath.row].username!)")
             let image1Attachment = NSTextAttachment()
             let icon = UIImage(systemName: "checkmark.seal.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .bold))?.withTintColor(UIColor(rgb: 0x1da1f2), renderingMode: .alwaysOriginal)
             image1Attachment.image = icon
@@ -203,7 +204,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
             cell.usernameLabel.attributedText = fullString
         }
         else {
-            cell.usernameLabel.text = usersData[indexPath.item].username
+            cell.usernameLabel.text = usersData[indexPath.row].username
         }
         
         return cell

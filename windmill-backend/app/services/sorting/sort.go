@@ -16,3 +16,9 @@ func SortActivities(activities []models.Activity) {
 		return activities[j].Date.Before(activities[i].Date)
 	})
 }
+
+func SortComments(comments []models.Comment) {
+	sort.Slice(comments, func(i, j int) bool {
+		return comments[i].DateAdded.Before(comments[j].DateAdded)
+	})
+}

@@ -59,8 +59,7 @@ func (app *App) setupRoutes() {
 	app.Get("/api/user/{username}", app.handleRequest(handlers.GetUser))
 	app.Put("/api/user/{userId}/dp", app.handleRequest(handlers.UpdateDisplayPicture))
 	app.Post("/api/user/{userId}/posts/{caption}", app.handleRequest(handlers.UploadVideo))
-	app.Post("/api/user/{username}/following/{followingUsername}/{followingStatus}", app.handleRequest(handlers.UserFollowingHandler))
-
+	app.Post("/api/user/{username}/following/{followingUsername}/{followingStatus}", app.handleRequest(handlers.UserFollowing))
 
 	// Search Routes
 	app.Get("/api/search/{substring}", app.handleRequest(handlers.SearchForUser))
@@ -70,8 +69,10 @@ func (app *App) setupRoutes() {
 	app.Get("/api/feed/all", app.handleRequest(handlers.GetUserFollowingFeed))
 
 	// Post Routes
-	app.Post("/api/user/{postUserId}/post/{postId}/likers/{userId}/{likedStatus}", app.handleRequest(handlers.PostLikedHandler))
+	app.Post("/api/user/{postUserId}/post/{postId}/likers/{userId}/{likedStatus}", app.handleRequest(handlers.PostLiked))
 	app.Delete("/api/user/{userId}/post/{postId}", app.handleRequest(handlers.DeletePost))
+	app.Post("/api/user/{postUserId}/post/{postId}/comments/{userId}", app.handleRequest(handlers.PostCommentedOn))
+	app.Get("/api/user/{postUserId}/post/{postId}/comments", app.handleRequest(handlers.GetPostComments))
 
 	// Activity Routes
 	app.Get("/api/user/{userId}/activity", app.handleRequest(handlers.GetActivity))

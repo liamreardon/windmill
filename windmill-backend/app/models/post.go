@@ -17,6 +17,10 @@ type Post struct {
 }
 
 type Comment struct {
+	CommentId string `json:"commentid"`
 	Username string `json:"username"`
+	Verified bool `json:"verified"`
+	UserDisplayPicture string `json:"userdisplay"`
 	CommentData string `json:"commentdata"`
+	DateAdded time.Time `json:"dateAdded"`
 }

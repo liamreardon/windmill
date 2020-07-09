@@ -12,7 +12,8 @@ struct Activity: Decodable {
     var id: String?
     var type: String?
     var username: String?
-    var postId: String?
+    var post: Post?
+    var comment: Comment?
     var body: String?
     var image: String?
     
@@ -21,16 +22,16 @@ struct Activity: Decodable {
         let id = dictionary["id"] as? String
         let type = dictionary["type"] as? String
         let username = dictionary["username"] as? String
-        let postId = dictionary["postId"] as? String
         let body = dictionary["body"] as? String
         let image = dictionary["image"] as? String
         
         self.id = id
         self.type = type
         self.username = username
-        self.postId = postId
         self.body = body
         self.image = image
+        self.post = nil
+        self.comment = nil
     
      }
 }

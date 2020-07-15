@@ -93,8 +93,6 @@ class CommentViewController: UIViewController, UITextViewDelegate, UITableViewDa
         else {
             displayPicture.sd_setImage(with: URL(string: dp!), placeholderImage: UIImage(named: ""))
         }
-        
-        self.tableView.backgroundColor = UIColor.white
     }
     
     internal func setupToolbar() {
@@ -102,12 +100,12 @@ class CommentViewController: UIViewController, UITextViewDelegate, UITableViewDa
         let sendIcon = UIImage(systemName: "arrow.up.circle.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
         
         let cancelButton = UIButton()
-        cancelButton.frame = CGRect(x: 0, y: 0, width: 80, height: 50)
+        cancelButton.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
         cancelButton.setImage(cancelIcon, for: .normal)
         cancelButton.addTarget(self, action: #selector(cancelComment), for: .touchUpInside)
         
         let sendButton = UIButton()
-        sendButton.frame = CGRect(x: 0, y: 0, width: 80, height: 50)
+        sendButton.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
         sendButton.setImage(sendIcon, for: .normal)
         sendButton.addTarget(self, action: #selector(sendComment), for: .touchUpInside)
         
@@ -230,6 +228,7 @@ class CommentViewController: UIViewController, UITextViewDelegate, UITableViewDa
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "commentCell", for: indexPath) as! CommentCell
+        cell.selectionStyle = .none
         cell.update(for: comments[indexPath.row])
         return cell
     }

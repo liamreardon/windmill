@@ -55,6 +55,10 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if currentUserProfile {
+            followButton.isHidden = true
+        }
+        
         collectionView.delegate = self
         collectionView.dataSource = self
         GIDSignIn.sharedInstance()?.presentingViewController = self
@@ -69,32 +73,21 @@ class ProfileViewController: UIViewController, UICollectionViewDelegate, UIColle
         
         refreshControl.addTarget(self, action: #selector(refreshCollection), for: .valueChanged)
         
-        if currentUserProfile {
-            let username = KeychainWrapper.standard.string(forKey: "username")
-            getUser(username: username!)
-            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dpTapped))
-            displayPicture.isUserInteractionEnabled = true
-            displayPicture.addGestureRecognizer(tapGestureRecognizer)
-        }
-        else {
-            if fromSearch {
-                getUser(username: otherUser!.username!)
-            }
-            else if fromActivity {
-                getUser(username: passedUsername!)
-            }
-            
-        }
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dpTapped))
+        displayPicture.isUserInteractionEnabled = true
+        displayPicture.addGestureRecognizer(tapGestureRecognizer)
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         
         if currentUserProfile {
+            followButton.isHidden = true
             let username = KeychainWrapper.standard.string(forKey: "username")
             getUser(username: username!)
         }
         else {
+            followButton.isHidden = false
             if fromSearch {
                 getUser(username: otherUser!.username!)
             }

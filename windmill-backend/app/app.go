@@ -50,6 +50,7 @@ func (app *App) Init() {
 
 // Sets up routes
 func (app *App) setupRoutes() {
+
 	// Auth routes
 	app.Post("/api/auth/login", app.handleRequest(handlers.Login))
 	app.Post("/api/auth/signup", app.handleRequest(handlers.SignUp))
@@ -57,22 +58,23 @@ func (app *App) setupRoutes() {
 	// User Routes
 	app.Get("/api/user/{userId}/dp", app.handleRequest(handlers.GetDisplayPicture))
 	app.Get("/api/user/{username}", app.handleRequest(handlers.GetUser))
-	app.Put("/api/user/{userId}/dp", app.handleRequest(handlers.UpdateDisplayPicture))
 	app.Post("/api/user/{userId}/posts/{caption}", app.handleRequest(handlers.UploadVideo))
 	app.Post("/api/user/{username}/following/{followingUsername}/{followingStatus}", app.handleRequest(handlers.UserFollowing))
+	app.Put("/api/user/{userId}/dp", app.handleRequest(handlers.UpdateDisplayPicture))
 
 	// Search Routes
 	app.Get("/api/search/{substring}", app.handleRequest(handlers.SearchForUser))
 
 	// Feed Routes
 	app.Get("/api/feed/{username}", app.handleRequest(handlers.GetUserFeed))
-	app.Get("/api/feed/all", app.handleRequest(handlers.GetUserFollowingFeed))
+	app.Get("/api/feed/{username}/all", app.handleRequest(handlers.GetUserFollowingFeed))
 
 	// Post Routes
-	app.Post("/api/user/{postUserId}/post/{postId}/likers/{userId}/{likedStatus}", app.handleRequest(handlers.PostLiked))
-	app.Delete("/api/user/{userId}/post/{postId}", app.handleRequest(handlers.DeletePost))
-	app.Post("/api/user/{postUserId}/post/{postId}/comments/{userId}", app.handleRequest(handlers.PostCommentedOn))
 	app.Get("/api/user/{postUserId}/post/{postId}/comments", app.handleRequest(handlers.GetPostComments))
+	app.Post("/api/user/{postUserId}/post/{postId}/likers/{userId}/{likedStatus}", app.handleRequest(handlers.PostLiked))
+	app.Post("/api/user/{postUserId}/post/{postId}/comments/{userId}", app.handleRequest(handlers.PostCommentedOn))
+	app.Delete("/api/user/{userId}/post/{postId}", app.handleRequest(handlers.DeletePost))
+	app.Delete("/api/user/{postUserId}/post/{postId}/comments/{userId}", app.handleRequest(handlers.DeleteComment))
 
 	// Activity Routes
 	app.Get("/api/user/{userId}/activity", app.handleRequest(handlers.GetActivity))

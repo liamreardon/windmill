@@ -58,13 +58,13 @@ class HomeViewController: PageboyViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        if pageControllers.count == 0 { return }
-        let vc = pageControllers[index]
-        vc.stop()
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-
+        if pageControllers.count == 0 { return }
+        let vc = pageControllers[index]
+        vc.stop()
     }
     
     @objc func refresh() {
@@ -94,20 +94,20 @@ class HomeViewController: PageboyViewController {
     
     func updateVideoLoop(index: Int, direction: PageboyViewController.NavigationDirection) {
 
-        let vc = pageControllers[index]
-        
-        switch direction {
-        case .forward:
-            let prevVC = pageControllers[index-1]
-            prevVC.stop()
-        case .reverse:
-            let prevVC = pageControllers[index+1]
-            prevVC.stop()
-        default:
-            print("default")
-        }
-        
-        vc.play()
+//        let vc = pageControllers[index]
+//
+//        switch direction {
+//        case .forward:
+//            let prevVC = pageControllers[index-1]
+//            prevVC.stop()
+//        case .reverse:
+//            let prevVC = pageControllers[index+1]
+//            prevVC.stop()
+//        default:
+//            print("default")
+//        }
+//
+//        vc.play()
     }
 
     // MARK: API Functions
@@ -119,10 +119,11 @@ class HomeViewController: PageboyViewController {
         
         let username = KeychainWrapper.standard.string(forKey: "username")
         
-        feedManager.getUserFeed(username: username!) { (data) in
+        feedManager.getAllFeed(username: username!) { (data) in
             
             do {
                 let jsonResponse = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:Any]
+                print(jsonResponse)
                 let posts = jsonResponse["posts"] as! [[String:Any]]
                 for i in 0..<(posts.count) {
                     let p = Post(dictionary: posts[i])!

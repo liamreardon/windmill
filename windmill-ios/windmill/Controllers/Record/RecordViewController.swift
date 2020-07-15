@@ -106,7 +106,6 @@ extension RecordViewController {
                 nextLevel.videoStabilizationMode = .off
                 nextLevel.frameRate = 60
                 
-                // video configuration
                 nextLevel.videoConfiguration.maximumCaptureDuration = CMTime(seconds: 12.0, preferredTimescale: 600)
                 nextLevel.videoConfiguration.bitRate = 15000000
                 nextLevel.videoConfiguration.maxKeyFrameInterval = 30

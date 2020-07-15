@@ -19,7 +19,7 @@ class ChildViewController: UIViewController {
     @IBOutlet weak var numberOfLikesLabel: UILabel!
     
     @IBOutlet weak var commentButton: UIImageView!
-    @IBOutlet weak var numberOfCommentsButton: UILabel!
+    @IBOutlet weak var numberOfCommentsLabel: UILabel!
     
     @IBOutlet weak var shareButton: UIImageView!
     
@@ -61,20 +61,20 @@ class ChildViewController: UIViewController {
         super.viewDidLoad()
         
         prepareVideo()
-        isChecked = didUserLikePost()
         showSpinner(onView: childView)
+        isChecked = didUserLikePost()
         initGraphics()
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        
+    override func viewDidAppear(_ animated: Bool) {
+        if fromActivity {
+            play()
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        if fromActivity {
-            pause()
-        }
+        stop()
     }
     
     // MARK: User Interaction
@@ -103,6 +103,10 @@ class ChildViewController: UIViewController {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "commentViewController") as! CommentViewController
         vc.post = post
         self.present(vc, animated: true, completion: nil)
+    }
+    
+    @objc internal func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
 
     // MARK: Post Data
@@ -157,6 +161,17 @@ class ChildViewController: UIViewController {
         
         let shareIcon = UIImage(systemName: "arrowshape.turn.up.right.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
         shareButton.image = shareIcon
+        
+        let icon = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        let button = UIButton()
+        button.frame = CGRect(x:0, y:0, width: 51, height: 31)
+        button.setImage(icon, for: .normal)
+        button.addTarget(self, action: #selector(self.backButtonTapped), for: .touchUpInside)
+        let barButton = UIBarButtonItem()
+        barButton.customView = button
+        self.navigationItem.leftBarButtonItem = barButton
+        
+        numberOfCommentsLabel.textColor = UIColor(displayP3Red: 1.0, green: 1.0, blue: 1.0, alpha: 0)
 
     }
     
@@ -183,12 +198,10 @@ class ChildViewController: UIViewController {
     
     func prepareVideo() {
         let playerItem = AVPlayerItem(url: URL.init(string: post!.url!)!)
-        playerItem.addObserver(self,
-                               forKeyPath: #keyPath(AVPlayerItem.status),
-                               options: [.old, .new],
-                               context: &playerItemContext)
         
         queuePlayer = AVQueuePlayer(playerItem: playerItem)
+        setupAVPlayer(player: queuePlayer)
+
         playerLayer = AVPlayerLayer(player: queuePlayer)
         guard let playerLayer = playerLayer else {return}
         guard let queuePlayer = queuePlayer else {return}
@@ -198,7 +211,15 @@ class ChildViewController: UIViewController {
         playerLayer.frame = CGRect.init(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.height)
         
         view.layer.insertSublayer(playerLayer, at: 0)
-        
+    }
+    
+    private func setupAVPlayer(player: AVQueuePlayer) {
+        player.addObserver(self, forKeyPath: "status", options: [.old, .new], context: nil)
+        if #available(iOS 10.0, *) {
+            player.addObserver(self, forKeyPath: "timeControlStatus", options: [.old, .new], context: nil)
+        } else {
+            player.addObserver(self, forKeyPath: "rate", options: [.old, .new], context: nil)
+        }
     }
     
     func play() {
@@ -228,47 +249,28 @@ class ChildViewController: UIViewController {
     
     // MARK: Observers
     
-    override func observeValue(forKeyPath keyPath: String?,
-                               of object: Any?,
-                               change: [NSKeyValueChangeKey : Any]?,
-                               context: UnsafeMutableRawPointer?) {
-
-        // Only handle observations for the playerItemContext
-        guard context == &playerItemContext else {
-            super.observeValue(forKeyPath: keyPath,
-                               of: object,
-                               change: change,
-                               context: context)
-            return
-        }
-
-        if keyPath == #keyPath(AVPlayerItem.status) {
-            let status: AVPlayerItem.Status
-            if let statusNumber = change?[.newKey] as? NSNumber {
-                status = AVPlayerItem.Status(rawValue: statusNumber.intValue)!
-            } else {
-                status = .unknown
-            }
-            
-            // Switch over status value
-            switch status {
-            case .readyToPlay:
-                // Player item is ready to play.
-                removeSpinner()
-                if fromActivity {
-                    play()
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if object as AnyObject? === queuePlayer {
+            if keyPath == "status" {
+                if queuePlayer.status == .readyToPlay {
+                    
                 }
-                print("playing")
-            case .failed:
-                // Player item failed. See error.
-                print("failed")
-            case .unknown:
-                // Player item is not yet ready.
-                print("unknown")
-            @unknown default:
-                print("player default")
-            }
+            } else if keyPath == "timeControlStatus" {
+                if #available(iOS 10.0, *) {
+                    if queuePlayer.timeControlStatus == .playing {
+                        removeSpinner()
+                    } else {
+               
+                    }
+                }
+            } else if keyPath == "rate" {
+                if queuePlayer.rate > 0 {
             
+                    removeSpinner()
+                } else {
+                
+                }
+            }
         }
     }
 }

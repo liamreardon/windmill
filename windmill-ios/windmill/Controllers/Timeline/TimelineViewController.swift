@@ -98,20 +98,20 @@ class TimelineViewController: PageboyViewController {
     
     func updateVideoLoop(index: Int, direction: PageboyViewController.NavigationDirection) {
 
-        let vc = pageControllers[index]
-        
-        switch direction {
-        case .forward:
-            let prevVC = pageControllers[index-1]
-            prevVC.stop()
-        case .reverse:
-            let prevVC = pageControllers[index+1]
-            prevVC.stop()
-        default:
-            print("")
-        }
-        
-        vc.play()
+//        let vc = pageControllers[index]
+//
+//        switch direction {
+//        case .forward:
+//            let prevVC = pageControllers[index-1]
+//            prevVC.stop()
+//        case .reverse:
+//            let prevVC = pageControllers[index+1]
+//            prevVC.stop()
+//        default:
+//            print("")
+//        }
+//
+//        vc.play()
     }
 
     // MARK: API Functions
@@ -214,6 +214,10 @@ extension TimelineViewController: PageboyViewControllerDelegate {
                                willScrollToPageAt index: Int,
                                direction: PageboyViewController.NavigationDirection,
                                animated: Bool) {
+        if feedLoaded {
+            self.profileTapIndex = index
+            updateVideoLoop(index: index, direction: direction)
+        }
         
 
     }
@@ -230,10 +234,7 @@ extension TimelineViewController: PageboyViewControllerDelegate {
                                didScrollToPageAt index: Int,
                                direction: PageboyViewController.NavigationDirection,
                                animated: Bool) {
-        if feedLoaded {
-            self.profileTapIndex = index
-            updateVideoLoop(index: index, direction: direction)
-        }
+
     }
     
     func pageboyViewController(_ pageboyViewController: PageboyViewController,

@@ -14,7 +14,8 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: IVARS
     
     @IBOutlet weak var tableView: UITableView!
-
+    @IBOutlet weak var activityLabel: UILabel!
+    
     internal var activityData: [Activity] = []
     internal var itemsToInsert: [Activity] = []
     let refreshControl = UIRefreshControl()
@@ -37,11 +38,15 @@ class ActivityViewController: UIViewController, UITableViewDataSource, UITableVi
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        activityLabel.isHidden = false
+        tableView.isHidden = false
         navigationController?.setNavigationBarHidden(true, animated: animated)
         getActivity()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        activityLabel.isHidden = true
+        tableView.isHidden = true
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
         navigationController?.navigationItem.backBarButtonItem = nil

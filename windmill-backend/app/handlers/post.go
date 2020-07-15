@@ -68,7 +68,7 @@ func PostCommentedOn(client *mongo.Client, w http.ResponseWriter, r *http.Reques
 
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, map[string]interface{}{
-			"message":"error uploading file",
+			"message":"error reading payload",
 		})
 		return
 	}
@@ -115,5 +115,9 @@ func GetPostComments(client *mongo.Client, w http.ResponseWriter, r *http.Reques
 	respondJSON(w, http.StatusOK, map[string]interface{}{
 		"comments":comments,
 	})
+}
+
+func DeleteComment(client *mongo.Client, w http.ResponseWriter, r *http.Request) {
+
 }
 

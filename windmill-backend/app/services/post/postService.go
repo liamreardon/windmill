@@ -161,6 +161,10 @@ func AddCommentToPost(collection *mongo.Collection, ctx context.Context, postUse
 		return err
 	}
 
+	if userId == postUserId {
+		return nil
+	}
+
 	_, err = collection.UpdateOne(ctx, bson.M{"userid":postUserId, "posts.postid":postId}, bson.D{
 		{"$push", bson.D{
 			{"activity", activity},

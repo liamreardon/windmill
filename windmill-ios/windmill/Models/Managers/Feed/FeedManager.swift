@@ -31,6 +31,22 @@ struct FeedManager {
         }
     }
     
-    
+    func getAllFeed(username: String, completionHandler: @escaping (_ data: Data?) -> Void) {
+        if let url = URL(string: API_URL+username+"/all") {
+            let session = URLSession.shared
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            
+            let task = session.dataTask(with: request as URLRequest, completionHandler: {
+                (data, response, error) -> Void in
+                if let data = data {
+                    completionHandler(data)
+                } else if let error = error {
+                    print(error.localizedDescription)
+                }
+            })
+            task.resume()
+        }
+    }
     
 }

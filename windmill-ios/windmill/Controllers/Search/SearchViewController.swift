@@ -56,19 +56,23 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     // MARK: User Interface
     
     func initGraphics() {
-        let green = UIColor(rgb: 0x00B894)
-        
-        searchBar.layer.borderColor = green.cgColor
-        searchBar.layer.borderWidth = 1.0
+
         searchBar.layer.cornerRadius = 10.0
         
         searchTableView.rowHeight = 80.0
         
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem?.tintColor = .white
+        
+        searchTableView.keyboardDismissMode = .interactive
     
     }
     
+    // MARK: User Interaction
+    
+    @objc internal func dismissKeyboard() {
+        view.endEditing(true)
+    }
     
     // MARK: API Functions
     
@@ -195,9 +199,9 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
         cell.videosLabel.text = videosLabel
         
         if usersData[indexPath.row].verified! {
-            let fullString = NSMutableAttributedString(string: "@\(usersData[indexPath.row].username!)")
+            let fullString = NSMutableAttributedString(string: "\(usersData[indexPath.row].username!)")
             let image1Attachment = NSTextAttachment()
-            let icon = UIImage(systemName: "checkmark.seal.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 16, weight: .bold))?.withTintColor(UIColor(rgb: 0x1da1f2), renderingMode: .alwaysOriginal)
+            let icon = UIImage(systemName: "checkmark.seal.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 11, weight: .bold))?.withTintColor(UIColor(rgb: 0x1da1f2), renderingMode: .alwaysOriginal)
             image1Attachment.image = icon
             let image1String = NSAttributedString(attachment: image1Attachment)
             fullString.append(image1String)

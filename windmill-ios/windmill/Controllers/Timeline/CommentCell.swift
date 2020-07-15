@@ -36,8 +36,7 @@ class CommentCell: UITableViewCell {
         }
         
         commentLabel.text = comment.commentData
-        commentImage.layer.borderWidth = 1.6
-        commentImage.layer.borderColor = UIColor.white.cgColor
+        
         commentImage.contentMode = UIView.ContentMode.scaleAspectFill
         
         commentImage.layer.cornerRadius = commentImage.frame.height / 2

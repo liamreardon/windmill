@@ -30,7 +30,7 @@ struct Post: Decodable {
         let likers = dictionary["likers"] as? [String]
         let url = dictionary["url"] as? String
         let thumbnail = dictionary["thumbnail"] as? String
-        let dateAdded = dictionary["dateadded"] as? String
+        let dateAdded = dictionary["dateAdded"] as? String
       
         self.id = id
         self.userId = userId

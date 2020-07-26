@@ -59,6 +59,12 @@ func GetConfig() *Config {
 go run main.go
 ```
 
+## Project
+
+- Have an idea for a feature? Open an [issue](https://github.com/liamreardon/windmill/issues).
+- Found a bug? Open an [issue](https://github.com/liamreardon/windmill/issues).
+- If you want to contribute to the project, submit a pull request.
+
 ## Libraries Used
 
 ### Swift

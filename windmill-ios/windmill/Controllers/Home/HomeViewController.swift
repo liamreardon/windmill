@@ -68,8 +68,15 @@ class HomeViewController: PageboyViewController {
     }
     
     @objc func refresh() {
-        self.refreshControl.beginRefreshing()
-        self.reloadData()
+        for i in 0..<pageControllers.count {
+            let vc = pageControllers[i]
+            if vc.playerLoaded {
+                vc.unload()
+            }
+            self.deletePage(at: i)
+            
+        }
+        getFeed()
     }
     
     // MARK: Pageboy Data Source
@@ -123,7 +130,6 @@ class HomeViewController: PageboyViewController {
             
             do {
                 let jsonResponse = try JSONSerialization.jsonObject(with: data!, options: []) as! [String:Any]
-                print(jsonResponse)
                 let posts = jsonResponse["posts"] as! [[String:Any]]
                 for i in 0..<(posts.count) {
                     let p = Post(dictionary: posts[i])!
@@ -200,9 +206,10 @@ extension HomeViewController: PageboyViewControllerDelegate {
                                didScrollTo position: CGPoint,
                                direction: PageboyViewController.NavigationDirection,
                                animated: Bool) {
-        print(position.y)
+       
 
-        if position.y < -0.10 {
+        if position.y < -0.07 {
+            print(position.y)
             self.refresh()
         }
         

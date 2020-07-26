@@ -10,6 +10,7 @@ import UIKit
 import AVKit
 import AVFoundation
 import SwiftKeychainWrapper
+import Photos
 
 class ChildViewController: UIViewController {
     
@@ -34,6 +35,7 @@ class ChildViewController: UIViewController {
     fileprivate var playerLayer: AVPlayerLayer!
     fileprivate var playbackLooper: AVPlayerLooper!
     fileprivate var playerItemContext = 0
+    public var playerLoaded: Bool = false
     
     var index: Int?
     var isChecked: Bool = false
@@ -46,6 +48,7 @@ class ChildViewController: UIViewController {
     let userId = KeychainWrapper.standard.string(forKey: "userId")
     let likeTapRec = UITapGestureRecognizer()
     let commentTapRec = UITapGestureRecognizer()
+    let shareTapRec = UITapGestureRecognizer()
     
     let commentViewController = CommentViewController()
     
@@ -99,15 +102,52 @@ class ChildViewController: UIViewController {
         }
     }
     
+    
     @objc func commentTapped() {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "commentViewController") as! CommentViewController
         vc.post = post
         self.present(vc, animated: true, completion: nil)
     }
     
+    @objc func shareTapped() {
+        let actionSheet = UIAlertController(title: "Share Options", message: nil, preferredStyle: .actionSheet)
+
+        let saveVideoAction = UIAlertAction(title: "Save To Camera Roll", style: .default) { (action) in
+            self.saveToCameraRoll()
+        }
+        
+        let deleteVideoAction = UIAlertAction(title: "Delete Video", style: .destructive) { (action) in
+            let deleteActionSheet = UIAlertController(title: "Are you sure you want to delete this video?", message: nil, preferredStyle: .actionSheet)
+            let yesAction = UIAlertAction(title: "Yes", style: .destructive) { (action) in
+                self.deleteVideo()
+            }
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+                return
+            }
+            
+            deleteActionSheet.addAction(yesAction)
+            deleteActionSheet.addAction(cancelAction)
+            
+            self.present(deleteActionSheet, animated: true, completion: nil)
+            
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+            return
+        }
+
+        actionSheet.addAction(saveVideoAction)
+        actionSheet.addAction(deleteVideoAction)
+        actionSheet.addAction(cancelAction)
+
+        self.present(actionSheet, animated: true, completion: nil)
+        
+    }
+    
     @objc internal func backButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
+    
 
     // MARK: Post Data
     
@@ -151,10 +191,13 @@ class ChildViewController: UIViewController {
         captionLabel.text = post?.caption
         likeTapRec.addTarget(self, action: #selector(ChildViewController.likeTapped))
         commentTapRec.addTarget(self, action: #selector(ChildViewController.commentTapped))
+        shareTapRec.addTarget(self, action: #selector(ChildViewController.shareTapped))
         likeBtn.addGestureRecognizer(likeTapRec)
         commentButton.addGestureRecognizer(commentTapRec)
+        shareButton.addGestureRecognizer(shareTapRec)
         likeBtn.isUserInteractionEnabled = true
         commentButton.isUserInteractionEnabled = true
+        shareButton.isUserInteractionEnabled = true
         
         let commentIcon = UIImage(systemName: "bubble.left.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 25, weight: .bold))?.withTintColor(.white, renderingMode: .alwaysOriginal)
         commentButton.image = commentIcon
@@ -190,8 +233,11 @@ class ChildViewController: UIViewController {
     }
     
     func removeSpinner() {
-        vSpinner?.removeFromSuperview()
-        vSpinner = nil
+        DispatchQueue.main.async {
+            self.vSpinner?.removeFromSuperview()
+            self.vSpinner = nil
+        }
+
     }
     
     // MARK: Player Functions
@@ -211,6 +257,8 @@ class ChildViewController: UIViewController {
         playerLayer.frame = CGRect.init(x: 0, y: 0, width: view.frame.size.width, height: view.frame.size.height)
         
         view.layer.insertSublayer(playerLayer, at: 0)
+        
+        playerLoaded = true
     }
     
     private func setupAVPlayer(player: AVQueuePlayer) {
@@ -239,6 +287,9 @@ class ChildViewController: UIViewController {
     }
      
     func unload() {
+        safeRemoveObserver(queuePlayer, forKeyPath: "status")
+//        safeRemoveObserver(queuePlayer, forKeyPath: "timeControlStatus")
+//        safeRemoveObserver(queuePlayer, forKeyPath: "rate")
         isPaused = true
         playerLayer?.removeFromSuperlayer()
         playerLayer = nil
@@ -273,4 +324,35 @@ class ChildViewController: UIViewController {
             }
         }
     }
+    
+    // MARK: Share Options
+    
+    func saveToCameraRoll() {
+        self.showSpinner(onView: view)
+        if let url = URL(string: post!.url!), let urlData = NSData(contentsOf: url) {
+          let galleryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0];
+          let filePath="\(galleryPath)/nameX.mp4"
+            DispatchQueue.main.async {
+             urlData.write(toFile: filePath, atomically: true)
+                PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL:
+                URL(fileURLWithPath: filePath))
+             }) {
+                success, error in
+                if success {
+                    self.removeSpinner()
+                    print("success")
+                } else {
+                    self.removeSpinner()
+                    print(error?.localizedDescription)
+                }
+             }
+          }
+       }
+    }
+    
+    func deleteVideo() {
+        
+    }
+    
 }

@@ -7,15 +7,15 @@
 | :video_camera: | Record "TikTok" style looping videos |  
 | :pencil2: | Add custom text and captions to your videos |
 | :bust_in_silhouette: | Create an account and customize your profile |
-| :green_heart: | Follow friends and like their videos | 
-| :newspaper: | Browse newsfeed of videos from users you follow | 
+| :green_heart: | Follow friends and like their videos |
+| :newspaper: | Browse newsfeed of videos from users you follow |
 | :wave: | View activity feed to see who is interacting with your profile |   
 | :bird: | [Swift 5](https://developer.apple.com/swift/) |  
 | :arrow_right: | [Go](https://golang.org/) |  
 
 ## Quick Start
 
-### Swift 
+### Swift
 
 ```swift
 # Install dependencies
@@ -35,6 +35,23 @@ go build
 # Install dependencies
 
 go install
+```
+
+```go
+# Create .env file in windmill-backend directory and add MongoDB URI + AWS S3 vars
+
+touch .env
+
+# Include these lines but swap in your own urls and vars
+
+DB_URI=mongodb://localhost:27017/myproject (this could be the uri for a local instance or MongoDB Atlas)
+
+AWS_S3_BASE=https://myproject.s3.us-east-2.amazonaws.com/users/
+
+AWS_S3_REGION=us-east-2
+
+AWS_S3_BUCKET=my-project
+
 ```
 
 ```go
@@ -69,7 +86,7 @@ go run main.go
 
 ### Swift
 
-* [NextLevel](https://github.com/NextLevel/NextLevel) - Rad Media Capture in Swift 
+* [NextLevel](https://github.com/NextLevel/NextLevel) - Rad Media Capture in Swift
 * [Pageboy](https://github.com/uias/Pageboy) - A simple, highly informative page view controller
 * [RPCircularProgress](https://github.com/iwasrobbed/RPCircularProgress) - Circular progress UIView subclass with UIProgressView properties
 * [SwiftKeychainWrapper](https://github.com/jrendel/SwiftKeychainWrapper) - A simple wrapper for the iOS Keychain to allow you to use it in a similar fashion to User Defaults

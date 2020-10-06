@@ -13,17 +13,33 @@
 | :bird: | [Swift 5](https://developer.apple.com/swift/) |  
 | :arrow_right: | [Go](https://golang.org/) |  
 
-## Quick Start
+# Quick Start
 
-### Swift
+## Swift
 
 ```swift
-# Install dependencies
+# Update and install deps
 
+pod update
 pod install
 ```
 
-### Go
+
+### Obtain Google Client ID and URL Scheme for GoogleSignIn
+
+Navigate [here](https://developers.google.com/identity/sign-in/ios/start-integrating) to get both of those (https://developers.google.com/identity/sign-in/ios/start-integrating) and follow all instructions
+
+```
+# Add credentials and other config settings to Config.plist file
+
+	ROOT_URL = http://localhost:8080
+	BUCKET_URL = https://my-project.s3.us-east-2.amazonaws.com
+	GOOGLE_CLIENT_ID = ENTER ID HERE
+	APP_BUNDLE_ID = io.liamreardon.windmill.dev
+	APP_NAME = windmill
+```
+
+## Go
 
 ```go
 # Build go.mod
@@ -37,7 +53,7 @@ go build
 go install
 ```
 
-```go
+```
 # Create .env file in windmill-backend directory and add MongoDB URI + AWS S3 vars
 
 touch .env

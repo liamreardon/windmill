@@ -1,30 +1,30 @@
 PODS:
-  - AppAuth (1.3.0):
-    - AppAuth/Core (= 1.3.0)
-    - AppAuth/ExternalUserAgent (= 1.3.0)
-  - AppAuth/Core (1.3.0)
-  - AppAuth/ExternalUserAgent (1.3.0)
+  - AppAuth (1.4.0):
+    - AppAuth/Core (= 1.4.0)
+    - AppAuth/ExternalUserAgent (= 1.4.0)
+  - AppAuth/Core (1.4.0)
+  - AppAuth/ExternalUserAgent (1.4.0)
   - GoogleSignIn (5.0.2):
     - AppAuth (~> 1.2)
     - GTMAppAuth (~> 1.0)
     - GTMSessionFetcher/Core (~> 1.1)
-  - GTMAppAuth (1.0.0):
-    - AppAuth/Core (~> 1.0)
-    - GTMSessionFetcher (~> 1.1)
-  - GTMSessionFetcher (1.3.1):
-    - GTMSessionFetcher/Full (= 1.3.1)
-  - GTMSessionFetcher/Core (1.3.1)
-  - GTMSessionFetcher/Full (1.3.1):
-    - GTMSessionFetcher/Core (= 1.3.1)
+  - GTMAppAuth (1.1.0):
+    - AppAuth/Core (~> 1.4)
+    - GTMSessionFetcher (~> 1.4)
+  - GTMSessionFetcher (1.4.0):
+    - GTMSessionFetcher/Full (= 1.4.0)
+  - GTMSessionFetcher/Core (1.4.0)
+  - GTMSessionFetcher/Full (1.4.0):
+    - GTMSessionFetcher/Core (= 1.4.0)
   - lottie-ios (3.1.8)
-  - NextLevel (0.16.3)
-  - Pageboy (3.6.0)
+  - NextLevel (0.16.4)
+  - Pageboy (3.6.1)
   - Pastel (0.6.0)
   - RPCircularProgress (0.5.0)
-  - SDWebImage (5.8.1):
-    - SDWebImage/Core (= 5.8.1)
-  - SDWebImage/Core (5.8.1)
-  - SwiftKeychainWrapper (3.4.0)
+  - SDWebImage (5.9.2):
+    - SDWebImage/Core (= 5.9.2)
+  - SDWebImage/Core (5.9.2)
+  - SwiftKeychainWrapper (4.0.1)
 
 DEPENDENCIES:
   - GoogleSignIn
@@ -51,18 +51,18 @@ SPEC REPOS:
     - SwiftKeychainWrapper
 
 SPEC CHECKSUMS:
-  AppAuth: 73574f3013a1e65b9601a3ddc8b3158cce68c09d
+  AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
-  GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
-  GTMSessionFetcher: cea130bbfe5a7edc8d06d3f0d17288c32ffe9925
+  GTMAppAuth: 197a8dabfea5d665224aa00d17f164fc2248dab9
+  GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
   lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
-  NextLevel: 76dab336f758e6a98ef6b4917de1481324cffe04
-  Pageboy: 490c26be405987158660bb45ee2f404567395007
+  NextLevel: f84ecba5c546a87e245809e0523ef3a24897323b
+  Pageboy: 29a2d474ad99404b4d77f325e0ab6d705930a4fb
   Pastel: 814f081efbe2859c37e65ee44f396e6e5be88619
   RPCircularProgress: 4499d4a1453dfbd3fe5bd8c6f344fd51cff3ad00
-  SDWebImage: e3eae2eda88578db0685a0c88597fdadd9433f05
-  SwiftKeychainWrapper: 6fc49fbf7d4a6b0772917acb0e53a1639f6078d6
+  SDWebImage: 0b42b8719ab0c5257177d5894306e8a336b21cbb
+  SwiftKeychainWrapper: 807ba1d63c33a7d0613288512399cd1eda1e470c
 
-PODFILE CHECKSUM: 62b45508be7e52faf49fe28c6eb0840bc1af7832
+PODFILE CHECKSUM: 1308dbfb9d4120a9827c8085d0daaa5684b96a73
 
 COCOAPODS: 1.8.4

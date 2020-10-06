@@ -160,67 +160,7 @@ strip_invalid_archs() {
 }
 
 
-if [[ "$CONFIGURATION" == "Debug (Development)" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/GTMAppAuth/GTMAppAuth.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/NextLevel/NextLevel.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Pageboy/Pageboy.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Pastel/Pastel.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/RPCircularProgress/RPCircularProgress.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SwiftKeychainWrapper/SwiftKeychainWrapper.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework"
-fi
-if [[ "$CONFIGURATION" == "Debug (Staging)" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/GTMAppAuth/GTMAppAuth.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/NextLevel/NextLevel.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Pageboy/Pageboy.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Pastel/Pastel.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/RPCircularProgress/RPCircularProgress.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SwiftKeychainWrapper/SwiftKeychainWrapper.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework"
-fi
-if [[ "$CONFIGURATION" == "Debug (Production)" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/GTMAppAuth/GTMAppAuth.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/NextLevel/NextLevel.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Pageboy/Pageboy.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Pastel/Pastel.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/RPCircularProgress/RPCircularProgress.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SwiftKeychainWrapper/SwiftKeychainWrapper.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework"
-fi
-if [[ "$CONFIGURATION" == "Release (Development)" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/GTMAppAuth/GTMAppAuth.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/NextLevel/NextLevel.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Pageboy/Pageboy.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Pastel/Pastel.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/RPCircularProgress/RPCircularProgress.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SwiftKeychainWrapper/SwiftKeychainWrapper.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework"
-fi
-if [[ "$CONFIGURATION" == "Release (Staging)" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/GTMAppAuth/GTMAppAuth.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/NextLevel/NextLevel.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Pageboy/Pageboy.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/Pastel/Pastel.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/RPCircularProgress/RPCircularProgress.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/SwiftKeychainWrapper/SwiftKeychainWrapper.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework"
-fi
-if [[ "$CONFIGURATION" == "Release (Production)" ]]; then
+if [[ "$CONFIGURATION" == "Development" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/GTMAppAuth/GTMAppAuth.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework"

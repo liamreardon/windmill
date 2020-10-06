@@ -100,7 +100,6 @@ class LoginViewController: UIViewController, GIDSignInDelegate {
         KeychainWrapper.standard.set(idToken!, forKey: "token")
 
         let authManager = AuthManager()
-        let userManager = UserManager()
         authManager.login(params: dict)
     }
 }

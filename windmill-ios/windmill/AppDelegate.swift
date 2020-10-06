@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UITabBarControllerDelegat
         
         // Initialize sign-in
         GIDSignIn.sharedInstance().clientID = Environment.googleClientId
+
         GIDSignIn.sharedInstance().delegate = self
         
         // Sets background to a blank/empty image

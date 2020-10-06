@@ -96,22 +96,7 @@ EOM
       ;;
   esac
 }
-if [[ "$CONFIGURATION" == "Debug (Development)" ]]; then
-  install_resource "${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle"
-fi
-if [[ "$CONFIGURATION" == "Debug (Staging)" ]]; then
-  install_resource "${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle"
-fi
-if [[ "$CONFIGURATION" == "Debug (Production)" ]]; then
-  install_resource "${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle"
-fi
-if [[ "$CONFIGURATION" == "Release (Development)" ]]; then
-  install_resource "${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle"
-fi
-if [[ "$CONFIGURATION" == "Release (Staging)" ]]; then
-  install_resource "${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle"
-fi
-if [[ "$CONFIGURATION" == "Release (Production)" ]]; then
+if [[ "$CONFIGURATION" == "Development" ]]; then
   install_resource "${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle"
 fi
 

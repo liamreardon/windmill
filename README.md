@@ -32,11 +32,11 @@ Navigate [here](https://developers.google.com/identity/sign-in/ios/start-integra
 ```
 # Add credentials and other config settings to Config.plist file
 
-	ROOT_URL = http://localhost:8080
-	BUCKET_URL = https://my-project.s3.us-east-2.amazonaws.com
-	GOOGLE_CLIENT_ID = ENTER ID HERE
-	APP_BUNDLE_ID = io.liamreardon.windmill.dev
-	APP_NAME = windmill
+ROOT_URL = http://localhost:8080
+BUCKET_URL = https://my-project.s3.us-east-2.amazonaws.com
+GOOGLE_CLIENT_ID = ENTER ID HERE
+APP_BUNDLE_ID = io.liamreardon.windmill.dev
+APP_NAME = windmill
 ```
 
 ## Go

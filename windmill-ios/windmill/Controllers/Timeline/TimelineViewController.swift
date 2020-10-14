@@ -155,7 +155,6 @@ class TimelineViewController: PageboyViewController {
         ai.startAnimating()
         ai.center = spinnerView.center
         
-       
         spinnerView.addSubview(ai)
         onView.addSubview(spinnerView)
         

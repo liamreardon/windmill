@@ -15,6 +15,15 @@
 
 # Quick Start
 
+## Data Stores
+
+### - MongoDB - 
+
+First you will need to create a MongoDB instance, this can be either local or via MongoDB Atlas. Note your database URL. 
+
+### - AWS S3 -
+Once this is done, you will need to create an AWS S3 bucket and set the store to public. Follow this link for instructions on how to make this public (https://docs.aws.amazon.com/AmazonS3/latest/user-guide/block-public-access-bucket.html).
+
 ## Swift
 
 ```swift

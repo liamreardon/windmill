@@ -20,6 +20,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     
     var timer: Timer!
     var usersData: [User] = []
+    var vSpinner: UIView?
     
     let searchManager = SearchManager()
     let refreshControl = UIRefreshControl()
@@ -68,6 +69,27 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     
     }
     
+    func showSpinner(onView : UIView) {
+        let spinnerView = UIView.init(frame: onView.bounds)
+        let ai = UIActivityIndicatorView.init(style: UIActivityIndicatorView.Style.large)
+        ai.color = .white
+        ai.startAnimating()
+        ai.center = spinnerView.center
+       
+        spinnerView.addSubview(ai)
+        onView.addSubview(spinnerView)
+        
+        vSpinner = spinnerView
+    }
+    
+    func removeSpinner() {
+        DispatchQueue.main.async {
+            self.vSpinner?.removeFromSuperview()
+            self.vSpinner = nil
+        }
+
+    }
+    
     // MARK: User Interaction
     
     @objc internal func dismissKeyboard() {
@@ -77,6 +99,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     // MARK: API Functions
     
     func searchUsers() {
+        showSpinner(onView: view)
         searchManager.searchForUsers(substring: searchBar.text!) { (data) in
             do {
                 self.usersData = []
@@ -99,11 +122,13 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
                 }
                 
                 DispatchQueue.main.async {
+                    self.removeSpinner()
                     self.searchTableView.reloadData()
                 }
                 
             } catch let parsingError {
-                 print("Error", parsingError)
+                self.removeSpinner()
+                print("Error", parsingError)
             }
         }
     }
@@ -142,6 +167,7 @@ class SearchViewController: UIViewController, UISearchBarDelegate, UITableViewDa
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText == "" {
+            removeSpinner()
             usersData = []
             searchTableView.reloadData()
             return

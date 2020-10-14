@@ -20,6 +20,7 @@
 		6B496ACA249E6BD600348CA9 /* Timeline in Resources */ = {isa = PBXBuildFile; fileRef = 6B496AC9249E6BD600348CA9 /* Timeline */; };
 		6B496ACF24A16AD000348CA9 /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B496ACE24A16AD000348CA9 /* ActivityViewController.swift */; };
 		6B496AD124A16DB800348CA9 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B496AD024A16DB800348CA9 /* SearchCell.swift */; };
+		6B4A75DE2537A379008C42B5 /* 719-loading.json in Resources */ = {isa = PBXBuildFile; fileRef = 6B4A75DD2537A379008C42B5 /* 719-loading.json */; };
 		6B5F538C245A9DB400A2610E /* UserCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5F538B245A9DB400A2610E /* UserCreationViewController.swift */; };
 		6B642A7D24868F7600F760D8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B642A7C24868F7600F760D8 /* User.swift */; };
 		6B642A81248698E400F760D8 /* Relations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B642A80248698E400F760D8 /* Relations.swift */; };
@@ -88,6 +89,7 @@
 		6B496AC9249E6BD600348CA9 /* Timeline */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Timeline; sourceTree = "<group>"; };
 		6B496ACE24A16AD000348CA9 /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
 		6B496AD024A16DB800348CA9 /* SearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
+		6B4A75DD2537A379008C42B5 /* 719-loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "719-loading.json"; sourceTree = "<group>"; };
 		6B5F538B245A9DB400A2610E /* UserCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCreationViewController.swift; sourceTree = "<group>"; };
 		6B642A7C24868F7600F760D8 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6B642A80248698E400F760D8 /* Relations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Relations.swift; sourceTree = "<group>"; };
@@ -228,6 +230,14 @@
 			path = Activity;
 			sourceTree = "<group>";
 		};
+		6B4A75DC2537A36A008C42B5 /* Lottie Files */ = {
+			isa = PBXGroup;
+			children = (
+				6B4A75DD2537A379008C42B5 /* 719-loading.json */,
+			);
+			path = "Lottie Files";
+			sourceTree = "<group>";
+		};
 		6B642A7B24868F6400F760D8 /* User */ = {
 			isa = PBXGroup;
 			children = (
@@ -319,6 +329,7 @@
 		6B881A6B2450D5E3001466CB /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6B4A75DC2537A36A008C42B5 /* Lottie Files */,
 				6B881A602450C5A0001466CB /* Assets.xcassets */,
 				6B881A6C2450D5EB001466CB /* Fonts */,
 			);
@@ -559,6 +570,7 @@
 				6BDEFC6124A46284007C01C4 /* SofiaPro-UltraLight.ttf in Resources */,
 				6B9B77E2252CBFF600B9401F /* Config.plist in Resources */,
 				6BDEFC5B24A46111007C01C4 /* SofiaPro-Regular.ttf in Resources */,
+				6B4A75DE2537A379008C42B5 /* 719-loading.json in Resources */,
 				6BDEFC5D24A461A2007C01C4 /* SofiaPro-Medium.ttf in Resources */,
 				6BC4F8A42495DCAA0027D3D4 /* WindmillMain.storyboard in Resources */,
 				6BD91BEA2480C4BA00F98C6B /* Ubuntu-Medium.ttf in Resources */,

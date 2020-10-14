@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>ROOT_URL</key>
-	<string>http://localhost:8080</string>
+	<string>http://liam.local:8080</string>
 	<key>BUCKET_URL</key>
-	<string>https://my-project.s3.us-east-2.amazonaws.com</string>
+	<string>https://windmill-warehouse.s3.us-east-2.amazonaws.com</string>
 	<key>GOOGLE_CLIENT_ID</key>
-	<string>ENTER_GOOGLE_CLIENT_ID_HERE</string>
+	<string>672331689068-91gdqeo39rjtu7qlno5i1it80of553e0.apps.googleusercontent.com</string>
 	<key>APP_BUNDLE_ID</key>
 	<string>io.liamreardon.windmill.dev</string>
 	<key>APP_NAME</key>

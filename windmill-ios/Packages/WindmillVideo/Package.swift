@@ -9,7 +9,7 @@ let package = Package(
         .library(name: "WindmillCapture", targets: ["WindmillCapture"]),
     ],
     targets: [
-        .target(name: "WindmillVideo"),
+        .target(name: "WindmillVideo", resources: [.process("Resources")]),
         .target(name: "WindmillCapture", dependencies: ["WindmillVideo"]),
         .testTarget(name: "WindmillVideoTests", dependencies: ["WindmillVideo"]),
     ],

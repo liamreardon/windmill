@@ -1,0 +1,11 @@
+.DS_Store
+/.run/
+windmill-backend/.env
+windmill-backend/.data/
+windmill-backend/.seed-media/
+windmill-ios/*.xcodeproj
+windmill-ios/Config/*.local.xcconfig
+xcuserdata/
+.build/
+.swiftpm/
+DerivedData/

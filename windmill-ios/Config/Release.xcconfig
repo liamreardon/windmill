@@ -1,0 +1,5 @@
+// Committed defaults for Release builds; the same keys as Debug.
+WINDMILL_API_SCHEME = http
+WINDMILL_API_HOST = localhost:8080
+WINDMILL_BUNDLE_SUFFIX =
+DEVELOPMENT_TEAM =

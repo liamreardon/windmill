@@ -1,0 +1,59 @@
+name: Windmill
+options:
+  bundleIdPrefix: com.liamreardon
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+configFiles:
+  Debug: Config/Debug.xcconfig
+  Release: Config/Release.xcconfig
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+packages:
+  WindmillVideo:
+    path: Packages/WindmillVideo
+targets:
+  Windmill:
+    type: application
+    platform: iOS
+    sources: [Windmill]
+    dependencies:
+      - package: WindmillVideo
+        product: WindmillVideo
+      - package: WindmillVideo
+        product: WindmillCapture
+    info:
+      path: Windmill/Info.plist
+      properties:
+        CFBundleDisplayName: Windmill
+        WindmillAPIBaseURL: "$(WINDMILL_API_SCHEME)://$(WINDMILL_API_HOST)"
+        NSCameraUsageDescription: Windmill uses the camera to record your clips.
+        NSMicrophoneUsageDescription: Windmill records sound with your clips.
+        NSLocalNetworkUsageDescription: Windmill talks to the Windmill server running on your Mac.
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "com.liamreardon.windmill$(WINDMILL_BUNDLE_SUFFIX)"
+        TARGETED_DEVICE_FAMILY: "1"
+  WindmillTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [WindmillTests]
+    dependencies:
+      - target: Windmill
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.liamreardon.windmill.tests
+schemes:
+  Windmill:
+    build:
+      targets:
+        Windmill: all
+        WindmillTests: [test]
+    test:
+      targets: [WindmillTests]

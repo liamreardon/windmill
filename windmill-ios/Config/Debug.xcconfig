@@ -1,0 +1,11 @@
+// Committed defaults for Debug builds. The app's base URL is built in
+// Info.plist from the scheme and host, since // starts a comment here.
+WINDMILL_API_SCHEME = http
+WINDMILL_API_HOST = localhost:8080
+WINDMILL_BUNDLE_SUFFIX =
+DEVELOPMENT_TEAM =
+
+// Gitignored: your signing team and a bundle id suffix.
+#include? "Debug.local.xcconfig"
+// Gitignored: the phone's host, written by make device-config.
+#include? "Device.local.xcconfig"

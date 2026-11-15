@@ -17,7 +17,7 @@ endif
 
 GO ?= go
 XCODEGEN ?= xcodegen
-SIM ?= iPhone 17
+SIM ?= iPhone 17 Pro
 
 WINDMILL_BLOB_DIR ?= windmill-backend/.data/blobs
 override WINDMILL_BLOB_DIR := $(abspath $(WINDMILL_BLOB_DIR))

@@ -9,14 +9,7 @@ struct ComposerTests {
 
     private func compose(_ urls: [URL], trim: ClosedRange<Double>? = nil,
                          overlays: [TextOverlay] = []) async throws -> Composition {
-        var segments: [Segment] = []
-        for url in urls {
-            segments.append(Segment(url: url, duration: try await AVURLAsset(url: url).load(.duration).seconds))
-        }
-        var edit = try Edit(segments: segments)
-        if let trim { edit.setTrim(trim) }
-        edit.overlays = overlays
-        return try await Composer.make(edit, context: context)
+        try await TestClips.compose(urls, trim: trim, overlays: overlays, context: context)
     }
 
     private func frame(_ composition: Composition, at seconds: Double) async throws -> TestFrame {

@@ -3,6 +3,7 @@ import CoreGraphics
 import CoreImage
 import Foundation
 import ImageIO
+@testable import WindmillVideo
 
 /// The transforms a phone writes on its clips, as `AVAssetTrack.preferredTransform`.
 enum ClipTransform: CaseIterable, Sendable {
@@ -122,6 +123,30 @@ enum TestClips {
                         fills: [(CGRect(origin: .zero, size: size), color)])
     }
 
+    /// A 1 s HEVC clip tagged BT.2020 HLG, as an iPhone records HDR.
+    static func hlg() async throws -> URL {
+        let size = CGSize(width: 1080, height: 1920)
+        return try await write(natural: size, transform: .identity, duration: 1, fps: 30, audio: .none,
+                               fills: [(CGRect(origin: .zero, size: size), .red)], hdr: true)
+    }
+
+    /// The segments joined into one edit, with an optional trim and overlays.
+    static func compose(_ urls: [URL], trim: ClosedRange<Double>? = nil, overlays: [TextOverlay] = [],
+                        context: CIContext) async throws -> Composition {
+        var segments: [Segment] = []
+        for url in urls {
+            segments.append(Segment(url: url, duration: try await AVURLAsset(url: url).load(.duration).seconds))
+        }
+        var edit = try Edit(segments: segments)
+        if let trim { edit.setTrim(trim) }
+        edit.overlays = overlays
+        return try await Composer.make(edit, context: context)
+    }
+
+    static func fileSize(_ url: URL) throws -> Int {
+        try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? -1
+    }
+
     static func frame(at seconds: Double, in asset: AVAsset, videoComposition: AVVideoComposition?) async throws -> TestFrame {
         let generator = AVAssetImageGenerator(asset: asset)
         generator.videoComposition = videoComposition
@@ -135,14 +160,24 @@ enum TestClips {
     // MARK: writing
 
     private static func write(natural: CGSize, transform: CGAffineTransform, duration: Double, fps: Int32,
-                              audio: ClipAudio, fills: [(CGRect, RGB)]) async throws -> URL {
+                              audio: ClipAudio, fills: [(CGRect, RGB)], hdr: Bool = false) async throws -> URL {
         let url = try folder().appending(path: "clip.mov")
         let writer = try AVAssetWriter(outputURL: url, fileType: .mov)
-        let video = AVAssetWriterInput(mediaType: .video, outputSettings: [
+        var settings: [String: Any] = [
             AVVideoCodecKey: AVVideoCodecType.h264,
             AVVideoWidthKey: Int(natural.width),
             AVVideoHeightKey: Int(natural.height),
-        ])
+        ]
+        if hdr {
+            // ponytail: no Main10 profile key; with 8-bit BGRA input it fails (-12902), and the HLG tags alone make an HDR track.
+            settings[AVVideoCodecKey] = AVVideoCodecType.hevc
+            settings[AVVideoColorPropertiesKey] = [
+                AVVideoColorPrimariesKey: AVVideoColorPrimaries_ITU_R_2020,
+                AVVideoTransferFunctionKey: AVVideoTransferFunction_ITU_R_2100_HLG,
+                AVVideoYCbCrMatrixKey: AVVideoYCbCrMatrix_ITU_R_2020,
+            ]
+        }
+        let video = AVAssetWriterInput(mediaType: .video, outputSettings: settings)
         video.transform = transform
         video.expectsMediaDataInRealTime = false
         let adaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: video, sourcePixelBufferAttributes: [
@@ -171,7 +206,7 @@ enum TestClips {
         let buffer = try pixelBuffer(size: natural, fills: fills)
         let frames = Int(duration * Double(fps))
         for index in 0..<frames {
-            while !video.isReadyForMoreMediaData { try await Task.sleep(for: .milliseconds(2)) }
+            while !video.isReadyForMoreMediaData { try await waitWhileWriting(writer) }
             guard adaptor.append(buffer, withPresentationTime: CMTime(value: CMTimeValue(index), timescale: fps)) else {
                 throw writer.error ?? CocoaError(.fileWriteUnknown)
             }
@@ -180,16 +215,26 @@ enum TestClips {
 
         if let audioInput, case .tone(let seconds) = audio {
             for sample in try toneBuffers(seconds: seconds) {
-                while !audioInput.isReadyForMoreMediaData { try await Task.sleep(for: .milliseconds(2)) }
+                while !audioInput.isReadyForMoreMediaData { try await waitWhileWriting(writer) }
                 guard audioInput.append(sample) else { throw writer.error ?? CocoaError(.fileWriteUnknown) }
             }
             audioInput.markAsFinished()
         }
 
+        guard writer.status == .writing else { throw writer.error ?? CocoaError(.fileWriteUnknown) }
         writer.endSession(atSourceTime: CMTime(seconds: duration, preferredTimescale: 600))
-        await writer.finishWriting()
+        // The SDK's `await writer.finishWriting()` crashed the test process (swift_continuation_resume) with
+        // several writers running at once; the completion handler form has not.
+        await withCheckedContinuation { (done: CheckedContinuation<Void, Never>) in
+            writer.finishWriting { done.resume() }
+        }
         if let error = writer.error { throw error }
         return url
+    }
+
+    private static func waitWhileWriting(_ writer: AVAssetWriter) async throws {
+        guard writer.status == .writing else { throw writer.error ?? CocoaError(.fileWriteUnknown) }
+        try await Task.sleep(for: .milliseconds(2))
     }
 
     private static func pixelBuffer(size: CGSize, fills: [(CGRect, RGB)]) throws -> CVPixelBuffer {

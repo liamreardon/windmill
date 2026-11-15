@@ -7,9 +7,7 @@ import Testing
 
 @Suite(.timeLimit(.minutes(5)))
 struct ExporterTests {
-    // WINDMILL_SOFTWARE_RENDERER=1 is for CI machines whose GPU cannot run Core Image.
-    private let context = ProcessInfo.processInfo.environment["WINDMILL_SOFTWARE_RENDERER"] == "1"
-        ? CIContext(options: [.useSoftwareRenderer: true]) : CIContext()
+    private let context = CIContext()
     private let top = TextOverlay(text: "WINDMILL", center: CGPoint(x: 0.5, y: 0.1), height: 0.06)
     private let frame = 1.0 / 30
 
@@ -96,9 +94,13 @@ struct ExporterTests {
                                                duration: 20, fps: 60)
         let composition = try await TestClips.compose([url], context: context)
         let out = try output()
-        // Cancel once the export reports progress, so it is mid-way on any machine.
+        // Cancel once the export reports progress, so it is mid-way on any machine. The stream ends with the export,
+        // so an export that fails first shows its own error.
         let (started, signal) = AsyncStream<Void>.makeStream()
-        let task = Task { try await Exporter.export(composition, to: out) { if $0 > 0 && $0 < 1 { signal.yield() } } }
+        let task = Task {
+            defer { signal.finish() }
+            return try await Exporter.export(composition, to: out) { if $0 > 0 && $0 < 1 { signal.yield() } }
+        }
         for await _ in started { break }
         task.cancel()
         await #expect(throws: CancellationError.self) { try await task.value }

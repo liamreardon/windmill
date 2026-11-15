@@ -142,7 +142,7 @@ struct ComposerTests {
     @Test func textCentreFollowsX() throws {
         let overlay = TextOverlay(text: "WWW", center: CGPoint(x: 0.25, y: 0.5), height: 0.06)
         let image = try #require(Composer.textImage([overlay], renderSize: Composer.renderSize))
-        let frame = TestFrame(try #require(CIContext().createCGImage(image, from: image.extent)))
+        let frame = TestFrame(try #require(context.createCGImage(image, from: image.extent)))
         let inked = (0..<frame.width).filter { x in
             stride(from: 900, to: 1020, by: 4).contains { y in
                 frame.pixel(x: Double(x) / Double(frame.width), y: Double(y) / Double(frame.height)).near(.white)
@@ -166,7 +166,10 @@ struct ComposerTests {
     @Test func missingSegmentIsExportFailed() async throws {
         let missing = try TestClips.folder().appending(path: "gone.mov")
         let edit = try Edit(segments: [Segment(url: missing, duration: 2)])
-        await #expect(throws: WindmillVideoError.self) { _ = try await Composer.make(edit, context: context) }
+        do {
+            _ = try await Composer.make(edit, context: context)
+            Issue.record("a missing file composed")
+        } catch WindmillVideoError.exportFailed {}
     }
 
     @Test func silenceOutlastsTheCap() async throws {

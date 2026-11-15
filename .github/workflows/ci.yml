@@ -63,8 +63,15 @@ jobs:
           echo "$XCODEGEN_SHA256  $RUNNER_TEMP/xcodegen.zip" | shasum -a 256 -c -
           unzip -q "$RUNNER_TEMP/xcodegen.zip" -d "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/xcodegen/bin" >> "$GITHUB_PATH"
+      # swift test prints when the run ends. The export suites have time limits, so a stuck export usually ends as
+      # a named failure, not the step timeout.
+      - name: Test WindmillVideo on macOS
+        working-directory: windmill-ios/Packages/WindmillVideo
+        timeout-minutes: 10
+        run: swift test
       - name: Make the simulators
         id: sims
+        if: ${{ !cancelled() }}
         timeout-minutes: 10
         run: |
           id=$(xcrun simctl create ci "iPhone 17" "$RUNTIME")
@@ -77,20 +84,15 @@ jobs:
           # Booted here, because xcodebuild gives up after 120 s waiting for a simulator it boots itself.
           for sim in $id $id18; do xcrun simctl bootstatus "$sim" -b; done
           echo "DESTINATIONS=$dest" >> "$GITHUB_ENV"
-      # The export suites have time limits, so a stuck export fails by name before the step times out.
-      - name: Test WindmillVideo on macOS
-        working-directory: windmill-ios/Packages/WindmillVideo
-        timeout-minutes: 10
-        run: swift test
       - name: Test WindmillVideo
         if: ${{ !cancelled() && steps.sims.outcome == 'success' }}
         working-directory: windmill-ios/Packages/WindmillVideo
         timeout-minutes: 20
-        env:
-          # On the runner's virtual machine the export tests render with Core Image's CPU renderer.
-          TEST_RUNNER_WINDMILL_SOFTWARE_RENDERER: "1"
+        # Composer and Exporter run in the macOS step instead: on these simulators their exports outlasted 20 minutes
+        # in CI runs 43710520859 and 43713580841.
         run: >-
           xcodebuild test -scheme WindmillVideo-Package $DESTINATIONS
+          -skip-testing:WindmillVideoTests/ComposerTests -skip-testing:WindmillVideoTests/ExporterTests
           -test-timeouts-enabled YES -default-test-execution-time-allowance 120
           CODE_SIGNING_ALLOWED=NO
       - name: Test the app

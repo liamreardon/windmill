@@ -51,6 +51,10 @@ public final class LoopingPlayer {
         !copies.isEmpty && copies.allSatisfy { $0.videoComposition?.customVideoCompositorClass == compositor }
     }
 
+    /// Why nothing plays, such as a file that is gone; nil while the item loads or plays.
+    // ponytail: read on demand; a screen that has to react to it can observe the item's status.
+    public var error: (any Error)? { looper?.error ?? player.error ?? player.currentItem?.error }
+
     public func play() { player.play() }
 
     public func pause() { player.pause() }

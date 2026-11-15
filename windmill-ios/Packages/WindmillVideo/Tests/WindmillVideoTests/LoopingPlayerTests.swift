@@ -80,6 +80,17 @@ struct LoopingPlayerTests {
         #expect(looping.player.items().isEmpty)
     }
 
+    @Test func missingFileReportsAnError() async throws {
+        let missing = FileManager.default.temporaryDirectory.appendingPathComponent("missing-\(UUID()).mov")
+        let looping = LoopingPlayer(url: missing)
+        defer { looping.release() }
+        let start = ContinuousClock.now
+        while looping.error == nil, ContinuousClock.now - start < .seconds(30) {
+            try await Task.sleep(for: .milliseconds(20))
+        }
+        #expect(looping.error != nil)
+    }
+
     @Test func releaseBeforeLoadStaysEmpty() async throws {
         let url = try await TestClips.solid(.blue)
         let released = LoopingPlayer(url: url), control = LoopingPlayer(url: url)

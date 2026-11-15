@@ -51,6 +51,13 @@ struct EditTests {
         #expect(text.contains("trim"))
     }
 
+    @Test func sizesNearTheBoundStayTrue() {
+        let short = WindmillVideoError.sourceTooShort(duration: 0.96, minimum: 1).failureReason ?? ""
+        #expect(short.contains("0.9 s"), "\(short)")
+        let large = WindmillVideoError.exportTooLarge(bytes: 52_428_801, limit: 52_428_800).failureReason ?? ""
+        #expect(large.contains("50.1 MB"), "\(large)")
+    }
+
     @Test func everyCaseHasReasonAndSuggestion() {
         let all: [WindmillVideoError] = [
             .cameraDenied, .microphoneDenied, .cameraUnavailable,

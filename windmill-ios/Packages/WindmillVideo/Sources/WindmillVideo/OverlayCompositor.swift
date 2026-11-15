@@ -12,18 +12,16 @@ final class SegmentInstruction: NSObject, AVVideoCompositionInstructionProtocol,
 
     let trackID: CMPersistentTrackID
     let orientation: CGImagePropertyOrientation
-    let naturalSize: CGSize
     /// Every overlay, already placed in the render frame.
     let text: CIImage?
     let context: CIContext
 
     init(timeRange: CMTimeRange, trackID: CMPersistentTrackID, orientation: CGImagePropertyOrientation,
-         naturalSize: CGSize, text: CIImage?, context: CIContext) {
+         text: CIImage?, context: CIContext) {
         self.timeRange = timeRange
         self.trackID = trackID
         self.requiredSourceTrackIDs = [NSNumber(value: trackID)]
         self.orientation = orientation
-        self.naturalSize = naturalSize
         self.text = text
         self.context = context
     }

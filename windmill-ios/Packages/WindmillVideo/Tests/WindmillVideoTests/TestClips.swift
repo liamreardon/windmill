@@ -7,7 +7,7 @@ import ImageIO
 
 /// The transforms a phone writes on its clips, as `AVAssetTrack.preferredTransform`.
 enum ClipTransform: CaseIterable, Sendable {
-    case identity, rotate90, rotate180, rotate270, mirrored
+    case identity, rotate90, rotate180, rotate270, mirrored, flipVertical, transpose, transverse
 
     /// The transform for a stored frame of `natural` size.
     func affine(natural: CGSize) -> CGAffineTransform {
@@ -18,13 +18,16 @@ enum ClipTransform: CaseIterable, Sendable {
         case .rotate180: return CGAffineTransform(a: -1, b: 0, c: 0, d: -1, tx: w, ty: h)
         case .rotate270: return CGAffineTransform(a: 0, b: -1, c: 1, d: 0, tx: 0, ty: w)
         case .mirrored: return CGAffineTransform(a: -1, b: 0, c: 0, d: 1, tx: w, ty: 0)
+        case .flipVertical: return CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0, ty: h)
+        case .transpose: return CGAffineTransform(a: 0, b: 1, c: 1, d: 0, tx: 0, ty: 0)
+        case .transverse: return CGAffineTransform(a: 0, b: -1, c: -1, d: 0, tx: h, ty: w)
         }
     }
 
     /// Stored size for a clip shown at `display` size.
     func natural(display: CGSize) -> CGSize {
         switch self {
-        case .rotate90, .rotate270: CGSize(width: display.height, height: display.width)
+        case .rotate90, .rotate270, .transpose, .transverse: CGSize(width: display.height, height: display.width)
         default: display
         }
     }
@@ -135,7 +138,7 @@ enum TestClips {
                         context: CIContext) async throws -> Composition {
         var segments: [Segment] = []
         for url in urls {
-            segments.append(Segment(url: url, duration: try await AVURLAsset(url: url).load(.duration).seconds))
+            segments.append(try await Segment.measured(url))
         }
         var edit = try Edit(segments: segments)
         if let trim { edit.setTrim(trim) }
@@ -204,25 +207,26 @@ enum TestClips {
         writer.startSession(atSourceTime: .zero)
 
         let buffer = try pixelBuffer(size: natural, fills: fills)
+        var tones: ArraySlice<CMSampleBuffer> = []
+        if case .tone(let seconds) = audio { tones = try toneBuffers(seconds: seconds)[...] }
+        // Video and audio go in by time: with every frame first, the writer stops taking video about 1 s ahead of the audio.
         let frames = Int(duration * Double(fps))
         for index in 0..<frames {
+            let time = CMTime(value: CMTimeValue(index), timescale: fps)
+            try await append(&tones, through: time, to: audioInput, of: writer)
             while !video.isReadyForMoreMediaData { try await waitWhileWriting(writer) }
-            guard adaptor.append(buffer, withPresentationTime: CMTime(value: CMTimeValue(index), timescale: fps)) else {
+            guard adaptor.append(buffer, withPresentationTime: time) else {
                 throw writer.error ?? CocoaError(.fileWriteUnknown)
             }
         }
         video.markAsFinished()
-
-        if let audioInput, case .tone(let seconds) = audio {
-            for sample in try toneBuffers(seconds: seconds) {
-                while !audioInput.isReadyForMoreMediaData { try await waitWhileWriting(writer) }
-                guard audioInput.append(sample) else { throw writer.error ?? CocoaError(.fileWriteUnknown) }
-            }
-            audioInput.markAsFinished()
-        }
+        try await append(&tones, through: .positiveInfinity, to: audioInput, of: writer)
+        audioInput?.markAsFinished()
 
         guard writer.status == .writing else { throw writer.error ?? CocoaError(.fileWriteUnknown) }
-        writer.endSession(atSourceTime: CMTime(seconds: duration, preferredTimescale: 600))
+        var end = duration
+        if case .tone(let seconds) = audio { end = max(end, seconds) }
+        writer.endSession(atSourceTime: CMTime(seconds: end, preferredTimescale: 600))
         // The SDK's `await writer.finishWriting()` crashed the test process (swift_continuation_resume) with
         // several writers running at once; the completion handler form has not.
         await withCheckedContinuation { (done: CheckedContinuation<Void, Never>) in
@@ -230,6 +234,17 @@ enum TestClips {
         }
         if let error = writer.error { throw error }
         return url
+    }
+
+    /// Appends the tone buffers that start at or before `time`.
+    private static func append(_ tones: inout ArraySlice<CMSampleBuffer>, through time: CMTime,
+                               to input: AVAssetWriterInput?, of writer: AVAssetWriter) async throws {
+        guard let input else { return }
+        while let sample = tones.first, sample.presentationTimeStamp <= time {
+            while !input.isReadyForMoreMediaData { try await waitWhileWriting(writer) }
+            guard input.append(sample) else { throw writer.error ?? CocoaError(.fileWriteUnknown) }
+            tones.removeFirst()
+        }
     }
 
     private static func waitWhileWriting(_ writer: AVAssetWriter) async throws {

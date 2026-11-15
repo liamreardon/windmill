@@ -73,11 +73,18 @@ jobs:
             dest="$dest -destination id=$id18"
           fi
           echo "DESTINATIONS=$dest" >> "$GITHUB_ENV"
-      - name: Build WindmillVideo for macOS
+      # swift test prints each test as it runs, so a stuck export shows by name here; xcodebuild prints only at the end.
+      - name: Test WindmillVideo on macOS
         working-directory: windmill-ios/Packages/WindmillVideo
-        run: swift build
+        timeout-minutes: 10
+        run: swift test
       - name: Test WindmillVideo
+        if: ${{ !cancelled() }}
         working-directory: windmill-ios/Packages/WindmillVideo
+        timeout-minutes: 20
+        env:
+          # The runner has no GPU; the export tests render with Core Image's CPU renderer.
+          TEST_RUNNER_WINDMILL_SOFTWARE_RENDERER: "1"
         run: >-
           xcodebuild test -scheme WindmillVideo-Package $DESTINATIONS
           -test-timeouts-enabled YES -default-test-execution-time-allowance 120

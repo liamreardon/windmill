@@ -65,11 +65,59 @@ struct ComposerTests {
 
     @Test func trimStartingInsideSecondSegment() async throws {
         let red = try await TestClips.solid(.red, duration: 2)
-        let blue = try await TestClips.solid(.blue, duration: 2)
+        let blue = try await TestClips.solid(.blue, duration: 2, audio: .tone(seconds: 2))
         let composition = try await compose([red, blue], trim: 2.5...3.5)
         #expect(abs(composition.duration.seconds - 1) <= 1.0 / 30, "duration \(composition.duration.seconds)")
         let pixel = try await frame(composition, at: 0).pixel(x: 0.5, y: 0.5)
         #expect(pixel.near(.blue), "got \(pixel)")
+        // A solid clip looks the same from any start, so check where in the source the cut begins.
+        for type in [AVMediaType.video, .audio] {
+            let segment = try #require(composition.asset.tracks(withMediaType: type).first?.segments.first { !$0.isEmpty })
+            #expect(abs(segment.timeMapping.source.start.seconds - 0.5) < 0.001,
+                    "\(type.rawValue) starts at \(segment.timeMapping.source.start.seconds) s in the source")
+        }
+    }
+
+    @Test func editAndCompositionAgreeWhenAudioOutlastsVideo() async throws {
+        let red = try await TestClips.solid(.red, duration: 1, audio: .tone(seconds: 1.5))
+        let blue = try await TestClips.solid(.blue, duration: 2)
+        var edit = try Edit(segments: [try await Segment.measured(red), try await Segment.measured(blue)])
+        edit.setTrim(2.5...3.5)
+        let composition = try await Composer.make(edit, context: context)
+        let length = edit.trim.upperBound - edit.trim.lowerBound
+        #expect(abs(composition.duration.seconds - length) <= 1.0 / 30,
+                "edit \(length) s, composition \(composition.duration.seconds) s")
+    }
+
+    @Test func segmentAfterTheTrimIsNotOpened() async throws {
+        let red = try await TestClips.solid(.red, duration: 2)
+        let broken = try TestClips.folder().appending(path: "broken.mov")
+        try Data("not a movie".utf8).write(to: broken)
+        var edit = try Edit(segments: [try await Segment.measured(red), Segment(url: broken, duration: 2)])
+        edit.setTrim(0...1.5)
+        let composition = try await Composer.make(edit, context: context)
+        #expect(abs(composition.duration.seconds - 1.5) <= 1.0 / 30, "duration \(composition.duration.seconds)")
+    }
+
+    @Test func longTextStaysInsideTheFrame() throws {
+        let size = Composer.renderSize
+        let long = TextOverlay(text: String(repeating: "WINDMILL ", count: 300), center: CGPoint(x: 0.5, y: 0.5),
+                               height: 0.06)
+        let image = try #require(Composer.textImage([long], renderSize: size))
+        #expect(image.extent == CGRect(origin: .zero, size: size), "extent \(image.extent)")
+        let empty = TextOverlay(text: "W", center: CGPoint(x: 0.5, y: 0.5), height: 0)
+        #expect(Composer.textImage([empty], renderSize: size) == nil)
+    }
+
+    @Test(.timeLimit(.minutes(1))) func longClipWithAudioWrites() async throws {
+        let asset = AVURLAsset(url: try await TestClips.solid(.red, duration: 4, audio: .tone(seconds: 4)))
+        let audio = try #require(try await asset.loadTracks(withMediaType: .audio).first)
+        #expect(try await audio.load(.timeRange).duration.seconds > 3.9)
+    }
+
+    @Test func silenceOutlastsTheCap() async throws {
+        let url = try #require(Composer.silenceURL)
+        #expect(try await AVURLAsset(url: url).load(.duration).seconds > Edit.cap)
     }
 
     @Test func audioFollowsEachSegment() async throws {

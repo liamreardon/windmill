@@ -16,8 +16,11 @@ struct ExporterTests {
         try TestClips.folder().appending(path: "out.\(ext)")
     }
 
-    private func videoTrack(_ url: URL) async throws -> AVAssetTrack {
-        try #require(try await AVURLAsset(url: url).loadTracks(withMediaType: .video).first)
+    /// Runs `body` on the file's video track while its asset is alive: a track holds its asset weakly.
+    private func video<T>(_ url: URL, _ body: (AVAssetTrack) async throws -> T) async throws -> T {
+        let asset = AVURLAsset(url: url)
+        let track = try #require(try await asset.loadTracks(withMediaType: .video).first)
+        return try await body(track)
     }
 
     @Test func exportIsH264Mp4WithinOneFrame() async throws {
@@ -26,10 +29,10 @@ struct ExporterTests {
         let composition = try await TestClips.compose([first, second], overlays: [top], context: context)
         let exported = try await Exporter.export(composition, to: try output())
 
-        let video = try await videoTrack(exported.url)
-        let format = try #require(try await video.load(.formatDescriptions).first)
+        let (formats, size) = try await video(exported.url) { (try await $0.load(.formatDescriptions), try await $0.load(.naturalSize)) }
+        let format = try #require(formats.first)
         #expect(format.mediaSubType.rawValue == kCMVideoCodecType_H264)
-        #expect(try await video.load(.naturalSize) == CGSize(width: 1080, height: 1920))
+        #expect(size == CGSize(width: 1080, height: 1920))
         let seconds = try await AVURLAsset(url: exported.url).load(.duration).seconds
         #expect(abs(seconds - composition.duration.seconds) <= frame + 0.1, "length \(seconds)")
         #expect(exported.url.pathExtension == "mp4")
@@ -46,7 +49,7 @@ struct ExporterTests {
         let asset = AVURLAsset(url: exported.url)
         let audio = try #require(try await asset.loadTracks(withMediaType: .audio).first)
         let audioLength = try await audio.load(.timeRange).duration.seconds
-        let videoLength = try await videoTrack(exported.url).load(.timeRange).duration.seconds
+        let videoLength = try await video(exported.url) { try await $0.load(.timeRange) }.duration.seconds
         #expect(abs(audioLength - videoLength) <= frame, "audio \(audioLength), video \(videoLength)")
     }
 
@@ -83,27 +86,39 @@ struct ExporterTests {
 
         let seconds = try await AVURLAsset(url: exported.url).load(.duration).seconds
         #expect(abs(seconds - 15) <= frame, "length \(seconds)")
-        let rate = try await videoTrack(exported.url).load(.nominalFrameRate)
+        let rate = try await video(exported.url) { try await $0.load(.nominalFrameRate) }
         #expect(abs(rate - 30) <= 1, "frame rate \(rate)")
+    }
+
+    @Test func cancelThrowsCancellation() async throws {
+        let url = try await TestClips.quarters(transform: .identity, size: CGSize(width: 540, height: 960),
+                                               duration: 20, fps: 60)
+        let composition = try await TestClips.compose([url], context: context)
+        let out = try output()
+        let task = Task { try await Exporter.export(composition, to: out) }
+        try await Task.sleep(for: .milliseconds(300))
+        task.cancel()
+        await #expect(throws: CancellationError.self) { try await task.value }
     }
 
     @Test func hdrDetectedAndConverted() async throws {
         let hlg = try await TestClips.hlg()
-        let source = try await videoTrack(hlg)
-        let written = try await source.load(.formatDescriptions).first
-            .flatMap { $0.extensions[.transferFunction] }
+        let (written, hdr) = try await video(hlg) {
+            (try await $0.load(.formatDescriptions).first.flatMap { $0.extensions[.transferFunction] },
+             try await Composer.isHDR($0))
+        }
         let input: URL
         if written == .transferFunction(.itu_R_2100_HLG) {
-            #expect(try await Composer.isHDR(source))
+            #expect(hdr)
             input = hlg
         } else {
             print("hdrDetectedAndConverted: this machine wrote no HLG clip (transfer \(String(describing: written))); only the SDR path is checked")
             input = try await TestClips.solid(.red)
-            #expect(try await Composer.isHDR(try await videoTrack(input)) == false)
+            #expect(try await video(input) { try await Composer.isHDR($0) } == false)
         }
         let composition = try await TestClips.compose([input], context: context)
         let exported = try await Exporter.export(composition, to: try output())
-        let format = try #require(try await videoTrack(exported.url).load(.formatDescriptions).first)
+        let format = try #require(try await video(exported.url) { try await $0.load(.formatDescriptions) }.first)
         #expect(format.extensions[.transferFunction] == .transferFunction(.itu_R_709_2))
     }
 }

@@ -1,15 +1,26 @@
+import AVFoundation
 import CoreGraphics
 import Foundation
 
 /// One recorded clip, or the one video picked from Photos.
 public struct Segment: Sendable, Hashable {
     public let url: URL
-    /// Seconds, measured on the finished file.
+    /// Seconds of video, measured on the finished file. `Composer` joins segments by their video tracks, so this has
+    /// to be the video track's length, not the file's (audio can run longer); `measured(_:)` reads it that way.
     public let duration: Double
 
     public init(url: URL, duration: Double) {
         self.url = url
         self.duration = duration
+    }
+
+    /// The segment for a finished file, timed by its video track.
+    public static func measured(_ url: URL) async throws -> Segment {
+        let asset = AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
+        guard let video = try await asset.loadTracks(withMediaType: .video).first else {
+            throw WindmillVideoError.exportFailed(underlying: CocoaError(.fileReadCorruptFile))
+        }
+        return Segment(url: url, duration: try await video.load(.timeRange).duration.seconds)
     }
 }
 
@@ -33,7 +44,7 @@ public struct TextOverlay: Sendable, Hashable, Identifiable {
     public var text: String
     /// The text's centre as a fraction of the frame, origin top left.
     public var center: CGPoint
-    /// The line height as a fraction of the frame height.
+    /// The font size as a fraction of the frame height. Lexend's line box is 1.25 times this. 0 or less draws nothing.
     public var height: Double
     public var color: OverlayColor
 

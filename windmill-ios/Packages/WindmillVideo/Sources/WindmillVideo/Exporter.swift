@@ -19,8 +19,9 @@ public enum Exporter {
     /// 50 MiB, the same number as the backend's video upload limit.
     public static let maxBytes = 52_428_800
 
-    /// Exports H.264 MP4 at 1080x1920, then reads the file back. Throws `exportTooLarge` over `limit`
-    /// (the file stays at `url`), `exportFailed` for anything else.
+    /// Exports H.264 MP4 at 1080x1920, then reads the file back. Any file already at `url` is replaced, so give
+    /// each export its own URL. Throws `exportTooLarge` over `limit` (the file stays at `url`), `CancellationError`
+    /// when the task is cancelled, `exportFailed` for anything else.
     public static func export(_ composition: Composition, to url: URL, limit: Int = maxBytes,
                               progress: @escaping @Sendable (Double) -> Void = { _ in }) async throws -> ExportedVideo {
         guard let session = AVAssetExportSession(asset: composition.asset,
@@ -41,22 +42,26 @@ public enum Exporter {
         defer { watcher.cancel() }
         do {
             try await session.export(to: url, as: .mp4)
+            progress(1)
+
+            // ponytail: MP4 is guaranteed by `as: .mp4`; the read back checks codec and length.
+            let asset = AVURLAsset(url: url)
+            let duration = try await asset.load(.duration)
+            let codec = try await asset.loadTracks(withMediaType: .video).first?.load(.formatDescriptions).first?.mediaSubType
+            guard codec?.rawValue == kCMVideoCodecType_H264,
+                  abs(duration.seconds - composition.duration.seconds) <= Composer.frameDuration.seconds + 0.1 else {
+                throw WindmillVideoError.exportFailed(underlying: CocoaError(.fileReadCorruptFile))
+            }
+            let bytes = try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
+            if bytes > limit { throw WindmillVideoError.exportTooLarge(bytes: bytes, limit: limit) }
+            return ExportedVideo(url: url, bytes: bytes, duration: duration.seconds)
+        } catch let error as WindmillVideoError {
+            throw error
+        } catch let error as CancellationError {
+            throw error
         } catch {
             throw WindmillVideoError.exportFailed(underlying: error)
         }
-        progress(1)
-
-        // ponytail: MP4 is guaranteed by `as: .mp4`; the read back checks codec and length.
-        let asset = AVURLAsset(url: url)
-        let duration = try await asset.load(.duration)
-        let codec = try await asset.loadTracks(withMediaType: .video).first?.load(.formatDescriptions).first?.mediaSubType
-        guard codec?.rawValue == kCMVideoCodecType_H264,
-              abs(duration.seconds - composition.duration.seconds) <= 1.0 / 30 + 0.1 else {
-            throw WindmillVideoError.exportFailed(underlying: CocoaError(.fileReadCorruptFile))
-        }
-        let bytes = try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
-        if bytes > limit { throw WindmillVideoError.exportTooLarge(bytes: bytes, limit: limit) }
-        return ExportedVideo(url: url, bytes: bytes, duration: duration.seconds)
     }
 
     /// The first frame, with its text, as a JPEG at quality 0.8.

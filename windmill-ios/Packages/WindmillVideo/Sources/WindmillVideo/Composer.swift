@@ -21,10 +21,11 @@ public enum Composer {
 
     // ponytail: one context for every composition; CIContext is thread safe.
     private static let sharedContext = CIContext()
+    static var silenceURL: URL? { Bundle.module.url(forResource: "silence-48k", withExtension: "m4a") }
 
     /// Joins the segments, keeps only the trim, and sets up the compositor for orientation, the cover crop and text.
     public static func make(_ edit: Edit, context: CIContext? = nil) async throws -> Composition {
-        guard let silenceURL = Bundle.module.url(forResource: "silence-48k", withExtension: "m4a") else {
+        guard let silenceURL else {
             throw WindmillVideoError.exportFailed(underlying: CocoaError(.fileReadNoSuchFile))
         }
         // A track holds its asset weakly, so the asset is kept until the last insert.
@@ -43,12 +44,12 @@ public enum Composer {
 
         var instructions: [SegmentInstruction] = []
         var joined = CMTime.zero
-        for segment in edit.segments {
-            let asset = AVURLAsset(url: segment.url)
+        for segment in edit.segments where joined < trimEnd {
+            let asset = AVURLAsset(url: segment.url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
             guard let video = try await asset.loadTracks(withMediaType: .video).first else {
                 throw WindmillVideoError.exportFailed(underlying: CocoaError(.fileReadCorruptFile))
             }
-            let (range, transform, natural) = try await video.load(.timeRange, .preferredTransform, .naturalSize)
+            let (range, transform) = try await video.load(.timeRange, .preferredTransform)
             let start = joined
             joined = start + range.duration
             let lower = max(start, trimStart), upper = min(joined, trimEnd)
@@ -73,7 +74,7 @@ public enum Composer {
 
             instructions.append(SegmentInstruction(
                 timeRange: CMTimeRange(start: at, duration: source.duration), trackID: videoOut.trackID,
-                orientation: orientation(transform), naturalSize: natural, text: text, context: context))
+                orientation: orientation(transform), text: text, context: context))
         }
 
         let videoComposition = AVMutableVideoComposition()
@@ -103,7 +104,8 @@ public enum Composer {
         CMTime(seconds: seconds, preferredTimescale: 600)
     }
 
-    // ponytail: the silent file is 16 s and a segment is at most 15 s, so one insert always covers a gap.
+    // ponytail: the silent file is 16 s and a gap is never longer than the trim (at most `Edit.cap`, 15 s),
+    // so one insert always covers it. ComposerTests.silenceOutlastsTheCap holds the two together.
     private static func fillSilence(_ track: AVMutableCompositionTrack, _ silence: AVAssetTrack,
                                     from start: CMTime, to end: CMTime) throws {
         guard end > start else { return }
@@ -125,10 +127,16 @@ public enum Composer {
         }
     }
 
-    /// Every overlay drawn once with Core Text, placed in a frame of `renderSize` (Core Image's origin is bottom left).
+    /// Every overlay drawn once with Core Text into one frame-sized image (Core Image's origin is bottom left).
+    // ponytail: one line per overlay, no wrapping; the bitmap is the frame, so memory stays the same whatever the text.
     static func textImage(_ overlays: [TextOverlay], renderSize: CGSize) -> CIImage? {
-        var result: CIImage?
-        for overlay in overlays where !overlay.text.isEmpty {
+        let visible = overlays.filter { !$0.text.isEmpty && $0.height > 0 }
+        guard !visible.isEmpty, let space = CGColorSpace(name: CGColorSpace.sRGB),
+              let cg = CGContext(data: nil, width: Int(renderSize.width), height: Int(renderSize.height),
+                                 bitsPerComponent: 8, bytesPerRow: 0, space: space,
+                                 bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
+        else { return nil }
+        for overlay in visible {
             let font = Fonts.lexend(size: overlay.height * renderSize.height)
             let color = CGColor(srgbRed: overlay.color.red, green: overlay.color.green, blue: overlay.color.blue,
                                 alpha: overlay.color.alpha)
@@ -138,22 +146,11 @@ public enum Composer {
             ]
             let line = CTLineCreateWithAttributedString(NSAttributedString(string: overlay.text, attributes: attributes))
             var ascent: CGFloat = 0, descent: CGFloat = 0
-            let width = ceil(CTLineGetTypographicBounds(line, &ascent, &descent, nil))
-            let height = ceil(ascent + descent)
-            guard width > 0, height > 0,
-                  let space = CGColorSpace(name: CGColorSpace.sRGB),
-                  let cg = CGContext(data: nil, width: Int(width), height: Int(height), bitsPerComponent: 8,
-                                     bytesPerRow: 0, space: space,
-                                     bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
-            else { continue }
-            cg.textPosition = CGPoint(x: 0, y: descent)
+            let width = CTLineGetTypographicBounds(line, &ascent, &descent, nil)
+            cg.textPosition = CGPoint(x: overlay.center.x * renderSize.width - width / 2,
+                                      y: (1 - overlay.center.y) * renderSize.height - (ascent + descent) / 2 + descent)
             CTLineDraw(line, cg)
-            guard let image = cg.makeImage() else { continue }
-            let x = overlay.center.x * renderSize.width - width / 2
-            let y = (1 - overlay.center.y) * renderSize.height - height / 2
-            let placed = CIImage(cgImage: image).transformed(by: CGAffineTransform(translationX: x, y: y))
-            result = result.map { placed.composited(over: $0) } ?? placed
         }
-        return result
+        return cg.makeImage().map { CIImage(cgImage: $0) }
     }
 }

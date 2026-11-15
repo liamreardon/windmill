@@ -4,6 +4,7 @@ import Foundation
 import Testing
 @testable import WindmillVideo
 
+@Suite(.timeLimit(.minutes(5)))
 struct ComposerTests {
     private let context = CIContext(options: [.useSoftwareRenderer: true])
 
@@ -113,6 +114,59 @@ struct ComposerTests {
         let asset = AVURLAsset(url: try await TestClips.solid(.red, duration: 4, audio: .tone(seconds: 4)))
         let audio = try #require(try await asset.loadTracks(withMediaType: .audio).first)
         #expect(try await audio.load(.timeRange).duration.seconds > 3.9)
+    }
+
+    @Test(.timeLimit(.minutes(1))) func shortAudioUnderLongVideoWrites() async throws {
+        let asset = AVURLAsset(url: try await TestClips.solid(.red, duration: 4, audio: .tone(seconds: 1)))
+        let video = try #require(try await asset.loadTracks(withMediaType: .video).first)
+        #expect(try await video.load(.timeRange).duration.seconds > 3.9)
+    }
+
+    @Test func scaledRotationsKeepTheirOrientation() {
+        #expect(Composer.orientation(CGAffineTransform(a: 0, b: 2, c: -2, d: 0, tx: 0, ty: 0)) == .right)
+        #expect(Composer.orientation(CGAffineTransform(a: -0.5, b: 0, c: 0, d: -0.5, tx: 0, ty: 0)) == .down)
+    }
+
+    @Test func longAudioIsClampedToItsSegment() async throws {
+        let red = try await TestClips.solid(.red, duration: 1, audio: .tone(seconds: 1.5))
+        let blue = try await TestClips.solid(.blue, duration: 1, audio: .tone(seconds: 1))
+        let composition = try await compose([red, blue])
+        let audio = try #require(composition.asset.tracks(withMediaType: .audio).first)
+        let video = try #require(composition.asset.tracks(withMediaType: .video).first)
+        let starts = audio.segments.filter { !$0.isEmpty }.map(\.timeMapping.target.start)
+        #expect(starts.contains(CMTime(value: 1, timescale: 1)), "audio starts \(starts.map(\.seconds))")
+        #expect(audio.timeRange.end == video.timeRange.end,
+                "audio ends \(audio.timeRange.end.seconds), video \(video.timeRange.end.seconds)")
+    }
+
+    @Test func textCentreFollowsX() throws {
+        let overlay = TextOverlay(text: "WWW", center: CGPoint(x: 0.25, y: 0.5), height: 0.06)
+        let image = try #require(Composer.textImage([overlay], renderSize: Composer.renderSize))
+        let frame = TestFrame(try #require(CIContext().createCGImage(image, from: image.extent)))
+        let inked = (0..<frame.width).filter { x in
+            stride(from: 900, to: 1020, by: 4).contains { y in
+                frame.pixel(x: Double(x) / Double(frame.width), y: Double(y) / Double(frame.height)).near(.white)
+            }
+        }
+        let first = try #require(inked.first), last = try #require(inked.last)
+        let centre = Double(first + last) / 2 / Double(frame.width)
+        #expect(abs(centre - 0.25) < 0.02, "ink centred at \(centre)")
+    }
+
+    @Test func audioOnlyFileIsTooShort() async throws {
+        let url = try #require(Composer.silenceURL)
+        await #expect(throws: WindmillVideoError.self) { _ = try await Segment.measured(url) }
+        do {
+            _ = try await Segment.measured(url)
+        } catch WindmillVideoError.sourceTooShort(let duration, _) {
+            #expect(duration == 0)
+        }
+    }
+
+    @Test func missingSegmentIsExportFailed() async throws {
+        let missing = try TestClips.folder().appending(path: "gone.mov")
+        let edit = try Edit(segments: [Segment(url: missing, duration: 2)])
+        await #expect(throws: WindmillVideoError.self) { _ = try await Composer.make(edit, context: context) }
     }
 
     @Test func silenceOutlastsTheCap() async throws {

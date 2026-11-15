@@ -5,6 +5,7 @@ import ImageIO
 import Testing
 @testable import WindmillVideo
 
+@Suite(.timeLimit(.minutes(5)))
 struct ExporterTests {
     // WINDMILL_SOFTWARE_RENDERER=1 is for CI machines whose GPU cannot run Core Image.
     private let context = ProcessInfo.processInfo.environment["WINDMILL_SOFTWARE_RENDERER"] == "1"
@@ -95,10 +96,21 @@ struct ExporterTests {
                                                duration: 20, fps: 60)
         let composition = try await TestClips.compose([url], context: context)
         let out = try output()
-        let task = Task { try await Exporter.export(composition, to: out) }
-        try await Task.sleep(for: .milliseconds(300))
+        // Cancel once the export reports progress, so it is mid-way on any machine.
+        let (started, signal) = AsyncStream<Void>.makeStream()
+        let task = Task { try await Exporter.export(composition, to: out) { if $0 > 0 && $0 < 1 { signal.yield() } } }
+        for await _ in started { break }
         task.cancel()
         await #expect(throws: CancellationError.self) { try await task.value }
+    }
+
+    @Test func sizeIsReadFromTheNewFile() async throws {
+        let composition = try await TestClips.compose([try await TestClips.solid(.black)], context: context)
+        let url = try output()
+        try Data(count: 10).write(to: url)
+        #expect(try url.resourceValues(forKeys: [.fileSizeKey]).fileSize == 10)
+        let exported = try await Exporter.export(composition, to: url)
+        #expect(exported.bytes == (try TestClips.fileSize(URL(filePath: url.path))))
     }
 
     @Test func hdrDetectedAndConverted() async throws {

@@ -40,7 +40,7 @@ public enum Exporter {
             }
         }
         defer { watcher.cancel() }
-        do {
+        return try await WindmillVideoError.wrapping {
             try await session.export(to: url, as: .mp4)
             progress(1)
 
@@ -52,20 +52,19 @@ public enum Exporter {
                   abs(duration.seconds - composition.duration.seconds) <= Composer.frameDuration.seconds + 0.1 else {
                 throw WindmillVideoError.exportFailed(underlying: CocoaError(.fileReadCorruptFile))
             }
-            let bytes = try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
+            // Read from the disk: a URL caches resource values, so a file it saw before the export reads the old size.
+            let bytes = try FileManager.default.attributesOfItem(atPath: url.path)[.size] as? Int ?? 0
             if bytes > limit { throw WindmillVideoError.exportTooLarge(bytes: bytes, limit: limit) }
             return ExportedVideo(url: url, bytes: bytes, duration: duration.seconds)
-        } catch let error as WindmillVideoError {
-            throw error
-        } catch let error as CancellationError {
-            throw error
-        } catch {
-            throw WindmillVideoError.exportFailed(underlying: error)
         }
     }
 
     /// The first frame, with its text, as a JPEG at quality 0.8.
     public static func thumbnail(for composition: Composition, to url: URL) async throws -> URL {
+        try await WindmillVideoError.wrapping { try await writeThumbnail(for: composition, to: url) }
+    }
+
+    private static func writeThumbnail(for composition: Composition, to url: URL) async throws -> URL {
         let generator = AVAssetImageGenerator(asset: composition.asset)
         generator.videoComposition = composition.videoComposition
         generator.requestedTimeToleranceBefore = .zero

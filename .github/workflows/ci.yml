@@ -36,7 +36,7 @@ jobs:
 
   ios:
     runs-on: macos-15
-    timeout-minutes: 40
+    timeout-minutes: 60
     env:
       XCODE: /Applications/Xcode_26.0.1.app
       RUNTIME: com.apple.CoreSimulator.SimRuntime.iOS-26-0
@@ -64,6 +64,8 @@ jobs:
           unzip -q "$RUNNER_TEMP/xcodegen.zip" -d "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/xcodegen/bin" >> "$GITHUB_PATH"
       - name: Make the simulators
+        id: sims
+        timeout-minutes: 10
         run: |
           id=$(xcrun simctl create ci "iPhone 17" "$RUNTIME")
           dest="-destination id=$id"
@@ -72,18 +74,20 @@ jobs:
             id18=$(xcrun simctl create ci18 "iPhone 16" "$ios18")
             dest="$dest -destination id=$id18"
           fi
+          # Booted here, because xcodebuild gives up after 120 s waiting for a simulator it boots itself.
+          for sim in $id $id18; do xcrun simctl bootstatus "$sim" -b; done
           echo "DESTINATIONS=$dest" >> "$GITHUB_ENV"
-      # swift test prints each test as it runs, so a stuck export shows by name here; xcodebuild prints only at the end.
+      # The export suites have time limits, so a stuck export fails by name before the step times out.
       - name: Test WindmillVideo on macOS
         working-directory: windmill-ios/Packages/WindmillVideo
         timeout-minutes: 10
         run: swift test
       - name: Test WindmillVideo
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && steps.sims.outcome == 'success' }}
         working-directory: windmill-ios/Packages/WindmillVideo
         timeout-minutes: 20
         env:
-          # The runner has no GPU; the export tests render with Core Image's CPU renderer.
+          # On the runner's virtual machine the export tests render with Core Image's CPU renderer.
           TEST_RUNNER_WINDMILL_SOFTWARE_RENDERER: "1"
         run: >-
           xcodebuild test -scheme WindmillVideo-Package $DESTINATIONS

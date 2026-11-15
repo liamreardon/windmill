@@ -9,18 +9,20 @@ public struct Segment: Sendable, Hashable {
     /// to be the video track's length, not the file's (audio can run longer); `measured(_:)` reads it that way.
     public let duration: Double
 
-    public init(url: URL, duration: Double) {
+    init(url: URL, duration: Double) {
         self.url = url
         self.duration = duration
     }
 
-    /// The segment for a finished file, timed by its video track.
+    /// The segment for a finished file, timed by its video track. A file with no video is `sourceTooShort` at 0 s.
     public static func measured(_ url: URL) async throws -> Segment {
-        let asset = AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
-        guard let video = try await asset.loadTracks(withMediaType: .video).first else {
-            throw WindmillVideoError.exportFailed(underlying: CocoaError(.fileReadCorruptFile))
+        try await WindmillVideoError.wrapping {
+            let asset = AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
+            guard let video = try await asset.loadTracks(withMediaType: .video).first else {
+                throw WindmillVideoError.sourceTooShort(duration: 0, minimum: Edit.minimumTrim)
+            }
+            return Segment(url: url, duration: try await video.load(.timeRange).duration.seconds)
         }
-        return Segment(url: url, duration: try await video.load(.timeRange).duration.seconds)
     }
 }
 

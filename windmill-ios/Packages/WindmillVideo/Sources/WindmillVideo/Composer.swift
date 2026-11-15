@@ -24,7 +24,12 @@ public enum Composer {
     static var silenceURL: URL? { Bundle.module.url(forResource: "silence-48k", withExtension: "m4a") }
 
     /// Joins the segments, keeps only the trim, and sets up the compositor for orientation, the cover crop and text.
+    /// Throws `sourceTooShort` for a segment with no video, `CancellationError`, or `exportFailed` for anything else.
     public static func make(_ edit: Edit, context: CIContext? = nil) async throws -> Composition {
+        try await WindmillVideoError.wrapping { try await build(edit, context: context) }
+    }
+
+    private static func build(_ edit: Edit, context: CIContext?) async throws -> Composition {
         guard let silenceURL else {
             throw WindmillVideoError.exportFailed(underlying: CocoaError(.fileReadNoSuchFile))
         }
@@ -47,7 +52,7 @@ public enum Composer {
         for segment in edit.segments where joined < trimEnd {
             let asset = AVURLAsset(url: segment.url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
             guard let video = try await asset.loadTracks(withMediaType: .video).first else {
-                throw WindmillVideoError.exportFailed(underlying: CocoaError(.fileReadCorruptFile))
+                throw WindmillVideoError.sourceTooShort(duration: 0, minimum: Edit.minimumTrim)
             }
             let (range, transform) = try await video.load(.timeRange, .preferredTransform)
             let start = joined
@@ -113,9 +118,11 @@ public enum Composer {
     }
 
     /// The display orientation a phone's preferred transform stands for.
-    // ponytail: only right angles and flips; any other transform draws the frame as stored.
+    // ponytail: only right angles and flips, at any scale; any other transform draws the frame as stored.
     static func orientation(_ t: CGAffineTransform) -> CGImagePropertyOrientation {
-        switch (t.a.rounded(), t.b.rounded(), t.c.rounded(), t.d.rounded()) {
+        let x = hypot(t.a, t.b), y = hypot(t.c, t.d)
+        guard x > 0, y > 0 else { return .up }
+        return switch ((t.a / x).rounded(), (t.b / x).rounded(), (t.c / y).rounded(), (t.d / y).rounded()) {
         case (0, 1, -1, 0): .right
         case (-1, 0, 0, -1): .down
         case (0, -1, 1, 0): .left

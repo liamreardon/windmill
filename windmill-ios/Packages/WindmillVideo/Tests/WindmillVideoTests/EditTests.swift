@@ -56,6 +56,8 @@ struct EditTests {
         #expect(short.contains("0.9 s"), "\(short)")
         let large = WindmillVideoError.exportTooLarge(bytes: 52_428_801, limit: 52_428_800).failureReason ?? ""
         #expect(large.contains("50.1 MB"), "\(large)")
+        let odd = WindmillVideoError.exportTooLarge(bytes: 50_000_001, limit: 50_000_000).failureReason ?? ""
+        #expect(odd.contains("limit is 47.6 MB"), "\(odd)")
     }
 
     @Test func everyCaseHasReasonAndSuggestion() {

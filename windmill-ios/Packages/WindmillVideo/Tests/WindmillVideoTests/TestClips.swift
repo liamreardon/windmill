@@ -209,19 +209,30 @@ enum TestClips {
         let buffer = try pixelBuffer(size: natural, fills: fills)
         var tones: ArraySlice<CMSampleBuffer> = []
         if case .tone(let seconds) = audio { tones = try toneBuffers(seconds: seconds)[...] }
-        // Video and audio go in by time: with every frame first, the writer stops taking video about 1 s ahead of the audio.
+        // The writer holds one input back until the other catches up, and the encoder holds frames back until it gets
+        // more, so waiting on one input while the other could take data deadlocks. Each sample goes to whichever input
+        // is ready, in time order when both are, and an input is finished as soon as its data runs out.
         let frames = Int(duration * Double(fps))
-        for index in 0..<frames {
-            let time = CMTime(value: CMTimeValue(index), timescale: fps)
-            try await append(&tones, through: time, to: audioInput, of: writer)
-            while !video.isReadyForMoreMediaData { try await waitWhileWriting(writer) }
-            guard adaptor.append(buffer, withPresentationTime: time) else {
-                throw writer.error ?? CocoaError(.fileWriteUnknown)
+        var frame = 0
+        while frame < frames || audioInput != nil {
+            let time = CMTime(value: CMTimeValue(frame), timescale: fps)
+            if let input = audioInput, tones.isEmpty {
+                input.markAsFinished()
+                audioInput = nil
+            } else if let input = audioInput, let sample = tones.first, input.isReadyForMoreMediaData,
+                      frame == frames || sample.presentationTimeStamp <= time || !video.isReadyForMoreMediaData {
+                guard input.append(sample) else { throw writer.error ?? CocoaError(.fileWriteUnknown) }
+                tones.removeFirst()
+            } else if frame < frames, video.isReadyForMoreMediaData {
+                guard adaptor.append(buffer, withPresentationTime: time) else {
+                    throw writer.error ?? CocoaError(.fileWriteUnknown)
+                }
+                frame += 1
+                if frame == frames { video.markAsFinished() }
+            } else {
+                try await waitWhileWriting(writer)
             }
         }
-        video.markAsFinished()
-        try await append(&tones, through: .positiveInfinity, to: audioInput, of: writer)
-        audioInput?.markAsFinished()
 
         guard writer.status == .writing else { throw writer.error ?? CocoaError(.fileWriteUnknown) }
         var end = duration
@@ -234,17 +245,6 @@ enum TestClips {
         }
         if let error = writer.error { throw error }
         return url
-    }
-
-    /// Appends the tone buffers that start at or before `time`.
-    private static func append(_ tones: inout ArraySlice<CMSampleBuffer>, through time: CMTime,
-                               to input: AVAssetWriterInput?, of writer: AVAssetWriter) async throws {
-        guard let input else { return }
-        while let sample = tones.first, sample.presentationTimeStamp <= time {
-            while !input.isReadyForMoreMediaData { try await waitWhileWriting(writer) }
-            guard input.append(sample) else { throw writer.error ?? CocoaError(.fileWriteUnknown) }
-            tones.removeFirst()
-        }
     }
 
     private static func waitWhileWriting(_ writer: AVAssetWriter) async throws {

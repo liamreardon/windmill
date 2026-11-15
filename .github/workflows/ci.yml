@@ -1,0 +1,110 @@
+name: CI
+
+on:
+  push:
+    branches: [v2]
+  pull_request:
+    branches: [v2]
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      mongo:
+        image: mongo:8.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ping:1})'"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 30
+    env:
+      CI: "true"
+      WINDMILL_TEST_MONGO_URI: mongodb://127.0.0.1:27017
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: 1.27.4
+          cache-dependency-path: windmill-backend/go.mod
+      - run: make test
+
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 40
+    env:
+      XCODE: /Applications/Xcode_26.0.1.app
+      RUNTIME: com.apple.CoreSimulator.SimRuntime.iOS-26-0
+      XCODEGEN_URL: https://github.com/yonaskolb/XcodeGen/releases/download/2.44.1/xcodegen.zip
+      XCODEGEN_SHA256: a2e905fb68446e9bb4008cdfe2e13e3f176d0cbcca828b71770f8e53fca91b73
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check the pinned Xcode and simulator runtime
+        run: |
+          xcodebuild -version
+          xcrun simctl list runtimes
+          if [ ! -d "$XCODE" ]; then
+            echo "::error::$XCODE is gone from the macos-15 image. Pin the image's newest Xcode 26.0.x with an iOS 26.0 runtime in one pull request."
+            exit 1
+          fi
+          sudo xcode-select -s "$XCODE"
+          if ! xcrun simctl list runtimes | grep -q "$RUNTIME"; then
+            echo "::error::No iOS 26.0 simulator runtime ($RUNTIME) on this image."
+            exit 1
+          fi
+      - name: Install xcodegen 2.44.1
+        run: |
+          curl -fsSL "$XCODEGEN_URL" -o "$RUNNER_TEMP/xcodegen.zip"
+          echo "$XCODEGEN_SHA256  $RUNNER_TEMP/xcodegen.zip" | shasum -a 256 -c -
+          unzip -q "$RUNNER_TEMP/xcodegen.zip" -d "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/xcodegen/bin" >> "$GITHUB_PATH"
+      - name: Make the simulators
+        run: |
+          id=$(xcrun simctl create ci "iPhone 17" "$RUNTIME")
+          dest="-destination id=$id"
+          ios18=$(xcrun simctl list runtimes | sed -n 's/.*\(com\.apple\.CoreSimulator\.SimRuntime\.iOS-18-[0-9-]*\).*/\1/p' | tail -1)
+          if [ -n "$ios18" ]; then
+            id18=$(xcrun simctl create ci18 "iPhone 16" "$ios18")
+            dest="$dest -destination id=$id18"
+          fi
+          echo "DESTINATIONS=$dest" >> "$GITHUB_ENV"
+      - name: Build WindmillVideo for macOS
+        working-directory: windmill-ios/Packages/WindmillVideo
+        run: swift build
+      - name: Test WindmillVideo
+        working-directory: windmill-ios/Packages/WindmillVideo
+        run: >-
+          xcodebuild test -scheme WindmillVideo-Package $DESTINATIONS
+          -test-timeouts-enabled YES -default-test-execution-time-allowance 120
+          CODE_SIGNING_ALLOWED=NO
+      - name: Test the app
+        working-directory: windmill-ios
+        run: |
+          xcodegen generate
+          xcodebuild test -project Windmill.xcodeproj -scheme Windmill $DESTINATIONS \
+            -test-timeouts-enabled YES -default-test-execution-time-allowance 120 \
+            CODE_SIGNING_ALLOWED=NO
+
+  gitleaks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Check the clone is complete
+        run: |
+          test "$(git rev-parse --is-shallow-repository)" = false
+          git cat-file -e 9d5ab40c80c431c26f7c25c3c08addd8d8bcbe23
+      - name: Scan the commits since 9d5ab40
+        # The 2020 Pods hold OAuth library strings, so only v2's commits are scanned.
+        run: >-
+          docker run --rm -v "$PWD:/repo"
+          -e GIT_CONFIG_COUNT=1 -e GIT_CONFIG_KEY_0=safe.directory -e GIT_CONFIG_VALUE_0=/repo
+          ghcr.io/gitleaks/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f
+          git /repo --log-opts="9d5ab40c80c431c26f7c25c3c08addd8d8bcbe23..HEAD" --redact

@@ -14,4 +14,10 @@ public enum Fonts {
     public static func registerOnce() {
         _ = registered
     }
+
+    /// Lexend at `size` points, registering it first.
+    static func lexend(size: CGFloat) -> CTFont {
+        registerOnce()
+        return CTFontCreateWithName(lexendFamily as CFString, size, nil)
+    }
 }

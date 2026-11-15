@@ -4,7 +4,8 @@ import SwiftUI
 import UIKit
 #endif
 
-/// Plays a file or a composition over and over. Call `release()` when the screen goes away, so the decoders are freed.
+/// Plays a file or a composition over and over. Make one per screen and call `release()` when the screen goes away,
+/// so the decoders are freed; a released player does not play again.
 @MainActor
 public final class LoopingPlayer {
     public let player = AVQueuePlayer()
@@ -28,13 +29,8 @@ public final class LoopingPlayer {
         item.videoComposition = composition.videoComposition
         item.audioMix = composition.audioMix
         let looper = AVPlayerLooper(player: player, templateItem: item)
-        // A composition's copies exist as soon as the looper does; an empty list counts as dropped, not kept.
-        let compositor = composition.videoComposition.customVideoCompositorClass.map { ObjectIdentifier($0) }
-        let copies = looper.loopingPlayerItems
-        let kept = !copies.isEmpty && copies.allSatisfy {
-            $0.videoComposition?.customVideoCompositorClass.map { ObjectIdentifier($0) } == compositor
-        }
-        if kept, !forceSeeking {
+        // A composition's copies exist as soon as the looper does.
+        if !forceSeeking, Self.copiesKeep(composition.videoComposition.customVideoCompositorClass, looper.loopingPlayerItems) {
             self.looper = looper
             return
         }
@@ -46,8 +42,13 @@ public final class LoopingPlayer {
         endObserver = NotificationCenter.default.addObserver(
             forName: AVPlayerItem.didPlayToEndTimeNotification, object: item, queue: .main
         ) { [weak self] _ in
-            MainActor.assumeIsolated { self?.player.seek(to: .zero) }
+            MainActor.assumeIsolated { self?.player.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero) }
         }
+    }
+
+    /// True when every copy plays through `compositor`; an empty list counts as dropped, not kept.
+    static func copiesKeep(_ compositor: AnyClass?, _ copies: [AVPlayerItem]) -> Bool {
+        !copies.isEmpty && copies.allSatisfy { $0.videoComposition?.customVideoCompositorClass == compositor }
     }
 
     public func play() { player.play() }
@@ -76,13 +77,14 @@ public struct LoopingVideoView: UIViewRepresentable {
 
     public func makeUIView(context: Context) -> PlayerView {
         let view = PlayerView()
+        view.clipsToBounds = true
         view.playerLayer.videoGravity = .resizeAspectFill
         view.playerLayer.player = player.player
         return view
     }
 
     public func updateUIView(_ view: PlayerView, context: Context) {
-        view.playerLayer.player = player.player
+        if view.playerLayer.player !== player.player { view.playerLayer.player = player.player }
     }
 
     public final class PlayerView: UIView {

@@ -56,12 +56,14 @@ struct ExporterTests {
         let composition = try await TestClips.compose([try await TestClips.quarters(transform: .identity)],
                                                       context: context)
         let url = try output()
+        // The export is about 11 KB with Apple's hardware encoder and smaller with CI's software one, so the limit sits
+        // far below either.
         do {
-            _ = try await Exporter.export(composition, to: url, limit: 10_000)
+            _ = try await Exporter.export(composition, to: url, limit: 1_000)
             Issue.record("expected exportTooLarge")
         } catch WindmillVideoError.exportTooLarge(let bytes, let limit) {
             #expect(bytes == (try TestClips.fileSize(url)))
-            #expect(limit == 10_000)
+            #expect(limit == 1_000)
         }
     }
 

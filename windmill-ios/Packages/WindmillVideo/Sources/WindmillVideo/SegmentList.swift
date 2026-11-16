@@ -24,12 +24,13 @@ public struct SegmentList: Sendable, Hashable {
 
     public var canRecord: Bool { timeLeft >= Self.floor }
 
-    /// Where each clip ends, as a fraction of the cap, for the marks on the record ring.
+    /// Where each clip ends, as a fraction of the cap, for the marks on the record ring. A clip the output ended a frame
+    /// past the cap still marks 1.
     public var marks: [Double] {
         var end = 0.0
         return segments.map { segment in
             end += segment.duration
-            return end / Self.cap
+            return min(1, end / Self.cap)
         }
     }
 }

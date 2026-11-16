@@ -120,7 +120,9 @@ public final class Recorder: NSObject, @unchecked Sendable {
 
     public func setTorch(_ on: Bool) {
         queue.async {
-            guard let device = self.camera?.device, device.hasTorch, (try? device.lockForConfiguration()) != nil else { return }
+            // The torch works with no session, as a flashlight, so it only turns on while the camera runs.
+            guard self.wanted, self.session.isRunning, let device = self.camera?.device, device.hasTorch,
+                  (try? device.lockForConfiguration()) != nil else { return }
             device.torchMode = on ? .on : .off
             device.unlockForConfiguration()
             // The torch stays off when the phone is too hot for it.
@@ -177,9 +179,9 @@ public final class Recorder: NSObject, @unchecked Sendable {
     }
 
     /// Adds what the session is missing: the camera, the microphone when allowed, the file output. Returns whether the
-    /// camera and the output are in; when they are not, the next start tries again.
+    /// camera and the output are in; the next start tries again for whatever is still missing.
     private func configure(microphone: Bool) -> Bool {
-        guard !configured else { return true }
+        guard !configured || microphone && !state.microphoneOn else { return true }
         session.beginConfiguration()
         if session.canSetSessionPreset(.hd1920x1080) { session.sessionPreset = .hd1920x1080 }
         if camera == nil, let input = Self.input(state.position), session.canAddInput(input) {
@@ -193,8 +195,10 @@ public final class Recorder: NSObject, @unchecked Sendable {
         }
         if !session.outputs.contains(output), session.canAddOutput(output) { session.addOutput(output) }
         session.commitConfiguration()
-        configured = camera != nil && session.outputs.contains(output)
-        if configured { setUpConnection() }
+        if !configured, camera != nil, session.outputs.contains(output) {
+            configured = true
+            setUpConnection()
+        }
         return configured
     }
 
@@ -217,14 +221,21 @@ public final class Recorder: NSObject, @unchecked Sendable {
         state.zoom = 1
     }
 
-    /// Stops the session and turns the torch off, so it is not back on when the camera starts again.
     private func stopCamera() {
         session.stopRunning()
-        if let device = camera?.device, device.torchMode == .on, (try? device.lockForConfiguration()) != nil {
-            device.torchMode = .off
+        resetCamera()
+    }
+
+    /// Torch off and zoom 1 on the current camera, which keeps both when it stops or is swapped out, so it comes back as
+    /// the snapshot says.
+    private func resetCamera() {
+        if let device = camera?.device, (try? device.lockForConfiguration()) != nil {
+            if device.torchMode == .on { device.torchMode = .off }
+            device.videoZoomFactor = 1
             device.unlockForConfiguration()
         }
         state.torchOn = false
+        state.zoom = 1
     }
 
     private func step(_ event: RecorderEvent) {
@@ -243,9 +254,9 @@ public final class Recorder: NSObject, @unchecked Sendable {
     private func apply(_ effect: RecorderEffect) {
         switch effect {
         case .startFile(let maxDuration):
-            // With no active connection startRecording raises an exception. The camera stopped after a press was queued:
-            // no file, so back to ready.
-            guard output.connection(with: .video)?.isActive == true else {
+            // startRecording raises an exception with no active connection, and a stopped camera records nothing. Either
+            // way there is no file, so back to ready.
+            guard session.isRunning, !session.isInterrupted, output.connection(with: .video)?.isActive == true else {
                 return queue.async {
                     self.step(.release)
                     self.step(.fileFinished(nil))
@@ -274,11 +285,14 @@ public final class Recorder: NSObject, @unchecked Sendable {
     private func flipCamera() {
         let position: AVCaptureDevice.Position = state.position == .back ? .front : .back
         guard let input = Self.input(position) else { return }
+        resetCamera()
         session.beginConfiguration()
         if let camera { session.removeInput(camera) }
         guard session.canAddInput(input) else {
+            // The old camera goes back in with a new connection, so rotation and mirroring are set again.
             if let camera { session.addInput(camera) }
-            return session.commitConfiguration()
+            session.commitConfiguration()
+            return setUpConnection()
         }
         session.addInput(input)
         session.commitConfiguration()
@@ -301,11 +315,11 @@ public final class Recorder: NSObject, @unchecked Sendable {
         continuation?.yield(state)
     }
 
-    /// A runtime error stopped the session. After a media services reset the camera starts again; any other error
-    /// shows as unavailable until the next `start()`.
-    private func recover(reset: Bool) {
+    /// A runtime error stopped the session. The camera shows as unavailable until the next `start()`, a media services
+    /// reset included, since Record sets the audio session up again before it starts.
+    private func recover() {
+        wanted = false
         step(.background)
-        if reset { return startSession() }
         state.access = .unavailable
         publish()
     }
@@ -334,16 +348,19 @@ public final class Recorder: NSObject, @unchecked Sendable {
             watch(AVCaptureSession.wasInterruptedNotification, session) { recorder in recorder.step(.release) },
             // For a start() made during the interruption, which is still idle.
             watch(AVCaptureSession.interruptionEndedNotification, session) { recorder in recorder.startSession() },
-            center.addObserver(forName: AVCaptureSession.runtimeErrorNotification, object: session, queue: nil) { [weak self] note in
-                let reset = (note.userInfo?[AVCaptureSessionErrorKey] as? AVError)?.code == .mediaServicesWereReset
-                guard let self else { return }
-                self.queue.async { self.recover(reset: reset) }
-            },
+            watch(AVCaptureSession.runtimeErrorNotification, session) { recorder in recorder.recover() },
         ]
     }
 }
 
 extension Recorder: AVCaptureFileOutputRecordingDelegate {
+    /// A tap can end before its file has started; stop it again here, in case the first stop came too early for it.
+    public func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo url: URL, from connections: [AVCaptureConnection]) {
+        queue.async {
+            if self.state.phase != .recording { self.output.stopRecording() }
+        }
+    }
+
     public func fileOutput(
         _ output: AVCaptureFileOutput, didFinishRecordingTo url: URL, from connections: [AVCaptureConnection],
         error: (any Error)?
@@ -354,10 +371,8 @@ extension Recorder: AVCaptureFileOutputRecordingDelegate {
             self.progressTimer?.cancel()
             self.progressTimer = nil
             // The output stopped by itself, at the cap or on a failure, while the button was still held.
-            if self.state.phase == .recording {
-                self.state.endedAtCap = atCap
-                self.step(atCap ? .capReached : .background)
-            }
+            self.state.endedAtCap = atCap
+            if self.state.phase == .recording { self.step(atCap ? .capReached : .background) }
         }
         Task {
             let segment: Segment? = if keep { try? await Segment.measured(url) } else { nil }

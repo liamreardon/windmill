@@ -24,6 +24,25 @@ struct RecorderMachineTests {
         #expect(list.total == 0.5)
     }
 
+    @Test func removeLastTakesTheNewest() {
+        var clips = list(2, 3)
+        let removed = clips.removeLast()
+        #expect(removed == segment(3))
+        #expect(clips.segments == [segment(2)])
+        var empty = SegmentList()
+        let none = empty.removeLast()
+        #expect(none == nil)
+    }
+
+    /// The output can end a clip a frame after its limit, so the list can pass the cap.
+    @Test func pastTheCapStopsRecording() {
+        let over = list(10, 5.04)
+        #expect(over.timeLeft == 0)
+        #expect(!over.canRecord)
+        #expect(over.marks.last == 1)
+        #expect(recorderStep(.ready, .press, over).1.isEmpty)
+    }
+
     @Test func marksAreCumulativeFractions() {
         #expect(list(5, 3).marks == [1.0 / 3, 8.0 / 15])
         #expect(list(5, 3).timeLeft == 7)
@@ -112,8 +131,8 @@ struct RecorderMachineTests {
             (.ready, .switchCamera, list(4), .ready, [.switchCamera]),
             (.ready, .deleteLast, list(4), .ready, [.deleteLast]),
             (.ready, .background, list(4), .idle, [.stopSession]),
-            (.idle, .press, list(), .idle, []),
-            (.recording, .press, list(4), .recording, []),
+            (.finishing(pressQueued: false), .fileFinished(nil), list(4), .ready, []),
+            (.finishing(pressQueued: true), .press, list(4), .finishing(pressQueued: true), []),
         ]
         for (from, event, list, to, effects) in rows {
             let (phase, got) = recorderStep(from, event, list)

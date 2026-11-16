@@ -56,6 +56,14 @@ struct RecorderMachineTests {
         #expect(appended == [.append(segment(2))])
     }
 
+    @Test func backgroundDropsQueuedPress() {
+        let (phase, effects) = recorderStep(.finishing(pressQueued: true), .background, list(3))
+        #expect(phase == .finishing(pressQueued: false))
+        #expect(effects.isEmpty)
+        let (after, _) = recorderStep(phase, .fileFinished(segment(2)), list(3))
+        #expect(after == .ready)
+    }
+
     @Test func switchCameraWhileFinishingIgnored() {
         let (phase, effects) = recorderStep(.finishing(pressQueued: false), .switchCamera, list(3))
         #expect(phase == .finishing(pressQueued: false))
@@ -77,6 +85,17 @@ struct RecorderMachineTests {
         let (phase, effects) = recorderStep(.ready, .goToEdit, list(1.2))
         #expect(phase == .idle)
         #expect(effects == [.stopSession, .openEdit])
+    }
+
+    /// Exactly 1 s of clips goes to Edit, and exactly 0.5 s left still records, from ready and from a queued press.
+    @Test func limitsAreInclusive() {
+        #expect(recorderStep(.ready, .goToEdit, list(1)).0 == .idle)
+        let (pressed, started) = recorderStep(.ready, .press, list(14.5))
+        #expect(pressed == .recording)
+        #expect(started == [.startFile(maxDuration: 0.5)])
+        let (queued, effects) = recorderStep(.finishing(pressQueued: true), .fileFinished(segment(4.5)), list(10))
+        #expect(queued == .recording)
+        #expect(effects == [.append(segment(4.5)), .startFile(maxDuration: 0.5)])
     }
 
     /// The rest of the table: one row each.
@@ -101,6 +120,31 @@ struct RecorderMachineTests {
             #expect(phase == to, "\(from) on \(event)")
             #expect(got == effects, "\(from) on \(event)")
         }
+    }
+
+    /// Every pair the table does not list keeps the phase and has no effect.
+    @Test func everyUnlistedPairChangesNothing() {
+        func listed(_ phase: RecorderPhase, _ event: RecorderEvent) -> Bool {
+            switch (phase, event) {
+            case (.idle, .sessionStarted), (.ready, .press), (.ready, .switchCamera), (.ready, .deleteLast), (.ready, .goToEdit),
+                 (.ready, .background), (.recording, .release), (.recording, .background), (.recording, .capReached),
+                 (.finishing, .press), (.finishing, .release), (.finishing, .background), (.finishing, .fileFinished): true
+            default: false
+            }
+        }
+        let phases: [RecorderPhase] = [.idle, .ready, .recording, .finishing(pressQueued: false), .finishing(pressQueued: true)]
+        let events: [RecorderEvent] = [.sessionStarted, .press, .release, .capReached, .background, .fileFinished(segment(2)),
+                                       .fileFinished(nil), .switchCamera, .deleteLast, .goToEdit]
+        var checked = 0
+        for phase in phases {
+            for event in events where !listed(phase, event) {
+                let (after, effects) = recorderStep(phase, event, list(4))
+                #expect(after == phase, "\(phase) on \(event)")
+                #expect(effects.isEmpty, "\(phase) on \(event)")
+                checked += 1
+            }
+        }
+        #expect(checked == 31)
     }
 
     @Test func keepRule() {

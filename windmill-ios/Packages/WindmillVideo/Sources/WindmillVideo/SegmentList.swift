@@ -1,6 +1,6 @@
 /// The clips recorded so far, in order, under the 15 second cap.
 public struct SegmentList: Sendable, Hashable {
-    public static let cap = 15.0
+    public static let cap = Edit.cap
     /// The shortest clip kept, and the least time left that still lets the record button start one.
     public static let floor = 0.5
 

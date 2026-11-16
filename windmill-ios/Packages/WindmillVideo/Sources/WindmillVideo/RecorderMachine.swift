@@ -32,7 +32,8 @@ public func recorderStep(_ phase: RecorderPhase, _ event: RecorderEvent, _ list:
         return (.finishing(pressQueued: false), [])
     case (.finishing, .press):
         return (.finishing(pressQueued: true), [])
-    case (.finishing, .release):
+    case (.finishing, .release), (.finishing, .background):
+        // A background, a stop or an interruption drops a press that was waiting.
         return (.finishing(pressQueued: false), [])
     case let (.finishing(pressQueued), .fileFinished(segment)):
         var after = list

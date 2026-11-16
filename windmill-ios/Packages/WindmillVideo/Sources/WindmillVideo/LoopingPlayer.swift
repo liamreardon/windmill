@@ -14,6 +14,8 @@ public final class LoopingPlayer {
     public private(set) var loopsBySeeking = false
     private var looper: AVPlayerLooper?
     private var endObserver: (any NSObjectProtocol)?
+    private var failureObserver: (any NSObjectProtocol)?
+    private var failure: (any Error)?
 
     public init(url: URL) {
         looper = AVPlayerLooper(player: player, templateItem: AVPlayerItem(url: url))
@@ -44,6 +46,13 @@ public final class LoopingPlayer {
         ) { [weak self] _ in
             MainActor.assumeIsolated { self?.player.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero) }
         }
+        // A frame that fails leaves this item ready with no error; the notification is the only sign of it.
+        failureObserver = NotificationCenter.default.addObserver(
+            forName: AVPlayerItem.failedToPlayToEndTimeNotification, object: item, queue: .main
+        ) { [weak self] note in
+            let error = note.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? any Error
+            MainActor.assumeIsolated { self?.failure = error }
+        }
     }
 
     /// True when every copy plays through `compositor`; an empty list counts as dropped, not kept.
@@ -51,9 +60,9 @@ public final class LoopingPlayer {
         !copies.isEmpty && copies.allSatisfy { $0.videoComposition?.customVideoCompositorClass == compositor }
     }
 
-    /// Why nothing plays, such as a file that is gone; nil while the item loads or plays.
-    // ponytail: read on demand; a screen that has to react to it can observe the item's status.
-    public var error: (any Error)? { looper?.error ?? player.error ?? player.currentItem?.error }
+    /// Why playback failed, such as a file that is gone or a frame that could not be drawn; nil until something fails.
+    // ponytail: polled, nothing announces a change; the screen that shows the failure adds the observation it needs.
+    public var error: (any Error)? { failure ?? looper?.error ?? player.error ?? player.currentItem?.error }
 
     public func play() { player.play() }
 
@@ -63,8 +72,11 @@ public final class LoopingPlayer {
     public func release() {
         looper?.disableLooping()
         looper = nil
-        if let endObserver { NotificationCenter.default.removeObserver(endObserver) }
+        for observer in [endObserver, failureObserver].compactMap({ $0 }) {
+            NotificationCenter.default.removeObserver(observer)
+        }
         endObserver = nil
+        failureObserver = nil
         player.pause()
         player.removeAllItems()
     }

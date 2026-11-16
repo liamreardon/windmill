@@ -30,6 +30,7 @@ struct LoopingPlayerTests {
         #expect(looped, "no loop in 30 s")
         #expect(ContinuousClock.now - start >= .seconds(composition.duration.seconds * 0.9))
 
+        #expect(looping.error == nil)
         let item = try #require(looping.player.currentItem)
         if looping.loopsBySeeking { #expect(item === first) }
         #expect(item.videoComposition?.customVideoCompositorClass == OverlayCompositor.self)
@@ -84,7 +85,7 @@ struct LoopingPlayerTests {
         looping.play()
         try await Task.sleep(for: .milliseconds(300))
         looping.release()
-        // Past the item's end, where the end observer would seek it back if it were still there.
+        // Past the clip's end, so the queue has had time to fill again if anything still fed it.
         try await Task.sleep(for: .seconds(composition.duration.seconds + 0.5))
         #expect(looping.player.items().isEmpty)
         #expect(looping.player.currentItem == nil)
@@ -109,8 +110,41 @@ struct LoopingPlayerTests {
             try await Task.sleep(for: .milliseconds(20))
         }
         #expect(!looping.player.items().isEmpty)
+        #expect(looping.error == nil)
         looping.release()
         #expect(looping.player.items().isEmpty)
+    }
+
+    #if os(macOS)
+    /// On macOS the looper keeps the compositor on every copy, so a composition never falls back to seeking.
+    @Test func compositionUsesTheLooperOnMacOS() async throws {
+        let looping = LoopingPlayer(composition: try await TestClips.compose([try await TestClips.solid(.red)],
+                                                                            context: context))
+        defer { looping.release() }
+        #expect(!looping.loopsBySeeking)
+        #expect(looping.player.items().count > 1)
+    }
+    #endif
+
+    /// A compositor that fails every frame stops the looper and makes the seeking item post a failure.
+    @Test(arguments: [false, true]) func failingFramesReportAnError(forceSeeking: Bool) async throws {
+        let good = try await TestClips.compose([try await TestClips.solid(.red)], context: context)
+        let failing = good.videoComposition.mutableCopy() as! AVMutableVideoComposition
+        failing.customVideoCompositorClass = FailingCompositor.self
+        let composition = Composition(asset: good.asset, videoComposition: failing, audioMix: nil,
+                                      duration: good.duration, fontName: good.fontName, renderSize: good.renderSize)
+        let looping = LoopingPlayer(composition: composition, forceSeeking: forceSeeking)
+        defer { looping.release() }
+        #expect(looping.loopsBySeeking == forceSeeking)
+        // With no layer or output to draw into, the player never asks the compositor for a frame.
+        let bgra: [String: Any] = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
+        for item in looping.player.items() { item.add(AVPlayerItemVideoOutput(pixelBufferAttributes: bgra)) }
+        looping.play()
+        let start = ContinuousClock.now
+        while looping.error == nil, ContinuousClock.now - start < .seconds(30) {
+            try await Task.sleep(for: .milliseconds(20))
+        }
+        #expect(looping.error != nil)
     }
 
     @Test func missingFileReportsAnError() async throws {
@@ -137,5 +171,19 @@ struct LoopingPlayerTests {
         try await Task.sleep(for: .milliseconds(200))
         #expect(!control.player.items().isEmpty)
         #expect(released.player.items().isEmpty)
+    }
+}
+
+/// Fails every frame, as the overlay compositor does when it gets no pixel buffer.
+final class FailingCompositor: NSObject, AVVideoCompositing, @unchecked Sendable {
+    let sourcePixelBufferAttributes: [String: any Sendable]? =
+        [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
+    let requiredPixelBufferAttributesForRenderContext: [String: any Sendable] =
+        [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
+
+    func renderContextChanged(_ newRenderContext: AVVideoCompositionRenderContext) {}
+
+    func startRequest(_ request: AVAsynchronousVideoCompositionRequest) {
+        request.finish(with: CocoaError(.fileReadCorruptFile))
     }
 }

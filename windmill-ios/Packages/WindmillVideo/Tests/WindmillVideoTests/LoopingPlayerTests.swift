@@ -52,9 +52,42 @@ struct LoopingPlayerTests {
             last = now
         }
         #expect(wrapped, "the time never went back to the start")
+        #expect(ContinuousClock.now - start >= .seconds(composition.duration.seconds * 0.9))
         #expect(looping.player.currentItem === first)
         #expect(looping.player.items().count == 1)
         #expect(first.videoComposition?.customVideoCompositorClass == OverlayCompositor.self)
+    }
+
+    @Test func seekingWrapLandsOnTheFirstFrame() async throws {
+        // A trim that starts between key frames, where a loose seek lands late.
+        let clip = try await TestClips.solid(.red, duration: 3)
+        let composition = try await TestClips.compose([clip], trim: 1.3...2.5, context: context)
+        let looping = LoopingPlayer(composition: composition, forceSeeking: true)
+        defer { looping.release() }
+        looping.play()
+
+        var landed: Double?, last = 0.0
+        let start = ContinuousClock.now
+        while landed == nil, ContinuousClock.now - start < .seconds(30) {
+            try await Task.sleep(for: .milliseconds(20))
+            let now = looping.player.currentTime().seconds
+            if now < last { landed = now }
+            last = now
+        }
+        let time = try #require(landed, "the time never went back")
+        #expect(time < 0.15, "the loop restarted at \(time) s")
+    }
+
+    @Test func releaseEmptiesTheSeekingQueue() async throws {
+        let composition = try await TestClips.compose([try await TestClips.solid(.red)], context: context)
+        let looping = LoopingPlayer(composition: composition, forceSeeking: true)
+        looping.play()
+        try await Task.sleep(for: .milliseconds(300))
+        looping.release()
+        // Past the item's end, where the end observer would seek it back if it were still there.
+        try await Task.sleep(for: .seconds(composition.duration.seconds + 0.5))
+        #expect(looping.player.items().isEmpty)
+        #expect(looping.player.currentItem == nil)
     }
 
     @Test func copiesKeepNeedsTheCompositorOnEveryCopy() async throws {
